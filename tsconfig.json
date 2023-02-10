@@ -1,16 +1,25 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "target": "es6",
-    "module": "commonjs",
-    "noResolve": false,
-    "noImplicitAny": false,
-    "sourceMap": true,
-    "preserveConstEnums": true,
-    "lib": [
-      "dom",
-      "es6"
-    ],
-    "rootDir": "src"
-  }
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "./build/src",
+        "declarationDir": "./declaration/src",
+        "experimentalDecorators": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "skipLibCheck": true,
+        "lib": [
+            "es2015.promise",
+            "es2015",
+            "dom"
+        ]
+    },
+    "exclude": [
+        "./node_modules",
+        "./build",
+        "./declaration"
+    ]
 }
