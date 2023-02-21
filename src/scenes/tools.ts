@@ -85,7 +85,7 @@ export interface IScript {
 
 export const projectConfiguration = {
 	"autoLod": {
-		"enabled": true,
+		"enabled": false,
 		"autoApply": true
 	},
 	"compressedTextures": {

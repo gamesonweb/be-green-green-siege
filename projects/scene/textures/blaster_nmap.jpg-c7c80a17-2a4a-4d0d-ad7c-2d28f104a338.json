@@ -42,5 +42,6 @@
 	"isRenderTarget": false,
 	"animations": [],
 	"invertY": true,
-	"samplingMode": 3
+	"samplingMode": 3,
+	"_useSRGBBuffer": false
 }

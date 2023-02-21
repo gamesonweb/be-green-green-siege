@@ -68,7 +68,7 @@
 			"layerMask": 268435455,
 			"alphaIndex": 1000,
 			"hasVertexAlpha": false,
-			"overlayAlpha": 0.5,
+			"overlayAlpha": 0.3,
 			"overlayColor": [
 				1,
 				0,

@@ -29,6 +29,7 @@
 		0
 	],
 	"fov": 0.6,
+	"projectionPlaneTilt": 0,
 	"minZ": 0.1,
 	"maxZ": 10000,
 	"inertia": 0,
@@ -45,7 +46,7 @@
 			"properties": {
 				"_forwardKey": {
 					"type": "KeyMap",
-					"value": 87
+					"value": 90
 				},
 				"_backwardKey": {
 					"type": "KeyMap",
@@ -53,7 +54,7 @@
 				},
 				"_strafeLeftKey": {
 					"type": "KeyMap",
-					"value": 65
+					"value": 81
 				},
 				"_strafeRightKey": {
 					"type": "KeyMap",
@@ -66,6 +67,7 @@
 			}
 		}
 	},
+	"uniqueId": 42,
 	"type": "UniversalCamera",
 	"inputsmgr": {
 		"FreeCameraKeyboardMoveInput": {
@@ -87,7 +89,10 @@
 			],
 			"keysRight": [
 				39
-			]
+			],
+			"rotationSpeed": 0.5,
+			"keysRotateLeft": [],
+			"keysRotateRight": []
 		},
 		"FreeCameraMouseInput": {
 			"tags": null,
@@ -100,5 +105,6 @@
 		}
 	},
 	"animations": [],
-	"ranges": []
+	"ranges": [],
+	"isEnabled": true
 }

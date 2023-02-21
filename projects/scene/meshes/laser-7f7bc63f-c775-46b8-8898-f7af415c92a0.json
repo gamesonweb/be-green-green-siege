@@ -2,26 +2,24 @@
 	"materials": [],
 	"meshes": [
 		{
-			"name": "cube",
-			"id": "d66c05ad-967f-4f69-a6fb-7d47281b641c",
-			"uniqueId": 10,
+			"name": "laser",
+			"id": "7f7bc63f-c775-46b8-8898-f7af415c92a0",
+			"uniqueId": 187,
 			"type": "Mesh",
-			"tags": "modified",
 			"position": [
-				0,
-				0.5351396799087524,
+				0.23391947150230408,
+				-0.1584002673625946,
+				1.0411518812179565
+			],
+			"rotation": [
+				1.5707963267948966,
+				5.200634523702154e-8,
 				0
 			],
-			"rotationQuaternion": [
-				0,
-				0,
-				0,
-				1
-			],
 			"scaling": [
-				1,
-				1,
-				1
+				0.10000000149011626,
+				0.10000011324882518,
+				0.10000371932983398
 			],
 			"localMatrix": {
 				"0": 1,
@@ -48,20 +46,29 @@
 			"receiveShadows": false,
 			"billboardMode": 0,
 			"visibility": 1,
-			"checkCollisions": true,
+			"checkCollisions": false,
 			"isBlocker": false,
 			"overrideMaterialSideOrientation": null,
+			"parentId": "2e391261-067a-4ec6-8b00-25d7e0738684",
 			"isUnIndexed": false,
-			"geometryId": "d3b70945-ad99-4eb5-abe6-e1409aa44e01",
+			"geometryId": "60d94eab-1842-4dfd-8df5-66932d4ee761",
 			"subMeshes": null,
-			"materialId": "965b4240-9156-4704-8e39-cc381d3c7123",
-			"physicsMass": 0,
-			"physicsFriction": 0.2,
-			"physicsRestitution": 0,
-			"physicsImpostor": 2,
+			"materialId": "default material",
 			"metadata": {
-				"isPickable": true,
-				"script": {}
+				"editorGeometry": {
+					"type": "Cylinder",
+					"height": 1,
+					"diameterTop": 1,
+					"diameterBottom": 1,
+					"tesselation": 16,
+					"subdivisions": 1,
+					"arc": 1
+				},
+				"isPickable": false,
+				"script": {
+					"name": "src/scenes/scene/laser.ts"
+				},
+				"renderingGroupId": 0
 			},
 			"instances": [],
 			"animations": [],
@@ -69,14 +76,14 @@
 			"layerMask": 268435455,
 			"alphaIndex": 1.7976931348623157e+308,
 			"hasVertexAlpha": false,
-			"overlayAlpha": 0.5,
+			"overlayAlpha": 0.3,
 			"overlayColor": [
 				1,
 				0,
 				0
 			],
 			"applyFog": true,
-			"delayLoadingFile": "geometries/d3b70945-ad99-4eb5-abe6-e1409aa44e01.babylonbinarymeshdata",
+			"delayLoadingFile": "geometries/60d94eab-1842-4dfd-8df5-66932d4ee761.babylonbinarymeshdata",
 			"boundingBoxMaximum": [
 				0.5,
 				0.5,
@@ -89,33 +96,33 @@
 			],
 			"_binaryInfo": {
 				"positionsAttrDesc": {
-					"count": 72,
+					"count": 210,
 					"stride": 3,
 					"offset": 0,
 					"dataType": 1
 				},
 				"normalsAttrDesc": {
-					"count": 72,
+					"count": 210,
 					"stride": 3,
-					"offset": 288,
+					"offset": 840,
 					"dataType": 1
 				},
 				"uvsAttrDesc": {
-					"count": 48,
+					"count": 140,
 					"stride": 2,
-					"offset": 576,
+					"offset": 1680,
 					"dataType": 1
 				},
 				"indicesAttrDesc": {
-					"count": 36,
+					"count": 192,
 					"stride": 1,
-					"offset": 768,
+					"offset": 2240,
 					"dataType": 0
 				},
 				"subMeshesAttrDesc": {
 					"count": 1,
 					"stride": 5,
-					"offset": 912,
+					"offset": 3008,
 					"dataType": 0
 				}
 			},

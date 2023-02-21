@@ -9,23 +9,32 @@
 	"inclination": 0,
 	"azimuth": 0.25,
 	"sunPosition": [
-		3.061616997868383e-14,
+		1.8746997283273223e-30,
 		500,
 		-3.061616997868383e-14
 	],
 	"useSunPosition": false,
-	"cameraOffset": {
-		"x": 0,
-		"y": 0,
-		"z": 0
-	},
+	"cameraOffset": [
+		0,
+		0,
+		0
+	],
+	"up": [
+		0,
+		1,
+		0
+	],
 	"id": "cdc8b068-1ebd-4c87-8cb0-f48a85181271",
 	"name": "sky",
+	"metadata": {
+		"editorPath": "materials/sky.material"
+	},
 	"checkReadyOnEveryCall": false,
 	"checkReadyOnlyOnce": false,
 	"state": "",
 	"alpha": 1,
 	"backFaceCulling": true,
+	"cullBackFaces": true,
 	"sideOrientation": 1,
 	"alphaMode": 2,
 	"_needDepthPrePass": false,
@@ -37,10 +46,20 @@
 	"fogEnabled": true,
 	"pointSize": 1,
 	"zOffset": 0,
+	"zOffsetUnits": 0,
 	"pointsCloud": false,
 	"fillMode": 0,
-	"customType": "BABYLON.SkyMaterial",
-	"metadata": {
-		"editorPath": "materials/sky.material"
-	}
+	"stencil": {
+		"tags": null,
+		"func": 519,
+		"funcRef": 1,
+		"funcMask": 255,
+		"opStencilFail": 7680,
+		"opDepthFail": 7680,
+		"opStencilDepthPass": 7681,
+		"mask": 255,
+		"enabled": false
+	},
+	"uniqueId": 32,
+	"customType": "BABYLON.SkyMaterial"
 }

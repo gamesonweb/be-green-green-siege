@@ -1,25 +1,18 @@
-import { FreeCamera, PointerEventTypes, Mesh, PointerInfo, PhysicsImpostor, Vector3, KeyboardEventTypes } from "@babylonjs/core";
+import { FreeCamera, PointerEventTypes, Mesh, PointerInfo, PhysicsImpostor, Vector3, KeyboardEventTypes, MeshBuilder } from "@babylonjs/core";
+import { sceneUboDeclaration } from "@babylonjs/core/Shaders/ShadersInclude/sceneUboDeclaration";
 
-import { fromChildren, visibleInInspector, onPointerEvent, onKeyboardEvent } from "../decorators";
+import { fromChildren, visibleInInspector, onPointerEvent, onKeyboardEvent, fromScene } from "../decorators";
+import laser from "./laser";
+
+import LaserComponent from "./laser"
 
 export default class PlayerCamera extends FreeCamera {
-    @fromChildren("ball")
-    private _ball: Mesh;
 
-    @visibleInInspector("KeyMap", "Forward Key", "z".charCodeAt(0))
-    private _forwardKey: number;
+    @fromChildren("laser")
+    private _laser: LaserComponent;
 
-    @visibleInInspector("KeyMap", "Backward Key", "s".charCodeAt(0))
-    private _backwardKey: number;
-
-    @visibleInInspector("KeyMap", "Strafe Left Key", "q".charCodeAt(0))
-    private _strafeLeftKey: number;
-
-    @visibleInInspector("KeyMap", "Strafe Right Key", "d".charCodeAt(0))
-    private _strafeRightKey: number;
-
-    @visibleInInspector("number", "Ball Force Factor", 1)
-    private _ballForceFactor: number;
+    @fromChildren("blaster")
+    private _blaster: LaserComponent;
 
     /**
      * Override constructor.
@@ -32,18 +25,13 @@ export default class PlayerCamera extends FreeCamera {
      * Called on the scene starts.
      */
     public onStart(): void {
-        // For the example, let's configure the keys of the camera using the @visibleInInspector decorator.
-        this.keysUp = [this._forwardKey];
-        this.keysDown = [this._backwardKey];
-        this.keysLeft = [this._strafeLeftKey];
-        this.keysRight = [this._strafeRightKey];
     }
+
 
     /**
      * Called each frame.
      */
     public onUpdate(): void {
-        // Nothing to do now...
     }
 
     /**
@@ -82,15 +70,11 @@ export default class PlayerCamera extends FreeCamera {
      * Launches a new ball from the camera position to the camera direction.
      */
     private _launchBall(info: PointerInfo): void {
-        // Create a new ball instance
-        const ballInstance = this._ball.createInstance("ballInstance");
-        ballInstance.position.copyFrom(this._ball.getAbsolutePosition());
 
-        // Create physics impostor for the ball instance
-        ballInstance.physicsImpostor = new PhysicsImpostor(ballInstance, PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.2, restitution: 0.2 });
+        // Create a laser instance
+        const laserInstance = this._laser.createInstance("laserInstance");
+        laserInstance.position.copyFrom(this._laser.getAbsolutePosition());
+        laserInstance.rotation = new Vector3(this.rotation.x + Math.PI /2, this.rotation.y, this.rotation.z);
 
-        // Apply impulse on ball
-        const force = this.getDirection(new Vector3(0, 0, 1)).multiplyByFloats(this._ballForceFactor, this._ballForceFactor, this._ballForceFactor);
-        ballInstance.applyImpulse(force, ballInstance.getAbsolutePosition());
     }
 }

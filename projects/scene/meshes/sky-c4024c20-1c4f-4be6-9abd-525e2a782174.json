@@ -56,7 +56,11 @@
 			"materialId": "cdc8b068-1ebd-4c87-8cb0-f48a85181271",
 			"metadata": {
 				"isPickable": true,
-				"script": {}
+				"script": {
+					"name": "None"
+				},
+				"renderingGroupId": 0,
+				"_waitingParentId": null
 			},
 			"instances": [],
 			"animations": [],
@@ -71,6 +75,7 @@
 				0
 			],
 			"applyFog": true,
+			"parentId": null,
 			"delayLoadingFile": "geometries/8c80c4bd-4350-4b45-98de-f4007c0ff845.babylonbinarymeshdata",
 			"boundingBoxMaximum": [
 				2500,

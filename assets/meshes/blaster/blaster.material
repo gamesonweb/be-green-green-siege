@@ -49,7 +49,8 @@
 		"isRenderTarget": false,
 		"animations": [],
 		"invertY": true,
-		"samplingMode": 3
+		"samplingMode": 3,
+		"_useSRGBBuffer": false
 	},
 	"ambientTextureStrength": 1,
 	"ambientTextureImpactOnAnalyticalLights": 0,
@@ -111,6 +112,7 @@
 		1,
 		1
 	],
+	"useOnlyMetallicFromMetallicReflectanceTexture": false,
 	"bumpTexture": {
 		"tags": null,
 		"url": "meshes/blaster/blaster_nmap.jpg",
@@ -155,7 +157,8 @@
 		"isRenderTarget": false,
 		"animations": [],
 		"invertY": true,
-		"samplingMode": 3
+		"samplingMode": 3,
+		"_useSRGBBuffer": false
 	},
 	"ambient": [
 		0,
@@ -253,17 +256,22 @@
 		"vignetteCameraFov": 0.5,
 		"_vignetteBlendMode": 0,
 		"_vignetteEnabled": false,
+		"_skipFinalColorClamp": false,
 		"_applyByPostProcess": true,
 		"_isEnabled": true
 	},
 	"useLogarithmicDepth": false,
 	"id": "71ce380f-e971-41c0-b580-e3e91b316c6f",
 	"name": "blaster",
+	"metadata": {
+		"editorPath": "meshes/blaster/blaster.material"
+	},
 	"checkReadyOnEveryCall": false,
 	"checkReadyOnlyOnce": false,
 	"state": "",
 	"alpha": 1,
 	"backFaceCulling": true,
+	"cullBackFaces": true,
 	"sideOrientation": 1,
 	"alphaMode": 2,
 	"_needDepthPrePass": false,
@@ -275,8 +283,21 @@
 	"fogEnabled": true,
 	"pointSize": 1,
 	"zOffset": 0,
+	"zOffsetUnits": 0,
 	"pointsCloud": false,
 	"fillMode": 0,
+	"stencil": {
+		"tags": null,
+		"func": 519,
+		"funcRef": 1,
+		"funcMask": 255,
+		"opStencilFail": 7680,
+		"opDepthFail": 7680,
+		"opStencilDepthPass": 7681,
+		"mask": 255,
+		"enabled": false
+	},
+	"uniqueId": 34,
 	"customType": "BABYLON.PBRMaterial",
 	"clearCoat": {
 		"tags": null,
@@ -293,7 +314,10 @@
 			1
 		],
 		"tintColorAtDistance": 1,
-		"tintThickness": 1
+		"tintThickness": 1,
+		"name": "PBRClearCoat",
+		"priority": 100,
+		"registerForExtraEvents": false
 	},
 	"anisotropy": {
 		"tags": null,
@@ -302,14 +326,20 @@
 		"direction": [
 			1,
 			0
-		]
+		],
+		"name": "PBRAnisotropic",
+		"priority": 110,
+		"registerForExtraEvents": false
 	},
 	"brdf": {
 		"tags": null,
 		"useEnergyConservation": true,
 		"useSmithVisibilityHeightCorrelated": true,
 		"useSphericalHarmonics": true,
-		"useSpecularGlossinessInputEnergyConservation": true
+		"useSpecularGlossinessInputEnergyConservation": true,
+		"name": "PBRBRDF",
+		"priority": 90,
+		"registerForExtraEvents": false
 	},
 	"sheen": {
 		"tags": null,
@@ -322,7 +352,10 @@
 			1
 		],
 		"useRoughnessFromMainTexture": true,
-		"albedoScaling": false
+		"albedoScaling": false,
+		"name": "Sheen",
+		"priority": 120,
+		"registerForExtraEvents": false
 	},
 	"subSurface": {
 		"tags": null,
@@ -333,12 +366,14 @@
 		"refractionIntensity": 1,
 		"translucencyIntensity": 1,
 		"useAlbedoToTintRefraction": false,
+		"useAlbedoToTintTranslucency": false,
 		"indexOfRefraction": 1,
 		"_volumeIndexOfRefraction": -1,
 		"invertRefractionY": false,
 		"linkRefractionWithTransparency": false,
 		"minimumThickness": 0,
 		"maximumThickness": 1,
+		"useThicknessAsDepth": false,
 		"tintColor": [
 			1,
 			1,
@@ -351,9 +386,20 @@
 			1
 		],
 		"useMaskFromThicknessTexture": false,
-		"useMaskFromThicknessTextureGltf": false
+		"useGltfStyleTextures": false,
+		"name": "PBRSubSurface",
+		"priority": 130,
+		"registerForExtraEvents": true
 	},
-	"metadata": {
-		"editorPath": "meshes/blaster/blaster.material"
+	"iridescence": {
+		"tags": null,
+		"isEnabled": false,
+		"intensity": 1,
+		"minimumThickness": 100,
+		"maximumThickness": 400,
+		"indexOfRefraction": 1.3,
+		"name": "PBRIridescence",
+		"priority": 110,
+		"registerForExtraEvents": false
 	}
 }

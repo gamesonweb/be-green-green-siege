@@ -1,14 +1,12 @@
 {
+	"animationGroups": [],
 	"cameras": [
 		"camera-2e391261-067a-4ec6-8b00-25d7e0738684.json"
 	],
 	"materials": [
 		{
 			"isMultiMaterial": false,
-			"bindedMeshes": [
-				"d66c05ad-967f-4f69-a6fb-7d47281b641c",
-				"f824df87-ae33-41d9-ba8f-551d2083a2be"
-			],
+			"bindedMeshes": [],
 			"json": "materials/cube.material"
 		},
 		{
@@ -41,17 +39,16 @@
 		}
 	],
 	"textures": [
-		"parking.env-30.json",
-		"blaster_diffuse.jpg-29.json",
-		"blaster_nmap.jpg-31.json"
+		"blaster_diffuse.jpg-3298758d-4380-4f12-9d6c-aabefafe1060.json",
+		"parking.env-7b76b09b-32fb-48c6-98fe-8a2d84f17aa1.json",
+		"blaster_nmap.jpg-c7c80a17-2a4a-4d0d-ad7c-2d28f104a338.json"
 	],
 	"meshes": [
 		"ground-b87c0751-53e5-4782-88d9-0461e9457fe1.json",
-		"cube-d66c05ad-967f-4f69-a6fb-7d47281b641c.json",
 		"blaster-b6a89645-0d85-44c1-8bf8-b99b8670c51f.json",
 		"sky-c4024c20-1c4f-4be6-9abd-525e2a782174.json",
 		"ball-f28c95a8-f3fc-4ff6-8522-26f3cc6d5d4c.json",
-		"wall-f824df87-ae33-41d9-ba8f-551d2083a2be.json"
+		"laser-7f7bc63f-c775-46b8-8898-f7af415c92a0.json"
 	],
 	"transformNodes": [],
 	"particleSystems": [],
@@ -63,8 +60,9 @@
 	],
 	"sounds": [],
 	"morphTargetManagers": [],
+	"reflectionProbes": [],
 	"scene": {
-		"autoClear": false,
+		"autoClear": true,
 		"clearColor": [
 			0,
 			0,
@@ -113,7 +111,6 @@
 			"_colorGradingBGR": true,
 			"_exposure": 1,
 			"_toneMappingEnabled": false,
-			"_toneMappingType": 0,
 			"_contrast": 1,
 			"vignetteStretch": 0,
 			"vignetteCentreX": 0,
@@ -128,6 +125,7 @@
 			"vignetteCameraFov": 0.5,
 			"_vignetteBlendMode": 0,
 			"_vignetteEnabled": false,
+			"_skipFinalColorClamp": false,
 			"_applyByPostProcess": true,
 			"_isEnabled": true
 		},
@@ -170,7 +168,24 @@
 							"exposure": 1,
 							"contrast": 1,
 							"fromLinearSpace": true,
-							"toneMappingEnabled": false
+							"toneMappingEnabled": false,
+							"colorCurvesEnabled": false,
+							"colorCurves": {
+								"tags": null,
+								"_globalHue": 200,
+								"_globalDensity": 80,
+								"_globalSaturation": 80,
+								"_globalExposure": 0,
+								"_highlightsHue": 20,
+								"_highlightsDensity": 80,
+								"_highlightsSaturation": -80,
+								"_highlightsExposure": 0,
+								"_midtonesHue": 30,
+								"_midtonesDensity": 0,
+								"_midtonesSaturation": 0,
+								"_midtonesExposure": 0
+							},
+							"colorGradingEnabled": false
 						},
 						"bloom": {
 							"enabled": false,
@@ -260,12 +275,7 @@
 				"blurKernel": 1,
 				"blurScale": 2,
 				"useKernelBlur": false,
-				"renderList": [
-					"d66c05ad-967f-4f69-a6fb-7d47281b641c",
-					"f824df87-ae33-41d9-ba8f-551d2083a2be",
-					"2dacc31c-b006-4088-aaaf-50c86a795b6c",
-					"b6f5c00a-61f9-48a2-a448-70f69392c07a"
-				],
+				"renderList": [],
 				"numCascades": 4,
 				"debug": false,
 				"stabilizeCascades": true,
@@ -287,6 +297,7 @@
 		"graphs": [],
 		"prefabs": []
 	},
+	"cinematics": [],
 	"project": {
 		"camera": {
 			"tags": null,
@@ -303,15 +314,15 @@
 			"checkCollisions": false,
 			"applyGravity": false,
 			"rotation": [
-				0.17217245306174717,
-				1.327837477142567,
+				0.6406167339208831,
+				8.369683279227505,
 				0
 			],
 			"speed": 2,
 			"position": [
-				-4.628809134220198,
-				2.063241488491201,
-				1.0651177195829378
+				2.023023635189615,
+				2.987576451694867,
+				4.4203986361532515
 			],
 			"upVector": [
 				0,
@@ -319,8 +330,9 @@
 				0
 			],
 			"fov": 0.8,
+			"projectionPlaneTilt": 0,
 			"minZ": 1,
-			"maxZ": 10000,
+			"maxZ": 15000,
 			"inertia": 0.5,
 			"mode": 0,
 			"layerMask": 268435455,
@@ -332,9 +344,11 @@
 			"metadata": {
 				"script": {
 					"name": "None"
-				}
+				},
+				"detached": false
 			},
-			"type": "FreeCamera",
+			"uniqueId": 7,
+			"type": "UniversalCamera",
 			"inputsmgr": {
 				"FreeCameraKeyboardMoveInput": {
 					"tags": null,
@@ -355,7 +369,10 @@
 					],
 					"keysRight": [
 						68
-					]
+					],
+					"rotationSpeed": 0.5,
+					"keysRotateLeft": [],
+					"keysRotateRight": []
 				},
 				"FreeCameraMouseInput": {
 					"tags": null,
@@ -368,10 +385,12 @@
 				}
 			},
 			"animations": [],
-			"ranges": []
+			"ranges": [],
+			"isEnabled": true
 		}
 	},
 	"postProcesses": {
+		"custom": [],
 		"ssao": {
 			"enabled": true,
 			"json": {
@@ -404,7 +423,24 @@
 					"exposure": 1,
 					"contrast": 1,
 					"fromLinearSpace": true,
-					"toneMappingEnabled": false
+					"toneMappingEnabled": false,
+					"colorCurvesEnabled": false,
+					"colorCurves": {
+						"tags": null,
+						"_globalHue": 200,
+						"_globalDensity": 80,
+						"_globalSaturation": 80,
+						"_globalExposure": 0,
+						"_highlightsHue": 20,
+						"_highlightsDensity": 80,
+						"_highlightsSaturation": -80,
+						"_highlightsExposure": 0,
+						"_midtonesHue": 30,
+						"_midtonesDensity": 0,
+						"_midtonesSaturation": 0,
+						"_midtonesExposure": 0
+					},
+					"colorGradingEnabled": false
 				},
 				"bloom": {
 					"enabled": false,
