@@ -1,18 +1,13 @@
-import { FreeCamera, PointerEventTypes, Mesh, PointerInfo, PhysicsImpostor, Vector3, KeyboardEventTypes, MeshBuilder } from "@babylonjs/core";
-import { sceneUboDeclaration } from "@babylonjs/core/Shaders/ShadersInclude/sceneUboDeclaration";
+import { FreeCamera, KeyboardEventTypes, PointerEventTypes, PointerInfo, Vector3 } from "@babylonjs/core";
 
-import { fromChildren, visibleInInspector, onPointerEvent, onKeyboardEvent, fromScene } from "../decorators";
-import laser from "./laser";
+import { fromChildren, onKeyboardEvent, onPointerEvent } from "../decorators";
 
-import LaserComponent from "./laser"
+import LaserComponent from "./laser";
 
 export default class PlayerCamera extends FreeCamera {
 
     @fromChildren("laser")
     private _laser: LaserComponent;
-
-    @fromChildren("blaster")
-    private _blaster: LaserComponent;
 
     /**
      * Override constructor.
@@ -36,12 +31,12 @@ export default class PlayerCamera extends FreeCamera {
 
     /**
      * Called on the user clicks on the canvas.
-     * Used to request pointer lock and launch a new ball.
+     * Used to request pointer lock and launch a new laser.
      */
     @onPointerEvent(PointerEventTypes.POINTERDOWN, false)
     private _onPointerEvent(info: PointerInfo): void {
         this._enterPointerLock();
-        this._launchBall(info);
+        this._fire(info);
     }
 
     /**
@@ -67,14 +62,11 @@ export default class PlayerCamera extends FreeCamera {
     }
 
     /**
-     * Launches a new ball from the camera position to the camera direction.
+     * Launches a new laser from the camera position to the camera direction.
      */
-    private _launchBall(info: PointerInfo): void {
-
-        // Create a laser instance
+    private _fire(info: PointerInfo): void {
         const laserInstance = this._laser.createInstance("laserInstance");
         laserInstance.position.copyFrom(this._laser.getAbsolutePosition());
-        laserInstance.rotation = new Vector3(this.rotation.x + Math.PI /2, this.rotation.y, this.rotation.z);
-
+        laserInstance.rotation = new Vector3(this.rotation.x + Math.PI / 2, this.rotation.y, this.rotation.z);
     }
 }

@@ -1,4 +1,5 @@
 import { Mesh } from "@babylonjs/core";
+import { visibleInInspector } from "../decorators";
 
 /**
  * This represents a script that is attached to a node in the editor.
@@ -20,7 +21,9 @@ import { Mesh } from "@babylonjs/core";
  */
 export default class laser extends Mesh {
 
-    private _isFiring: boolean = false;
+    @visibleInInspector("number", "Laser Speed", 0.2)
+    private _laserSpeed: number = 0.1;
+
 
     /**
      * Override constructor.
@@ -55,8 +58,9 @@ export default class laser extends Mesh {
      */
     public onUpdate(): void {
 
+        // Move the laser forward
         this.instances.forEach((instance) => {
-            instance.position.addInPlace(instance.up.scale(0.1));
+            instance.position.addInPlace(instance.up.scale(this._laserSpeed));
         });
     }
 
