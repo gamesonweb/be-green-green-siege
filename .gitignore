@@ -138,6 +138,7 @@ photoshop-extension/.build
 photoshop-extension/.declaration
 module/index.d.ts
 website/_doc
+scene.babylon
 
 # Tests
 testOutput
