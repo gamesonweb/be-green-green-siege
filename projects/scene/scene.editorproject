@@ -47,8 +47,8 @@
 		"ground-b87c0751-53e5-4782-88d9-0461e9457fe1.json",
 		"blaster-b6a89645-0d85-44c1-8bf8-b99b8670c51f.json",
 		"sky-c4024c20-1c4f-4be6-9abd-525e2a782174.json",
-		"ball-f28c95a8-f3fc-4ff6-8522-26f3cc6d5d4c.json",
-		"laser-7f7bc63f-c775-46b8-8898-f7af415c92a0.json"
+		"laser-7f7bc63f-c775-46b8-8898-f7af415c92a0.json",
+		"New Cube-ef837481-7863-4243-9dfa-18b4b79f4efa.json"
 	],
 	"transformNodes": [],
 	"particleSystems": [],
@@ -314,8 +314,8 @@
 			"checkCollisions": false,
 			"applyGravity": false,
 			"rotation": [
-				0.6406167339208831,
-				8.369683279227505,
+				0.5968622316244351,
+				8.430073745917563,
 				0
 			],
 			"speed": 2,

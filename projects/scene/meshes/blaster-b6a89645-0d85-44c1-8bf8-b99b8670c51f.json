@@ -48,7 +48,7 @@
 			"receiveShadows": true,
 			"billboardMode": 0,
 			"visibility": 1,
-			"checkCollisions": true,
+			"checkCollisions": false,
 			"isBlocker": false,
 			"parentId": "2e391261-067a-4ec6-8b00-25d7e0738684",
 			"isUnIndexed": false,

@@ -10,8 +10,8 @@
 		0,
 		0
 	],
-	"checkCollisions": true,
-	"applyGravity": true,
+	"checkCollisions": false,
+	"applyGravity": false,
 	"rotation": [
 		0.009158764023248068,
 		-6.122251021214431,

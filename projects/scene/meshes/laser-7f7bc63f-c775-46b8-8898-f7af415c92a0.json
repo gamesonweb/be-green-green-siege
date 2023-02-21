@@ -11,10 +11,11 @@
 				-0.1584002673625946,
 				1.0411518812179565
 			],
-			"rotation": [
-				1.5707963267948966,
-				5.200634523702154e-8,
-				0
+			"rotationQuaternion": [
+				0.7071067811865472,
+				1.8387019690913318e-8,
+				-1.8387019690913314e-8,
+				0.7071067811865474
 			],
 			"scaling": [
 				0.10000000149011626,
@@ -39,14 +40,14 @@
 				"14": 0,
 				"15": 1
 			},
-			"isEnabled": true,
+			"isEnabled": false,
 			"isVisible": true,
 			"infiniteDistance": false,
 			"pickable": true,
 			"receiveShadows": false,
 			"billboardMode": 0,
 			"visibility": 1,
-			"checkCollisions": false,
+			"checkCollisions": true,
 			"isBlocker": false,
 			"overrideMaterialSideOrientation": null,
 			"parentId": "2e391261-067a-4ec6-8b00-25d7e0738684",
@@ -54,6 +55,10 @@
 			"geometryId": "60d94eab-1842-4dfd-8df5-66932d4ee761",
 			"subMeshes": null,
 			"materialId": "default material",
+			"physicsMass": 0,
+			"physicsFriction": 0,
+			"physicsRestitution": 0,
+			"physicsImpostor": 7,
 			"metadata": {
 				"editorGeometry": {
 					"type": "Cylinder",
@@ -66,7 +71,17 @@
 				},
 				"isPickable": false,
 				"script": {
-					"name": "src/scenes/scene/laser.ts"
+					"name": "src/scenes/scene/laser.ts",
+					"properties": {
+						"_laserSpeed": {
+							"type": "number",
+							"value": 0.2
+						},
+						"_distanceDispawn": {
+							"type": "number",
+							"value": 30
+						}
+					}
 				},
 				"renderingGroupId": 0
 			},
