@@ -2,14 +2,14 @@
 	"materials": [],
 	"meshes": [
 		{
-			"name": "New Cube",
+			"name": "Cible",
 			"id": "ef837481-7863-4243-9dfa-18b4b79f4efa",
 			"uniqueId": 108,
 			"type": "Mesh",
 			"position": [
-				5.045834064483643,
-				0.6785404086112976,
-				5.176877498626709
+				-4.182921886444092,
+				0.8880476355552673,
+				-3.1459312438964844
 			],
 			"rotationQuaternion": [
 				0,
@@ -54,10 +54,6 @@
 			"geometryId": "4035be34-b9bd-489c-a8cb-5e5f85aba43d",
 			"subMeshes": null,
 			"materialId": "default material",
-			"physicsMass": 1,
-			"physicsFriction": 0.2,
-			"physicsRestitution": 0.2,
-			"physicsImpostor": 2,
 			"metadata": {
 				"editorGeometry": {
 					"type": "Cube",
@@ -65,9 +61,10 @@
 				},
 				"isPickable": false,
 				"script": {
-					"name": "None"
+					"name": "src/scenes/scene/cible.ts"
 				},
-				"renderingGroupId": 0
+				"renderingGroupId": 0,
+				"_waitingParentId": null
 			},
 			"instances": [],
 			"animations": [],

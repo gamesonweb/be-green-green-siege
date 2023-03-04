@@ -2,15 +2,14 @@
 	"materials": [],
 	"meshes": [
 		{
-			"name": "ground",
-			"id": "b87c0751-53e5-4782-88d9-0461e9457fe1",
-			"uniqueId": 8,
+			"name": "Cible",
+			"id": "b6e9bd48-2ecb-433f-8ced-f85d510a6ac9",
+			"uniqueId": 63,
 			"type": "Mesh",
-			"tags": "modified",
 			"position": [
-				2.8490021228790283,
-				9.592326932761353e-14,
-				-1.775890588760376
+				0.9457148262901383,
+				0.05000000074515398,
+				-0.6034301701673552
 			],
 			"rotationQuaternion": [
 				0,
@@ -19,11 +18,11 @@
 				1
 			],
 			"scaling": [
-				100,
-				0.10000000149011612,
-				100
+				1,
+				1,
+				1
 			],
-			"localMatrix": {
+			"pivotMatrix": {
 				"0": 1,
 				"1": 0,
 				"2": 0,
@@ -45,24 +44,24 @@
 			"isVisible": true,
 			"infiniteDistance": false,
 			"pickable": true,
-			"receiveShadows": true,
+			"receiveShadows": false,
 			"billboardMode": 0,
 			"visibility": 1,
 			"checkCollisions": true,
 			"isBlocker": false,
 			"overrideMaterialSideOrientation": null,
 			"isUnIndexed": false,
-			"geometryId": "0d38a45c-03a7-4a42-bfc3-977788ff849d",
+			"geometryId": "0b8bd826-7cd0-4007-94e7-e2388ce29a4d",
 			"subMeshes": null,
-			"materialId": "77eb899b-024f-405e-b240-9bb6e5cbe3c3",
-			"physicsMass": 0,
-			"physicsFriction": 0.2,
-			"physicsRestitution": 0,
-			"physicsImpostor": 2,
+			"materialId": "default material",
 			"metadata": {
-				"isPickable": true,
+				"editorGeometry": {
+					"type": "Cube",
+					"size": 1
+				},
+				"isPickable": false,
 				"script": {
-					"name": "None"
+					"name": "src/scenes/scene/cible.ts"
 				},
 				"renderingGroupId": 0,
 				"_waitingParentId": null
@@ -81,7 +80,7 @@
 			],
 			"applyFog": true,
 			"parentId": null,
-			"delayLoadingFile": "geometries/0d38a45c-03a7-4a42-bfc3-977788ff849d.babylonbinarymeshdata",
+			"delayLoadingFile": "geometries/0b8bd826-7cd0-4007-94e7-e2388ce29a4d.babylonbinarymeshdata",
 			"boundingBoxMaximum": [
 				0.5,
 				0.5,
