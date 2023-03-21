@@ -62,14 +62,16 @@ export default class MyScript extends Mesh {
      * Called each frame.
      */
     public onUpdate(): void {
-
-        
-
+  
         this._laser.instances.forEach((laser) => {
-            if (laser.intersectsMesh(this)) {
-                console.log("hit");
+
+            // detect if laser touch cible
+            if (laser.intersectsMesh(this, true)) {
+                console.log("laser touch cible");
                 laser.dispose();
+                this.dispose();
             }
+
         });
 
     }

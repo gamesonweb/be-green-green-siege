@@ -40,7 +40,7 @@
 				"14": 0,
 				"15": 1
 			},
-			"isEnabled": false,
+			"isEnabled": true,
 			"isVisible": true,
 			"infiniteDistance": false,
 			"pickable": true,
