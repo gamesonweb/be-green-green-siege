@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import Logger from '../debug/Logger';
 import { Game } from '../game';
 
 export default class Inputs {
@@ -16,19 +17,19 @@ export default class Inputs {
     }
 
     public leftTrigger(pressed: boolean): void {
-        console.log("Left Trigger");
+        Logger.log("Left Trigger");
     }
 
     public rightTrigger(pressed: boolean): void {
-        console.log("Right Trigger");
+        Logger.log("Right Trigger");
     }
 
     public leftPrimary(pressed: boolean): void {
-        console.log("Left Primary");
+        Logger.log("Left Primary");
     }
 
     public rightPrimary(pressed: boolean): void {
-        console.log("Right Primary");
+        Logger.log("Right Primary");
     }
 
     public leftSecondary(pressed: boolean): void {
@@ -38,6 +39,6 @@ export default class Inputs {
     }
 
     public rightSecondary(pressed: boolean): void {
-        console.log("Right Secondary");
+        Logger.log("Right Secondary");
     }
 }
