@@ -3,5 +3,5 @@ node_modules
 .vscode
 .idea
 *.iml
-.DS_Store
-.pem
+*.DS_Store
+*.pem
