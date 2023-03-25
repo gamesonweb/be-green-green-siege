@@ -50,11 +50,14 @@ export class Game {
             this._scene
         );
         this._camera.attachControl(this._canvas, true);
-
         this._camera.inertia = 0;
         this._camera.angularSensibility = 1000;
+
+        this._inputs = new Inputs(this, this._scene, this._camera, this._canvas);
+        this.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
+
         // create the skybox
-        let skybox = GameUtils.createSkybox(
+        let skybox = GameUtils.createSkybox(    
             'skybox',
             './assets/texture/skybox/TropicalSunnyDay',
             this._scene
@@ -66,9 +69,6 @@ export class Game {
             './assets/',
             'test.glb'
         );
-        this._inputs = new Inputs(this, this._scene, this._camera, this._canvas);
-
-        this.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
 
         meshTask.onSuccess = (task) => {
             console.log('Loading mesh');
