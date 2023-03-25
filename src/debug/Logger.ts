@@ -1,6 +1,6 @@
 
 const console = document.getElementById("debugConsole") as HTMLDivElement;
-const maxhistory = 24;
+const maxhistory = 100;
 
 let currentHistory = 0;
 
@@ -9,7 +9,8 @@ export default class Logger {
     static log(message: string) {
         let entry = document.createElement("div");
         entry.className = "consoleEntry";
-        entry.innerHTML = message;
+        let date = new Date();
+        entry.innerHTML = "["+ date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()+ "]" + " - " + message;
 
         if (currentHistory === 0) {
             console.appendChild(entry);
