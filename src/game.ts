@@ -19,8 +19,7 @@ export class Game {
     private _light: BABYLON.Light;
 
     public debug: DebugConsole;
-    // ennemies
-    private ennemies: Ennemy[];
+    private _spawnPoint: BABYLON.AbstractMesh;
     private _stateManager: StateManager;
 
     constructor(canvasElement: string) {
@@ -37,9 +36,6 @@ export class Game {
     async createScene(): Promise<void> {
         // create a basic BJS Scene object
         this._scene = new BABYLON.Scene(this._engine);
-
-        this._stateManager = new StateManager(this._scene);
-        this._stateManager.switchState(StatesEnum.MAINMENU);
 
         this._assetManager = new BABYLON.AssetsManager(this._scene);
 
@@ -87,8 +83,8 @@ export class Game {
                     'immersive-ar'
                 );
             let platform = this._scene.getMeshByName('Platform');
-            let spawnPoint = this._scene.getMeshByName('SpawnPoint');
-            this._camera.position = spawnPoint.position.clone();
+            this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
+            this._camera.position = this._spawnPoint.position.clone();
 
             if (supported) {
                 console.log('supported');
@@ -101,13 +97,8 @@ export class Game {
                 let keyboardInputs = new KeyboardInputs(this._scene, this._camera, this._canvas, this._inputs)
             }
         });
-
-        // init ennemies
-        this.ennemies = [];
-        // create a new ennemy
-        let ennemy = new Ennemy(this._scene, 30, 1);
-        // push it in list
-        this.ennemies.push(ennemy);
+        this._stateManager = new StateManager(this._scene, this._spawnPoint);
+        this._stateManager.switchState(StatesEnum.MAINMENU);
     }
 
     /**
@@ -118,9 +109,9 @@ export class Game {
             let deltaTime: number = (1 / this._engine.getFps());
             this.debug.fps.innerHTML = "FPS: " + this._engine.getFps().toFixed();
             // call ennemies update
-            this.ennemies.forEach(function(ennemy) {
-                ennemy.update(deltaTime);
-            });
+            // this._ennemies.forEach(function(ennemy) {
+            //     ennemy.update(deltaTime);
+            // });
         });
 
         // run the render loop

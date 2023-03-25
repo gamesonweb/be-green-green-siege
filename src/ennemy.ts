@@ -1,54 +1,58 @@
-import { Scene, Mesh, int, MeshBuilder, Vector3, Matrix, Quaternion } from "babylonjs";
+import * as BABYLON from 'babylonjs';
 
 export class Ennemy {
 
-    private mesh: Mesh;
+    private _mesh: BABYLON.Mesh;
+    private _origin: BABYLON.Vector3;
+    private _movementSpeed: number;
 
-    private movementSpeed: number;
-
-    public constructor(scene: Scene, separation_distance: int, speed: int) {
+    public constructor(scene: BABYLON.Scene, origin: BABYLON.Vector3, separation_distance: number, speed: number) {
         // set mesh
-        this.mesh = MeshBuilder.CreateBox("ennemy", { size: 2 }, scene);
+        this._mesh = BABYLON.MeshBuilder.CreateBox("ennemy", { size: 2 }, scene);
         // set the ennemy position (to a distance of separation_distance value)
         this.setPosition(separation_distance);
         // set movement radius
-        this.movementSpeed = speed;
+        this._movementSpeed = speed;
+        this._origin = origin;
     }
 
-    private setPosition(separation_distance: int): void {
-        // Set the initial position of the enemy mesh to a random point on a sphere with a radius of 30
+    private setPosition(separation_distance: number): void {
         const randomX = Math.random() * 2 - 1; // Random value between -1 and 1
         const randomY = Math.random() * 2 - 1; // Random value between -1 and 1
         const randomZ = Math.random() * 2 - 1; // Random value between -1 and 1
-        const randomPosition = new Vector3(randomX, randomY, randomZ).normalize().scale(separation_distance);
-        randomPosition.y = Math.max(Math.random() * separation_distance, 0); // Random height between 0 and 30
-        this.mesh.position.copyFrom(randomPosition);
+        const randomPosition = new BABYLON.Vector3(randomX, randomY, randomZ).normalize().scale(separation_distance);
+        randomPosition.y = Math.max(Math.random() * separation_distance, 0);
+        this._mesh.position.copyFrom(randomPosition);
     }
 
     public update(deltaTime: number): void {
         // Move the enemy randomly
-        const randomDirection = new Vector3(
+        const randomDirection = new BABYLON.Vector3(
             Math.random() * 2 - 1, // Random value between -1 and 1
             0, // Don't move up or down
             Math.random() * 2 - 1 // Random value between -1 and 1
         );
         randomDirection.normalize();
-        this.mesh.position.addInPlace(randomDirection.scale(deltaTime * this.movementSpeed));
+        this._mesh.position.addInPlace(randomDirection.scale(deltaTime * this._movementSpeed));
 
         // Calculate the distance from the enemy to the origin
-        const distanceFromOrigin = this.mesh.position.length();
+        const distanceFromOrigin = this._origin.length();
 
         // If the distance is greater than 30, move the enemy back to the nearest point on the circle
         if (distanceFromOrigin > 30) {
-            const directionToOrigin = this.mesh.position.negate().normalize();
+            const directionToOrigin = this._origin.negate().normalize();
             const nearestPointOnCircle = directionToOrigin.scale(30);
-            this.mesh.position.copyFrom(nearestPointOnCircle);
+            this._origin.copyFrom(nearestPointOnCircle);
         }
 
         // Rotate the enemy towards the player
-        const directionToPlayer = this.mesh.position.subtract(this.mesh.position);
+        const directionToPlayer = this._mesh.position.subtract(this._origin);
         directionToPlayer.y = 0; // Don't rotate up or down
-        this.mesh.lookAt(this.mesh.position.add(directionToPlayer));
+        this._mesh.lookAt(this._mesh.position.add(directionToPlayer));
+    }
+
+    public getMesh(): BABYLON.Mesh {
+        return this._mesh;
     }
 
 }
