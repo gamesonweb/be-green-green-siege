@@ -2,6 +2,8 @@ import { GameUtils } from './game-utils';
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import { FreeCamera } from 'babylonjs';
+import { EnnemiesSpace } from './ennemies-space';
+import { Ennemy } from './ennemy';
 
 export class Game {
 
@@ -11,6 +13,8 @@ export class Game {
     private _camera: BABYLON.FreeCamera;
     private _light: BABYLON.Light;
 
+    // ennemies
+    private ennemies: Ennemy[];
 
     constructor(canvasElement: string) {
         // Create canvas and engine
@@ -24,9 +28,6 @@ export class Game {
     async createScene(): Promise<void> {
         // create a basic BJS Scene object
         this._scene = new BABYLON.Scene(this._engine);
-
-        
-
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
         this._camera = new FreeCamera("Camera", new BABYLON.Vector3(0, 5, -10), this._scene);
         this._camera.attachControl(this._canvas, true);
@@ -37,10 +38,16 @@ export class Game {
         // creates the sandy ground
         let ground = GameUtils.createGround(this._scene);
         // creates the watermaterial and adds the relevant nodes to the renderlist
-        
+        let ennemmiesSpace = new EnnemiesSpace(3, 30, this._scene);
         // let xr = await this._scene.createDefaultXRExperienceAsync({
         //     floorMeshes: [ground]
         // });
+        // init ennemies
+        this.ennemies = [];
+        // create a new ennemy
+        let ennemy = new Ennemy(this._scene, 30, 1);
+        // push it in list
+        this.ennemies.push(ennemy);
     }
 
 
@@ -51,7 +58,10 @@ export class Game {
     animate(): void {
         this._scene.registerBeforeRender(() => {
             let deltaTime: number = (1 / this._engine.getFps());
-
+            // call ennemies update
+            this.ennemies.forEach(function(ennemy) {
+                ennemy.update(deltaTime);
+            });
         });
 
         // run the render loop
