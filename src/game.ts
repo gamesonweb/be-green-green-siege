@@ -3,7 +3,7 @@ import { FreeCamera } from 'babylonjs';
 import Inputs from './inputs/Inputs';
 import XRInputs from './inputs/XRInputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
-import DebugConsole from './DebugConsole';
+import DebugConsole from './debug/DebugConsole';
 import { EnnemiesSpace } from './ennemies-space';
 import { Ennemy } from './ennemy';
 import { GameUtils } from './game-utils';
