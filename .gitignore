@@ -1,7 +1,10 @@
+declaration/
+build/
 dist
 node_modules
 .vscode
 .idea
+*.babylon
 *.iml
-.DS_Store
-.pem
+*.DS_Store
+*.pem
