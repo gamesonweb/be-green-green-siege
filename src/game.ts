@@ -1,7 +1,10 @@
 import { GameUtils } from './game-utils';
 import * as BABYLON from 'babylonjs';
-import * as GUI from 'babylonjs-gui';
-import { FreeCamera, SceneLoader } from 'babylonjs';
+import { FreeCamera } from 'babylonjs';
+import Inputs from './inputs/Inputs';
+import XRInputs from './inputs/XRInputs';
+import KeyboardInputs from './inputs/KeyboardInputs';
+import DebugConsole from './DebugConsole';
 
 export class Game {
 
@@ -10,8 +13,10 @@ export class Game {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.FreeCamera;
     private _assetManager: BABYLON.AssetsManager;
+    private _inputs: Inputs;
     private _light: BABYLON.Light;
 
+    public debug: DebugConsole;
 
     constructor(canvasElement: string) {
         // Create canvas and engine
@@ -32,6 +37,9 @@ export class Game {
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
         this._camera = new FreeCamera("Camera", new BABYLON.Vector3(0, 5, -10), this._scene);
         this._camera.attachControl(this._canvas, true);
+        this._camera.inertia = 0;
+        this._camera.angularSensibility = 1000;
+
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this._scene);
         // create the skybox
@@ -40,6 +48,10 @@ export class Game {
         // let ground = GameUtils.createGround(this._scene);
         // // creates the watermaterial and adds the relevant nodes to the renderlist
         
+        this._inputs = new Inputs(this, this._scene, this._camera, this._canvas);
+
+        this.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
+
         let meshTask = this._assetManager.addMeshTask("test", "", "./assets/", "test.glb");
 
         meshTask.onSuccess = (task) => {
@@ -48,7 +60,7 @@ export class Game {
             task.loadedMeshes.forEach((mesh) => {
                 console.log(mesh.name);
             });
-        }
+        } 
         this._assetManager.load();
         
 
@@ -65,8 +77,10 @@ export class Game {
                 let xr = await this._scene.createDefaultXRExperienceAsync({
                     floorMeshes: [platform]
                 });
+                let xrInputs = new XRInputs(this._scene, this._camera, this._canvas, xr, this._inputs);
             } else {
                 console.log('not supported');
+                let keyboardInputs = new KeyboardInputs(this._scene, this._camera, this._canvas, this._inputs)
             }
         });
         
@@ -78,7 +92,7 @@ export class Game {
     animate(): void {
         this._scene.registerBeforeRender(() => {
             let deltaTime: number = (1 / this._engine.getFps());
-
+            this.debug.fps.innerHTML = "FPS: " + this._engine.getFps().toFixed();
         });
 
         // run the render loop
@@ -91,5 +105,4 @@ export class Game {
             this._engine.resize();
         });
     }
-
 }

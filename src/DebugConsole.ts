@@ -1,0 +1,37 @@
+import * as BABYLON from 'babylonjs';
+import { Game } from './game';
+
+export default class DebugConsole {
+
+    private _game: Game;
+    private _scene: BABYLON.Scene;
+    private _camera: BABYLON.FreeCamera;
+
+    private _window = document.getElementById("debugWindow");
+
+    fps = document.getElementById("fps");
+    cameraSpeed = document.getElementById("cameraSpeed") as HTMLInputElement;
+
+    constructor(game: Game, scene: BABYLON.Scene, camera: BABYLON.FreeCamera, canvas: HTMLCanvasElement) {
+        this._game = game;
+        this._scene = scene;
+        this._camera = camera;
+
+        this._window.style.display = "none";
+
+        this.addListeners();
+    }
+
+    toggleDebug() {
+        this._window.style.display = this._window.style.display == "none" ? "block" : "none";
+    }
+
+    addListeners() {
+        this.cameraSpeed.addEventListener("input", (evt) => {
+            console.log("Camera Speed: " + this.cameraSpeed.value);
+            
+            this._camera.angularSensibility = +this.cameraSpeed.value
+        });
+    }
+
+}
