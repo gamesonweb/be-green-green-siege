@@ -1,5 +1,9 @@
 import * as BABYLON from 'babylonjs';
 import { FreeCamera } from 'babylonjs';
+import Inputs from './inputs/Inputs';
+import XRInputs from './inputs/XRInputs';
+import KeyboardInputs from './inputs/KeyboardInputs';
+import DebugConsole from './DebugConsole';
 import { EnnemiesSpace } from './ennemies-space';
 import { Ennemy } from './ennemy';
 import { GameUtils } from './game-utils';
@@ -11,8 +15,10 @@ export class Game {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.FreeCamera;
     private _assetManager: BABYLON.AssetsManager;
+    private _inputs: Inputs;
     private _light: BABYLON.Light;
 
+    public debug: DebugConsole;
     // ennemies
     private ennemies: Ennemy[];
     private _stateManager: StateManager;
@@ -44,9 +50,14 @@ export class Game {
             this._scene
         );
         this._camera.attachControl(this._canvas, true);
+        this._camera.inertia = 0;
+        this._camera.angularSensibility = 1000;
+
+        this._inputs = new Inputs(this, this._scene, this._camera, this._canvas);
+        this.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
 
         // create the skybox
-        let skybox = GameUtils.createSkybox(
+        let skybox = GameUtils.createSkybox(    
             'skybox',
             './assets/texture/skybox/TropicalSunnyDay',
             this._scene
@@ -84,8 +95,10 @@ export class Game {
                 let xr = await this._scene.createDefaultXRExperienceAsync({
                     floorMeshes: [platform],
                 });
+                let xrInputs = new XRInputs(this._scene, this._camera, this._canvas, xr, this._inputs);
             } else {
                 console.log('not supported');
+                let keyboardInputs = new KeyboardInputs(this._scene, this._camera, this._canvas, this._inputs)
             }
         });
 
@@ -103,6 +116,7 @@ export class Game {
     animate(): void {
         this._scene.registerBeforeRender(() => {
             let deltaTime: number = (1 / this._engine.getFps());
+            this.debug.fps.innerHTML = "FPS: " + this._engine.getFps().toFixed();
             // call ennemies update
             this.ennemies.forEach(function(ennemy) {
                 ennemy.update(deltaTime);
