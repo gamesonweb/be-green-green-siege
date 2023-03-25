@@ -96,9 +96,10 @@ export class Game {
                 console.log('not supported');
                 let keyboardInputs = new KeyboardInputs(this._scene, this._camera, this._canvas, this._inputs)
             }
+
+            this._stateManager = new StateManager(this._scene, this._spawnPoint);
+            this._stateManager.switchState(StatesEnum.MAINMENU);
         });
-        this._stateManager = new StateManager(this._scene, this._spawnPoint);
-        this._stateManager.switchState(StatesEnum.MAINMENU);
     }
 
     /**
