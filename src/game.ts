@@ -8,6 +8,7 @@ import { EnnemiesSpace } from './ennemies-space';
 import { Ennemy } from './ennemy';
 import { GameUtils } from './game-utils';
 import { StateManager, StatesEnum } from './states/stateManager';
+import { logDepthFragment } from 'babylonjs/Shaders/ShadersInclude/logDepthFragment';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -78,15 +79,29 @@ export class Game {
         };
         meshTask2.onSuccess = (task) => {
             console.log('Loading mesh');
+            task.loadedAnimationGroups.forEach((anim) => {
+                console.log(anim.name);
+            });
             
             let leftLaserShot = task.loadedAnimationGroups[0];
-            let rightLaserShot = task.loadedAnimationGroups[1];
-            
+            let leftLaserShot2 = task.loadedAnimationGroups[1];
+            let rightLaserShot = task.loadedAnimationGroups[2];
+            let rightLaserShot2 = task.loadedAnimationGroups[3];
+
+            rightLaserShot.stop();
+            leftLaserShot.stop();
+            rightLaserShot2.stop();
+            leftLaserShot2.stop();
+
             rightLaserShot.reset();
             leftLaserShot.reset();
+            rightLaserShot2.reset();
+            leftLaserShot2.reset();
 
             rightLaserShot.play(true);
             leftLaserShot.play(true);
+            // rightLaserShot2.play(true);
+            // leftLaserShot2.play(true);
             
             // voir doc on peut les stop les resets loops etc.
         };
