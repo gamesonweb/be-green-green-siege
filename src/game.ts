@@ -67,7 +67,7 @@ export class Game {
             './assets/',
             'test.glb'
         );
-        this._assetManager.addMeshTask('test', '', './assets/', 'robot.glb')
+        let meshTask2 = this._assetManager.addMeshTask('test', '', './assets/', 'robotAnimated.glb')
 
         meshTask.onSuccess = (task) => {
             console.log('Loading mesh');
@@ -76,6 +76,21 @@ export class Game {
                 console.log(mesh.name);
             });
         };
+        meshTask2.onSuccess = (task) => {
+            console.log('Loading mesh');
+            
+            let leftLaserShot = task.loadedAnimationGroups[0];
+            let rightLaserShot = task.loadedAnimationGroups[1];
+            
+            rightLaserShot.reset();
+            leftLaserShot.reset();
+
+            rightLaserShot.play(true);
+            leftLaserShot.play(true);
+            
+            // voir doc on peut les stop les resets loops etc.
+        };
+
         this._assetManager.load();
 
         this._scene.executeWhenReady(async () => {
@@ -86,6 +101,7 @@ export class Game {
                     'immersive-ar'
                 );
             let robot = this._scene.getMeshByName('Robot');
+            
             let platform = this._scene.getMeshByName('Platform');
             robot.position = new BABYLON.Vector3(10, 5, 10);
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
