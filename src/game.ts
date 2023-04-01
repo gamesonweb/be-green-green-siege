@@ -36,6 +36,8 @@ export class Game {
     async createScene(): Promise<void> {
         // create a basic BJS Scene object
         this._scene = new BABYLON.Scene(this._engine);
+        const gl = new BABYLON.GlowLayer("glow", this._scene);
+        gl.intensity = 0.3;
 
         this._assetManager = new BABYLON.AssetsManager(this._scene);
 
@@ -65,6 +67,7 @@ export class Game {
             './assets/',
             'test.glb'
         );
+        this._assetManager.addMeshTask('test', '', './assets/', 'robot.glb')
 
         meshTask.onSuccess = (task) => {
             console.log('Loading mesh');
@@ -82,7 +85,9 @@ export class Game {
                 await BABYLON.WebXRSessionManager.IsSessionSupportedAsync(
                     'immersive-ar'
                 );
+            let robot = this._scene.getMeshByName('Robot');
             let platform = this._scene.getMeshByName('Platform');
+            robot.position = new BABYLON.Vector3(10, 5, 10);
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
             this._camera.position = this._spawnPoint.position.clone();
 
