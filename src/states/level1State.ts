@@ -3,7 +3,7 @@ import { Ennemy } from '../ennemy';
 import { EnnemiesSpace } from '../ennemies-space';
 
 export class Level1State {
-
+    
     private _scene: BABYLON.Scene;
     private _light: BABYLON.HemisphericLight;
     private _assetManager: BABYLON.AssetsManager;
@@ -12,6 +12,10 @@ export class Level1State {
     constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
         this._assetManager = assetManager;
+    }
+
+    public getName() {
+        return 'Level 1';
     }
 
     public load(): void {

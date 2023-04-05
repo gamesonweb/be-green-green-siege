@@ -1,11 +1,12 @@
 import * as BABYLON from 'babylonjs';
+import { Game } from '../game';
 import { Level1State } from './level1State';
 import { MainMenuState } from './mainMenuState';
 import { State } from './state';
 
 export enum StatesEnum {
     MAINMENU = 0,
-    LEVEL1 = 'level1',
+    LEVEL1 = 1,
 }
 
 export class StateManager {
@@ -26,7 +27,6 @@ export class StateManager {
 
         switch (state) {
             case StatesEnum.MAINMENU:
-                console.log('Switching to main menu');
                 this._currentState = new MainMenuState(this._scene, this);
                 break;
             case StatesEnum.LEVEL1:
@@ -35,6 +35,7 @@ export class StateManager {
                 break;
         }
 
+        Game.debug.currentstate.innerHTML = 'Current state: ' + this._currentState.getName();
         this._currentState.load();
     }
 }
