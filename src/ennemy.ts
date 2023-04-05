@@ -79,17 +79,17 @@ export class Ennemy {
         };
     }
 
-    public getAgentParams(): BABYLON.IAgentParameters {
-        return {
-            radius: 0.1,
-            height: 0.2,
-            maxAcceleration: 2,
-            maxSpeed: 1,
-            collisionQueryRange: 0.5,
-            pathOptimizationRange: 0.0,
-            separationWeight: 1.0
-        }
-    }
+    // public getAgentParams(): BABYLON.IAgentParameters {
+    //     return {
+    //         radius: 0.1,
+    //         height: 0.2,
+    //         maxAcceleration: 4,
+    //         maxSpeed: 1,
+    //         collisionQueryRange: 0.5,
+    //         pathOptimizationRange: 0.0,
+    //         separationWeight: 1.0
+    //     }
+    // }
 
     private lookAtMe(biais: number) {
         let origin: BABYLON.Vector3 = this._scene.getCameraByName("Camera").position;
@@ -100,14 +100,46 @@ export class Ennemy {
         ));
     }
 
+    // private nextDestination(): BABYLON.Vector3 {
+    //     let min = this._enemiesSpace.getMin();
+    //     let max = this._enemiesSpace.getMax();
+    //     let newDest = new BABYLON.Vector3(
+    //         BABYLON.Scalar.RandomRange(min.x, max.x),
+    //         BABYLON.Scalar.RandomRange(min.y, max.y),
+    //         BABYLON.Scalar.RandomRange(min.z, max.z)
+    //     );
+    //     // while(BABYLON.Vector3.Distance(newDest, this.mesh.position) < 10 && BABYLON.Vector3.Distance(newDest, this.mesh.position) < 30) {
+    //     //     console.log("compute new dest ...");
+    //     //     this.nextDestination();
+    //     // }
+    //     return newDest;
+    // }
+
+    private moove(destination: BABYLON.Vector3, speed: number): number {
+        let distance = BABYLON.Vector3.Distance(this.mesh.position, destination);
+        let direction = destination.subtract(this.mesh.position).normalize();
+        let delta = direction.scale(speed);
+        this.mesh.position = this.mesh.position.add(delta);
+        distance = BABYLON.Vector3.Distance(this.mesh.position, destination);
+        console.log("position: " + this.mesh.position);
+        console.log("distance: ", distance);
+        // return distance
+        return distance;
+    }
+
     private animate(): void {
         let vibration = 0;
+        let destination = this._enemiesSpace.getRandomPoint();
         this._scene.registerBeforeRender(() => {
             // animate face
-            vibration += 0.4;
+            vibration += 0.2;
             // the enemy look at player ... for ever !
             this.lookAtMe(Math.sin(vibration));
             // moove !
+            // console.log("destination: ", destination);
+            if(this.moove(destination, 0.09) < 3) {
+                destination = this._enemiesSpace.getRandomPoint();
+            }
             // this.moove();
         });
     }

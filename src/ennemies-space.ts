@@ -7,38 +7,41 @@ export class EnnemiesSpace {
     public zone: BABYLON.Mesh;
     private _min: BABYLON.Vector3;
     private _max: BABYLON.Vector3;
-    private _navigationPlugin: BABYLON.RecastJSPlugin;
-    private _crowd: BABYLON.ICrowd;
+    // private _navigationPlugin: BABYLON.RecastJSPlugin;
+    // private _crowd: BABYLON.ICrowd;
     private _scene: BABYLON.Scene;
-    private _nEnnemie: number;
-    private _staticMesh: BABYLON.Mesh;
+    // private _nEnnemie: number;
+    // private _staticMesh: BABYLON.Mesh;
     private _ennemies: Ennemy[];
-    private _agents;
+    // private _agents;
 
     constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, nEnnemie: number, scene: BABYLON.Scene) {
         this._min = min;
         this._max = max;
         this._scene = scene;
-        this._nEnnemie = nEnnemie;
+        // this._nEnnemie = nEnnemie;
         this._ennemies = [];
-        this._agents = [];
+        // this._agents = [];
         this.zone = this.setupZone();
-        this._staticMesh = this.zone;
+        // this._staticMesh = this.zone;
     }
 
-    public launch(): void {
-        // setup navigation mesh using worker
-        this.setupNavigationPlugin().then(() => {
-            this.activateNavmesh();
-        });
-    }
+    // public launch(): void {
+    //     // setup navigation mesh using worker
+    //     this.setupNavigationPlugin().then(() => {
+    //         this.activateNavmesh();
+    //     });
+    // }
 
-    public getMin(): BABYLON.Vector3 {
-        return this._min;
-    }
-
-    public getMax(): BABYLON.Vector3 {
-        return this._max;
+    public getRandomPoint(): BABYLON.Vector3 {
+        let width = this._max.x - this._min.x;
+        let height = this._max.y - this._min.y;
+        let depth = this._max.z - this._min.z;
+        return new BABYLON.Vector3(
+            Math.random() * width - width / 2,
+            Math.random() * height - height / 2,
+            Math.random() * depth - depth / 2
+        );
     }
 
     private setupZone(): BABYLON.Mesh {
@@ -62,89 +65,96 @@ export class EnnemiesSpace {
         return zone;
     }
 
-    public debug() {
-        let navmeshdebug = this._navigationPlugin.createDebugNavMesh(this._scene);
-        const matdebug = new BABYLON.StandardMaterial("matdebug", this._scene);
-        matdebug.diffuseColor = new BABYLON.Color3(0.1, 0.2, 3);
-        matdebug.alpha = 0.75;
-        navmeshdebug.material = matdebug;
-    }
+    // public debug() {
+    //     let navmeshdebug = this._navigationPlugin.createDebugNavMesh(this._scene);
+    //     const matdebug = new BABYLON.StandardMaterial("matdebug", this._scene);
+    //     matdebug.diffuseColor = new BABYLON.Color3(0.1, 0.2, 3);
+    //     matdebug.alpha = 0.75;
+    //     navmeshdebug.material = matdebug;
+    // }
 
-    private async setupRecast() {
-        await require("recast-detour")();
-    }
+    // private async setupRecast() {
+    //     await require("recast-detour")();
+    // }
 
-    private async setupNavigationPlugin() {
-        await this.setupRecast().then(() => {
-            this._navigationPlugin = new BABYLON.RecastJSPlugin();
-            // https://github.com/BabylonJS/Babylon.js/tree/master/packages/tools/playground/workers/navMeshWorker.js
-            this._navigationPlugin.setWorkerURL("./workers/navMeshWorker.js");
-        });
-    }
+    // private async setupNavigationPlugin() {
+    //     await this.setupRecast().then(() => {
+    //         this._navigationPlugin = new BABYLON.RecastJSPlugin();
+    //         // https://github.com/BabylonJS/Babylon.js/tree/master/packages/tools/playground/workers/navMeshWorker.js
+    //         // this._navigationPlugin.setWorkerURL("./workers/navMeshWorker.js");
+    //     });
+    // }
 
-    private activateNavmesh() {
-        this._navigationPlugin.createNavMesh([this._staticMesh], this.getParameters(), (navmeshData) => {
-            console.log("got worker data", navmeshData);
-            this._navigationPlugin.buildFromNavmeshData(navmeshData);
-            //
-            this.debug();
-            //
-            this._crowd = this._navigationPlugin.createCrowd(this._nEnnemie, 2, this._scene);
-            this._ennemies.forEach((agent) => {
-                let target = BABYLON.MeshBuilder.CreateBox("target", {size: 1}, this._scene);
-                target.isVisible = true;
-                let transform: BABYLON.TransformNode = new BABYLON.TransformNode("transform_agent");
-                // console.log('debug, pos: ', agent.getMesh().position);
-                // agent.mesh.parent = transform;
-                let idx: number = this._crowd.addAgent(agent.mesh.position, agent.getAgentParams(), transform);
-                console.log("idx: ", idx);
-                this._agents.push({idx:idx, trf:transform, mesh:agent.mesh, target:target});
-            });
-            this._crowd.getAgents().forEach((agent) => {
-                console.log('agent: ', agent);
-            });
-            //
-            this._scene.onBeforeRenderObservable.add(() => {
-                // a random point into our space
-                let randPoint = new BABYLON.Vector3(-50,20,40);
-                let cube = BABYLON.MeshBuilder.CreateBox("debug_dest", {size: 1}, this._scene);
-                cube.material = new BABYLON.StandardMaterial("debug_mat", this._scene);
-                cube.position = randPoint;
-                //
-                this._crowd.agentGoto(0, this._navigationPlugin.getClosestPoint(randPoint));
-                //
-                this._agents.forEach((ag) => {
-                    console.log('agent °', ag.idx);
-                    ag.mesh.position = this._crowd.getAgentPosition(ag.idx);
-                    console.log("pos ag.mesh= ", ag.mesh.position);
-                    this._crowd.getAgentNextTargetPathToRef(ag.idx, ag.target.position);
-                    console.log("pos ag.target= ", ag.target.position);
-                });
-            //
-            });
-        });
-    }
+    // private activateNavmesh() {
+    //     this._navigationPlugin.createNavMesh([this._staticMesh], this.getParameters());//, (navmeshData) => {
+    //     // console.log("got worker data", navmeshData);
+    //     // this._navigationPlugin.buildFromNavmeshData(navmeshData);
+    //     //
+    //     this.debug();
+    //     //
+    //     this._crowd = this._navigationPlugin.createCrowd(200, 2, this._scene);
+    //     this._ennemies.forEach((agent) => {
+    //         let target = BABYLON.MeshBuilder.CreateBox("target", {size: 1}, this._scene);
+    //         target.isVisible = true;
+    //         let transform: BABYLON.TransformNode = new BABYLON.TransformNode("transform_agent");
+    //         // console.log('debug, pos: ', agent.getMesh().position);
+    //         // agent.mesh.parent = transform;
+    //         let idx: number = this._crowd.addAgent(agent.mesh.position, agent.getAgentParams(), transform);
+    //         console.log("idx: ", idx);
+    //         this._agents.push({idx:idx, trf:transform, mesh:agent.mesh, target:target});
+    //     });
+    //     this._crowd.getAgents().forEach((agent) => {
+    //         console.log('agent: ', agent);
+    //     });
+    //     // 
+    //     this._scene.executeWhenReady()
+    //     //
+    //     this._scene.onBeforeRenderObservable.add(() => {
+    //         // a random point into our space
+    //         let destination = new BABYLON.Vector3(-50,10,40);
+    //         let cube = BABYLON.MeshBuilder.CreateBox("debug_dest", {size: 1}, this._scene);
+    //         cube.material = new BABYLON.StandardMaterial("debug_mat", this._scene);
+    //         cube.position = destination;
+    //         //
+    //         this._crowd.agentGoto(0, this._navigationPlugin.getClosestPoint(destination));
+    //         //
+    //         this._agents.forEach((ag) => {
+    //             console.log('agent °', ag.idx);
+    //             ag.mesh.position = this._crowd.getAgentPosition(ag.idx);
+    //             console.log("pos ag.mesh= ", ag.mesh.position);
+    //             this._crowd.getAgentNextTargetPathToRef(ag.idx, ag.target.position);
+    //             console.log("pos ag.target= ", ag.target.position);
+    //         });
+    //     //
+    //     });
+    //     // });
+    // }
 
-    private getParameters(): BABYLON.INavMeshParameters {
-        return {
-            cs: 0.2,
-            ch: 0.2,
-            walkableSlopeAngle: 90,
-            walkableHeight: 1,
-            walkableClimb: 1,
-            walkableRadius: 1,
-            maxEdgeLen: 12,
-            maxSimplificationError: 1.3,
-            minRegionArea: 8,
-            mergeRegionArea: 20,
-            maxVertsPerPoly: 6,
-            detailSampleDist: 6,
-            detailSampleMaxError: 1,
-        };
-    }
+    // private getParameters(): BABYLON.INavMeshParameters {
+    //     return {
+    //         cs: 0.2,
+    //         ch: 0.2,
+    //         walkableSlopeAngle: 90,
+    //         walkableHeight: 1,
+    //         walkableClimb: 1,
+    //         walkableRadius: 1,
+    //         maxEdgeLen: 12,
+    //         maxSimplificationError: 1.3,
+    //         minRegionArea: 8,
+    //         mergeRegionArea: 20,
+    //         maxVertsPerPoly: 6,
+    //         detailSampleDist: 6,
+    //         detailSampleMaxError: 1,
+    //     };
+    // }
 
     public addEnnemy(ennemie: Ennemy) {
         this._ennemies.push(ennemie);
+    }
+
+    public logDim() {
+        console.log("dim_Min: (x:", this._min.x, ", y:", this._min.y, ", z:", this._min.z, ")");
+        console.log("dim_Max: (x:", this._max.x, ", y:", this._max.y, ", z:", this._max.z, ")");
     }
 
 }
