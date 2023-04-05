@@ -1,86 +1,150 @@
-import { Color4, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, VertexBuffer, int } from "babylonjs";
+// import { Color4, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, VertexBuffer, int } from "babylonjs";
+import * as BABYLON from 'babylonjs';
+import { Ennemy } from './ennemy';
 
 export class EnnemiesSpace {
 
-    private scene: Scene;
+    public zone: BABYLON.Mesh;
+    private _min: BABYLON.Vector3;
+    private _max: BABYLON.Vector3;
+    private _navigationPlugin: BABYLON.RecastJSPlugin;
+    private _crowd: BABYLON.ICrowd;
+    private _scene: BABYLON.Scene;
+    private _nEnnemie: number;
+    private _staticMesh: BABYLON.Mesh;
+    private _ennemies: Ennemy[];
+    private _agents;
 
-    private distances: int[];
-
-    public constructor(n_layers: int, min_distance: int, scene: Scene) { 
-        scene = this.scene;
-        this.distances = [];
-        // manage layers
-        for(let i=1; i<=n_layers; i++) {
-            // debug
-            this.showCylinder(i, scene);
-            let padding = min_distance * i;
-            // push differents distances where ennemies will move
-            this.distances.push(padding);
-        }
+    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, nEnnemie: number, scene: BABYLON.Scene) {
+        this._min = min;
+        this._max = max;
+        this._scene = scene;
+        this._nEnnemie = nEnnemie;
+        this._ennemies = [];
+        this._agents = [];
+        this.zone = this.setupZone();
+        this._staticMesh = this.zone;
     }
 
-    public getDistances(): int[] {
-        return this.distances;
+    public launch(): void {
+        // setup navigation mesh using worker
+        this.setupNavigationPlugin().then(() => {
+            this.activateNavmesh();
+        });
     }
 
-    private showCylinder(i: int, scene: Scene): void {
-        let d = 30+15*i;
-        let rand_col = 0.5*i;
-        let colors = [
-            new Color4(0.4, 0.3+rand_col, 0, 0.1),
-            new Color4(0.4, 0.3+rand_col, 0, 0.1),
-            new Color4(0.4, 0.3+rand_col, 0, 0.1)
-        ];
-        let cylinder: Mesh = MeshBuilder.CreateCylinder("cylinder_"+i, {height: 15, diameter: d, faceColors: colors}, scene);
-        cylinder.material = new StandardMaterial("mat", scene);
-        cylinder.material.wireframe = true;
-        cylinder.setAbsolutePosition(new Vector3(0, 0, 0));
+    public getMin(): BABYLON.Vector3 {
+        return this._min;
     }
 
-    /**
-     * Called on the node is being initialized.
-     * This function is called immediatly after the constructor has been called.
-     */
-    public onInitialize(): void {
-        // ...
+    public getMax(): BABYLON.Vector3 {
+        return this._max;
     }
 
-    /**
-     * Called on the node has been fully initialized and is ready.
-     */
-    public onInitialized(): void {
-        // ...
+    private setupZone(): BABYLON.Mesh {
+        let zone = BABYLON.MeshBuilder.CreateBox("invisibleZone",
+            {
+                width: this._max.x - this._min.x,
+                height: this._max.y - this._min.y,
+                depth: this._max.z - this._min.z,
+            }, this._scene);
+        zone.material = new BABYLON.StandardMaterial("material_e_space", this._scene);
+        zone.material.alpha = 0.1;
+        // zone.isVisible = false;
+        zone.position = this._min;
+        //
+        let axes = new BABYLON.AxesViewer(this._scene, 10);
+        axes.xAxis.parent = this._scene.getMeshByName('Platform');
+        axes.yAxis.parent = this._scene.getMeshByName('Platform');
+        axes.zAxis.parent = this._scene.getMeshByName('Platform');
+        //
+        console.log("Position zone: ", zone.position);
+        return zone;
     }
 
-    /**
-     * Called on the scene starts.
-     */
-    public onStart(): void {
-        // ...
+    public debug() {
+        let navmeshdebug = this._navigationPlugin.createDebugNavMesh(this._scene);
+        const matdebug = new BABYLON.StandardMaterial("matdebug", this._scene);
+        matdebug.diffuseColor = new BABYLON.Color3(0.1, 0.2, 3);
+        matdebug.alpha = 0.75;
+        navmeshdebug.material = matdebug;
     }
 
-    /**
-     * Called each frame.
-     */
-    public onUpdate(entity: Mesh): void {
-        // ...
+    private async setupRecast() {
+        await require("recast-detour")();
     }
 
-    /**
-     * Called on the object has been disposed.
-     * Object can be disposed manually or when the editor stops running the scene.
-     */
-    public onStop(): void {
-        // ...
+    private async setupNavigationPlugin() {
+        await this.setupRecast().then(() => {
+            this._navigationPlugin = new BABYLON.RecastJSPlugin();
+            // https://github.com/BabylonJS/Babylon.js/tree/master/packages/tools/playground/workers/navMeshWorker.js
+            this._navigationPlugin.setWorkerURL("./workers/navMeshWorker.js");
+        });
     }
 
-    /**
-     * Called on a message has been received and sent from a graph.
-     * @param name defines the name of the message sent from the graph.
-     * @param data defines the data sent in the message.
-     * @param sender defines the reference to the graph class that sent the message.
-     */
-    public onMessage(name: string, data: any, sender: any): void {
-        // ...
+    private activateNavmesh() {
+        this._navigationPlugin.createNavMesh([this._staticMesh], this.getParameters(), (navmeshData) => {
+            console.log("got worker data", navmeshData);
+            this._navigationPlugin.buildFromNavmeshData(navmeshData);
+            //
+            this.debug();
+            //
+            this._crowd = this._navigationPlugin.createCrowd(this._nEnnemie, 2, this._scene);
+            this._ennemies.forEach((agent) => {
+                let target = BABYLON.MeshBuilder.CreateBox("target", {size: 1}, this._scene);
+                target.isVisible = true;
+                let transform: BABYLON.TransformNode = new BABYLON.TransformNode("transform_agent");
+                // console.log('debug, pos: ', agent.getMesh().position);
+                // agent.mesh.parent = transform;
+                let idx: number = this._crowd.addAgent(agent.mesh.position, agent.getAgentParams(), transform);
+                console.log("idx: ", idx);
+                this._agents.push({idx:idx, trf:transform, mesh:agent.mesh, target:target});
+            });
+            this._crowd.getAgents().forEach((agent) => {
+                console.log('agent: ', agent);
+            });
+            //
+            this._scene.onBeforeRenderObservable.add(() => {
+                // a random point into our space
+                let randPoint = new BABYLON.Vector3(-50,20,40);
+                let cube = BABYLON.MeshBuilder.CreateBox("debug_dest", {size: 1}, this._scene);
+                cube.material = new BABYLON.StandardMaterial("debug_mat", this._scene);
+                cube.position = randPoint;
+                //
+                this._crowd.agentGoto(0, this._navigationPlugin.getClosestPoint(randPoint));
+                //
+                this._agents.forEach((ag) => {
+                    console.log('agent °', ag.idx);
+                    ag.mesh.position = this._crowd.getAgentPosition(ag.idx);
+                    console.log("pos ag.mesh= ", ag.mesh.position);
+                    this._crowd.getAgentNextTargetPathToRef(ag.idx, ag.target.position);
+                    console.log("pos ag.target= ", ag.target.position);
+                });
+            //
+            });
+        });
     }
+
+    private getParameters(): BABYLON.INavMeshParameters {
+        return {
+            cs: 0.2,
+            ch: 0.2,
+            walkableSlopeAngle: 90,
+            walkableHeight: 1,
+            walkableClimb: 1,
+            walkableRadius: 1,
+            maxEdgeLen: 12,
+            maxSimplificationError: 1.3,
+            minRegionArea: 8,
+            mergeRegionArea: 20,
+            maxVertsPerPoly: 6,
+            detailSampleDist: 6,
+            detailSampleMaxError: 1,
+        };
+    }
+
+    public addEnnemy(ennemie: Ennemy) {
+        this._ennemies.push(ennemie);
+    }
+
 }

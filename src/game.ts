@@ -68,7 +68,7 @@ export class Game {
             './assets/',
             'test.glb'
         );
-        let meshTask2 = this._assetManager.addMeshTask('test', '', './assets/', 'robotAnimated.glb')
+        // let meshTask2 = this._assetManager.addMeshTask('test', '', './assets/', 'robotAnimated.glb')
 
         meshTask.onSuccess = (task) => {
             console.log('Loading mesh');
@@ -77,34 +77,34 @@ export class Game {
                 console.log(mesh.name);
             });
         };
-        meshTask2.onSuccess = (task) => {
-            console.log('Loading mesh');
-            task.loadedAnimationGroups.forEach((anim) => {
-                console.log(anim.name);
-            });
+        // meshTask2.onSuccess = (task) => {
+        //     console.log('Loading mesh');
+        //     task.loadedAnimationGroups.forEach((anim) => {
+        //         console.log(anim.name);
+        //     });
             
-            let leftLaserShot = task.loadedAnimationGroups[0];
-            let leftLaserShot2 = task.loadedAnimationGroups[1];
-            let rightLaserShot = task.loadedAnimationGroups[2];
-            let rightLaserShot2 = task.loadedAnimationGroups[3];
+        //     let leftLaserShot = task.loadedAnimationGroups[0];
+        //     let leftLaserShot2 = task.loadedAnimationGroups[1];
+        //     let rightLaserShot = task.loadedAnimationGroups[2];
+        //     let rightLaserShot2 = task.loadedAnimationGroups[3];
 
-            rightLaserShot.stop();
-            leftLaserShot.stop();
-            rightLaserShot2.stop();
-            leftLaserShot2.stop();
+        //     rightLaserShot.stop();
+        //     leftLaserShot.stop();
+        //     rightLaserShot2.stop();
+        //     leftLaserShot2.stop();
 
-            rightLaserShot.reset();
-            leftLaserShot.reset();
-            rightLaserShot2.reset();
-            leftLaserShot2.reset();
+        //     rightLaserShot.reset();
+        //     leftLaserShot.reset();
+        //     rightLaserShot2.reset();
+        //     leftLaserShot2.reset();
 
-            rightLaserShot.play(true);
-            leftLaserShot.play(true);
-            // rightLaserShot2.play(true);
-            // leftLaserShot2.play(true);
+        //     rightLaserShot.play(true);
+        //     leftLaserShot.play(true);
+        //     // rightLaserShot2.play(true);
+        //     // leftLaserShot2.play(true);
             
-            // voir doc on peut les stop les resets loops etc.
-        };
+        //     // voir doc on peut les stop les resets loops etc.
+        // };
 
         this._assetManager.load();
 
@@ -115,10 +115,10 @@ export class Game {
                 await BABYLON.WebXRSessionManager.IsSessionSupportedAsync(
                     'immersive-ar'
                 );
-            let robot = this._scene.getMeshByName('Robot');
+            // let robot = this._scene.getMeshByName('Robot');
             
             let platform = this._scene.getMeshByName('Platform');
-            robot.position = new BABYLON.Vector3(10, 5, 10);
+            // robot.position = new BABYLON.Vector3(10, 5, 10);
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
             this._camera.position = this._spawnPoint.position.clone();
 
@@ -133,7 +133,7 @@ export class Game {
                 let keyboardInputs = new KeyboardInputs(this._scene, this._camera, this._canvas, this._inputs)
             }
 
-            this._stateManager = new StateManager(this._scene, this._spawnPoint);
+            this._stateManager = new StateManager(this._scene, this._assetManager);
             this._stateManager.switchState(StatesEnum.MAINMENU);
         });
     }

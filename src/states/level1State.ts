@@ -1,20 +1,17 @@
 import * as BABYLON from 'babylonjs';
-import { StateManager } from './stateManager';
 import { Ennemy } from '../ennemy';
+import { EnnemiesSpace } from '../ennemies-space';
 
 export class Level1State {
 
     private _scene: BABYLON.Scene;
-    private _stateManager: StateManager;
     private _light: BABYLON.HemisphericLight;
-    private _spawnPoint: BABYLON.AbstractMesh;
-    private _ennemies: Ennemy[];
+    private _assetManager: BABYLON.AssetsManager;
+    private _e_space: EnnemiesSpace;
 
-    constructor(scene: BABYLON.Scene, stateManager: StateManager, spawnPoint: BABYLON.AbstractMesh) {
+    constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
-        this._stateManager = stateManager;
-        this._spawnPoint = spawnPoint;
-        this._ennemies = [];
+        this._assetManager = assetManager;
     }
 
     public load(): void {
@@ -24,21 +21,27 @@ export class Level1State {
             new BABYLON.Vector3(0, 1, 0),
             this._scene
         );
-        this._light.diffuse = new BABYLON.Color3(1, 0, 0);
-        // init ennemies
-        this._ennemies = [];
+        // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
+        // set enemies area
+        this._e_space = new EnnemiesSpace(
+            new BABYLON.Vector3(-20, 30, 25),
+            new BABYLON.Vector3(-200, 100, 50),
+            1,
+            this._scene
+        );
         // create a new ennemy
-        let ennemy = new Ennemy(this._scene, this._spawnPoint.position, 30, 1);
+        let ennemy = new Ennemy(this._scene, this._assetManager, this._e_space, 1, new BABYLON.Vector3(20,10,5));
         // push it in list
-        this._ennemies.push(ennemy);
+        this._e_space.addEnnemy(ennemy);
         // remove it when it's finished
+        this._e_space.launch();
     }
 
     public dispose(): void {
         // dispose the light
         this._light.dispose();
-        this._ennemies.forEach(function(ennemy) {
-            ennemy.getMesh().dispose();
-        });
+        // this._ennemies.forEach(function(ennemy) {
+        //     ennemy.getMesh().dispose();
+        // });
     }
 }

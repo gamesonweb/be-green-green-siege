@@ -1,58 +1,115 @@
 import * as BABYLON from 'babylonjs';
+import { EnnemiesSpace } from './ennemies-space';
+// import Recast from 'recast-detour';
+// npm install recast-detour
 
 export class Ennemy {
 
-    private _mesh: BABYLON.Mesh;
-    private _origin: BABYLON.Vector3;
-    private _movementSpeed: number;
+    public mesh: BABYLON.AbstractMesh;
+    private _scene: BABYLON.Scene;
+    private _id: number;
+    private _assetManager: BABYLON.AssetsManager;
+    private _enemiesSpace: EnnemiesSpace;
 
-    public constructor(scene: BABYLON.Scene, origin: BABYLON.Vector3, separation_distance: number, speed: number) {
+    public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, ennemiesSpace: EnnemiesSpace, id: number, pos: BABYLON.Vector3) {
+        this._scene = scene;
+        this._assetManager = assetManager;
         // set mesh
-        this._mesh = BABYLON.MeshBuilder.CreateBox("ennemy", { size: 2 }, scene);
+        // this._mesh = BABYLON.MeshBuilder.CreateBox("ennemy", { size: 2 }, scene);
         // set the ennemy position (to a distance of separation_distance value)
-        this.setPosition(separation_distance);
+        // this._mesh.position = new BABYLON.Vector3(30,3,3);
         // set movement radius
-        this._movementSpeed = speed;
-        this._origin = origin;
+        this._id = id;
+        this._enemiesSpace = ennemiesSpace;
+        this.create(pos);
     }
 
-    private setPosition(separation_distance: number): void {
-        const randomX = Math.random() * 2 - 1; // Random value between -1 and 1
-        const randomY = Math.random() * 2 - 1; // Random value between -1 and 1
-        const randomZ = Math.random() * 2 - 1; // Random value between -1 and 1
-        const randomPosition = new BABYLON.Vector3(randomX, randomY, randomZ).normalize().scale(separation_distance);
-        randomPosition.y = Math.max(Math.random() * separation_distance, 0);
-        this._mesh.position.copyFrom(randomPosition);
+    public async create(pos: BABYLON.Vector3) {
+        // set mesh
+        this.setupMesh();
+        this._assetManager.load();
+        this._scene.executeWhenReady(async () => {
+            this.mesh.position = pos;
+            // this.setPosition(20,10,5);
+            // this.setupNavigationPlugin().then(() => {
+            this.animate();
+            // });
+        });
     }
 
-    public update(deltaTime: number): void {
-        // Move the enemy randomly
-        const randomDirection = new BABYLON.Vector3(
-            Math.random() * 2 - 1, // Random value between -1 and 1
-            0, // Don't move up or down
-            Math.random() * 2 - 1 // Random value between -1 and 1
-        );
-        randomDirection.normalize();
-        this._mesh.position.addInPlace(randomDirection.scale(deltaTime * this._movementSpeed));
+    // private rotateEnnemy(distance, alpha): void {
+    //     // let angle = deltaTime * rotationSpeed;
+    //     this._mesh.position = new BABYLON.Vector3(
+    //         distance * Math.cos(alpha),
+    //         Math.sin(10 * alpha),
+    //         distance * Math.sin(alpha)
+    //     );
+    // }
 
-        // Calculate the distance from the enemy to the origin
-        const distanceFromOrigin = this._origin.length();
+    public setupMesh() {
+        let task = this._assetManager.addMeshTask('ennemy_'+this._id, '', './assets/', 'robotAnimated.glb');
+        task.onSuccess = (task) => {
+            console.log('Loading ennemy');
+            task.loadedAnimationGroups.forEach((anim) => {
+                console.log(anim.name);
+            });
+            let leftLaserShot = task.loadedAnimationGroups[0];
+            let leftLaserShot2 = task.loadedAnimationGroups[1];
+            let rightLaserShot = task.loadedAnimationGroups[2];
+            let rightLaserShot2 = task.loadedAnimationGroups[3];
+            //
+            rightLaserShot.stop();
+            leftLaserShot.stop();
+            rightLaserShot2.stop();
+            leftLaserShot2.stop();
+            //
+            rightLaserShot.reset();
+            leftLaserShot.reset();
+            rightLaserShot2.reset();
+            leftLaserShot2.reset();
+            //
+            rightLaserShot.play(true);
+            leftLaserShot.play(true);
+            // rightLaserShot2.play(true);
+            // leftLaserShot2.play(true);
+            // voir doc on peut les stop les resets loops etc.
+            //
+            this.mesh = this._scene.getMeshByName('Robot');
+            console.log("Ennemy created: this name is ", this.mesh.name);
+        };
+    }
 
-        // If the distance is greater than 30, move the enemy back to the nearest point on the circle
-        if (distanceFromOrigin > 30) {
-            const directionToOrigin = this._origin.negate().normalize();
-            const nearestPointOnCircle = directionToOrigin.scale(30);
-            this._origin.copyFrom(nearestPointOnCircle);
+    public getAgentParams(): BABYLON.IAgentParameters {
+        return {
+            radius: 0.1,
+            height: 0.2,
+            maxAcceleration: 2,
+            maxSpeed: 1,
+            collisionQueryRange: 0.5,
+            pathOptimizationRange: 0.0,
+            separationWeight: 1.0
         }
-
-        // Rotate the enemy towards the player
-        const directionToPlayer = this._mesh.position.subtract(this._origin);
-        directionToPlayer.y = 0; // Don't rotate up or down
-        this._mesh.lookAt(this._mesh.position.add(directionToPlayer));
     }
 
-    public getMesh(): BABYLON.Mesh {
-        return this._mesh;
+    private lookAtMe(biais: number) {
+        let origin: BABYLON.Vector3 = this._scene.getCameraByName("Camera").position;
+        this.mesh.lookAt(new BABYLON.Vector3(
+            origin.x + biais,
+            origin.y,
+            origin.z
+        ));
+    }
+
+    private animate(): void {
+        let vibration = 0;
+        this._scene.registerBeforeRender(() => {
+            // animate face
+            vibration += 0.4;
+            // the enemy look at player ... for ever !
+            this.lookAtMe(Math.sin(vibration));
+            // moove !
+            // this.moove();
+        });
     }
 
 }

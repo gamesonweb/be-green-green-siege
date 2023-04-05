@@ -9,13 +9,14 @@ export enum StatesEnum {
 }
 
 export class StateManager {
-    private _scene: BABYLON.Scene;
-    private _currentState: State;
-    private _spawnPoint: BABYLON.AbstractMesh;
 
-    constructor(scene: BABYLON.Scene, spawnPoint: BABYLON.AbstractMesh) {
+    private _scene: BABYLON.Scene;
+    private _assetManager: BABYLON.AssetsManager;
+    private _currentState: State;
+
+    constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
-        this._spawnPoint = spawnPoint;
+        this._assetManager = assetManager;
     }
 
     public switchState(state: StatesEnum): void {
@@ -30,7 +31,7 @@ export class StateManager {
                 break;
             case StatesEnum.LEVEL1:
                 console.log('Switching to level 1');
-                this._currentState = new Level1State(this._scene, this, this._spawnPoint);
+                this._currentState = new Level1State(this._scene, this._assetManager);
                 break;
         }
 
