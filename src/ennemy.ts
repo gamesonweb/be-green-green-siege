@@ -4,7 +4,6 @@ import { EnnemiesSpace } from './ennemies-space';
 // npm install recast-detour
 
 export class Ennemy {
-
     public mesh: BABYLON.AbstractMesh;
     private _scene: BABYLON.Scene;
     private _id: number;
@@ -47,7 +46,7 @@ export class Ennemy {
     // }
 
     public setupMesh() {
-        let task = this._assetManager.addMeshTask('ennemy_'+this._id, '', './assets/', 'robotAnimated.glb');
+        let task = this._assetManager.addMeshTask('ennemy_' + this._id, '', './assets/', 'robotAnimated.glb');
         task.onSuccess = (task) => {
             console.log('Loading ennemy');
             task.loadedAnimationGroups.forEach((anim) => {
@@ -75,7 +74,7 @@ export class Ennemy {
             // voir doc on peut les stop les resets loops etc.
             //
             this.mesh = this._scene.getMeshByName('Robot');
-            console.log("Ennemy created: this name is ", this.mesh.name);
+            console.log('Ennemy created: this name is ', this.mesh.name);
         };
     }
 
@@ -92,12 +91,8 @@ export class Ennemy {
     // }
 
     private lookAtMe(biais: number) {
-        let origin: BABYLON.Vector3 = this._scene.getCameraByName("Camera").position;
-        this.mesh.lookAt(new BABYLON.Vector3(
-            origin.x + biais,
-            origin.y,
-            origin.z
-        ));
+        let origin: BABYLON.Vector3 = this._scene.getCameraByName('Camera').position;
+        this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
     }
 
     // private nextDestination(): BABYLON.Vector3 {
@@ -121,8 +116,8 @@ export class Ennemy {
         let delta = direction.scale(speed);
         this.mesh.position = this.mesh.position.add(delta);
         distance = BABYLON.Vector3.Distance(this.mesh.position, destination);
-        console.log("position: " + this.mesh.position);
-        console.log("distance: ", distance);
+        // console.log("position: " + this.mesh.position);
+        // console.log("distance: ", distance);
         // return distance
         return distance;
     }
@@ -137,11 +132,10 @@ export class Ennemy {
             this.lookAtMe(Math.sin(vibration));
             // moove !
             // console.log("destination: ", destination);
-            if(this.moove(destination, 0.09) < 3) {
+            if (this.moove(destination, 0.09) < 3) {
                 destination = this._enemiesSpace.getRandomPoint();
             }
             // this.moove();
         });
     }
-
 }

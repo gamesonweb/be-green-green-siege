@@ -3,7 +3,6 @@ import * as BABYLON from 'babylonjs';
 import { Ennemy } from './ennemy';
 
 export class EnnemiesSpace {
-
     public zone: BABYLON.Mesh;
     private _min: BABYLON.Vector3;
     private _max: BABYLON.Vector3;
@@ -37,21 +36,20 @@ export class EnnemiesSpace {
         let width = this._max.x - this._min.x;
         let height = this._max.y - this._min.y;
         let depth = this._max.z - this._min.z;
-        return new BABYLON.Vector3(
-            Math.random() * width - width / 2,
-            Math.random() * height - height / 2,
-            Math.random() * depth - depth / 2
-        );
+        return new BABYLON.Vector3(Math.random() * width - width / 2, Math.random() * height - height / 2, Math.random() * depth - depth / 2);
     }
 
     private setupZone(): BABYLON.Mesh {
-        let zone = BABYLON.MeshBuilder.CreateBox("invisibleZone",
+        let zone = BABYLON.MeshBuilder.CreateBox(
+            'invisibleZone',
             {
                 width: this._max.x - this._min.x,
                 height: this._max.y - this._min.y,
                 depth: this._max.z - this._min.z,
-            }, this._scene);
-        zone.material = new BABYLON.StandardMaterial("material_e_space", this._scene);
+            },
+            this._scene
+        );
+        zone.material = new BABYLON.StandardMaterial('material_e_space', this._scene);
         zone.material.alpha = 0.1;
         // zone.isVisible = false;
         zone.position = this._min;
@@ -61,7 +59,7 @@ export class EnnemiesSpace {
         axes.yAxis.parent = this._scene.getMeshByName('Platform');
         axes.zAxis.parent = this._scene.getMeshByName('Platform');
         //
-        console.log("Position zone: ", zone.position);
+        // console.log("Position zone: ", zone.position);
         return zone;
     }
 
@@ -106,7 +104,7 @@ export class EnnemiesSpace {
     //     this._crowd.getAgents().forEach((agent) => {
     //         console.log('agent: ', agent);
     //     });
-    //     // 
+    //     //
     //     this._scene.executeWhenReady()
     //     //
     //     this._scene.onBeforeRenderObservable.add(() => {
@@ -153,8 +151,7 @@ export class EnnemiesSpace {
     }
 
     public logDim() {
-        console.log("dim_Min: (x:", this._min.x, ", y:", this._min.y, ", z:", this._min.z, ")");
-        console.log("dim_Max: (x:", this._max.x, ", y:", this._max.y, ", z:", this._max.z, ")");
+        console.log('dim_Min: (x:', this._min.x, ', y:', this._min.y, ', z:', this._min.z, ')');
+        console.log('dim_Max: (x:', this._max.x, ', y:', this._max.y, ', z:', this._max.z, ')');
     }
-
 }

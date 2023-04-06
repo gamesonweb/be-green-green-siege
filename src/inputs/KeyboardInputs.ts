@@ -1,8 +1,7 @@
-import Inputs from "./Inputs";
 import * as BABYLON from 'babylonjs';
+import Inputs from './Inputs';
 
 export default class KeyboardInputs {
-
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.FreeCamera;
     private _canvas: HTMLCanvasElement;
@@ -18,47 +17,43 @@ export default class KeyboardInputs {
     }
 
     initInputs() {
-        console.log("Keyboard Inputs");
-        
-        window.addEventListener("keydown", (evt) => {
-            
+        window.addEventListener('keydown', (evt) => {
             switch (evt.key) {
-                case " ":
+                case ' ':
                     this._inputs.rightSecondary(true);
                     break;
-                case "a":
+                case 'a':
                     this._inputs.leftTrigger(true);
                     break;
-                case "z":
+                case 'z':
                     this._inputs.leftPrimary(true);
                     break;
-                case "e":
+                case 'e':
                     this._inputs.leftSecondary(true);
                     break;
-                case "Escape":
+                case 'Escape':
                     this._scene.getEngine().exitPointerlock();
             }
         });
 
-        window.addEventListener("keyup", (evt) => {
+        window.addEventListener('keyup', (evt) => {
             switch (evt.key) {
-                case " ":
+                case ' ':
                     this._inputs.rightSecondary(false);
                     break;
-                case "a":
+                case 'a':
                     this._inputs.leftTrigger(false);
                     break;
-                case "z":
+                case 'z':
                     this._inputs.leftPrimary(false);
                     break;
-                case "e":
+                case 'e':
                     this._inputs.leftSecondary(false);
                     break;
             }
-        }); 
-        
+        });
 
-        this._canvas.addEventListener("pointerdown", (evt) => {
+        this._canvas.addEventListener('pointerdown', (evt) => {
             if (!this._scene.getEngine().isPointerLock) {
                 this._canvas.requestPointerLock();
             }
@@ -71,7 +66,7 @@ export default class KeyboardInputs {
                     break;
             }
         });
-        this._canvas.addEventListener("pointerup", (evt) => {
+        this._canvas.addEventListener('pointerup', (evt) => {
             switch (evt.button) {
                 case 0:
                     this._inputs.rightTrigger(false);
@@ -80,13 +75,12 @@ export default class KeyboardInputs {
                     this._inputs.rightPrimary(false);
                     break;
             }
-        });        
+        });
 
-        this._canvas.addEventListener("pointerlockchange", (evt) => {
+        this._canvas.addEventListener('pointerlockchange', (evt) => {
             if (document.pointerLockElement === this._canvas) {
                 this._scene.getEngine().enterPointerlock();
-            }
-            else {
+            } else {
                 this._scene.getEngine().exitPointerlock();
             }
         });

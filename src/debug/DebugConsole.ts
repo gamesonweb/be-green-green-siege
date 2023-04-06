@@ -28,8 +28,6 @@ export default class DebugConsole {
 
     addListeners() {
         this.cameraSpeed.addEventListener('input', (evt) => {
-            console.log('Camera Speed: ' + this.cameraSpeed.value);
-
             this._camera.angularSensibility = +this.cameraSpeed.value;
         });
     }
