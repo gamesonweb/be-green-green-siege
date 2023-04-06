@@ -28,8 +28,8 @@ export class Level1State {
         // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
         // set enemies area
         this._e_space = new EnnemiesSpace(
-            new BABYLON.Vector3(-20, 40, 25),
-            new BABYLON.Vector3(-200, 100, 50),
+            new BABYLON.Vector3(-100, 30, 25),
+            new BABYLON.Vector3(-200, 60, 75),
             1,
             this._scene
         );

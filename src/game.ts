@@ -54,6 +54,7 @@ export class Game {
             // Load input
             let xr = await this._scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
             new XRInputs(this._scene, this._camera, this._canvas, xr, this._inputs);
+
         } else {
             Logger.log('VR not supported');
 
@@ -152,6 +153,10 @@ export class Game {
 
             this._stateManager = new StateManager(this._scene, this._assetManager);
             this._stateManager.switchState(StatesEnum.MAINMENU);
+
+            //
+            let axes = new BABYLON.AxesViewer(this._scene, 10);
+            //
         });
     }
 
