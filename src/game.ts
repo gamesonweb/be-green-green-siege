@@ -61,7 +61,6 @@ export class Game {
     }
 
     /**
-
      * Creates the BABYLONJS Scene
      */
     async createScene(): Promise<void> {

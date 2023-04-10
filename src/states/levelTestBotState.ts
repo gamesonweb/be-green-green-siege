@@ -16,6 +16,14 @@ export class LevelTestBotState implements State {
 
     fire(): void {}
 
+    /**
+     * Creates the debug element
+     * @param scene The BABYLONJS Scene
+     */
+    createDebugElement(scene: BABYLON.Scene): void {
+        let axes = new BABYLON.AxesViewer(scene, 2);
+    }
+
     public getName() {
         return 'Test bot';
     }
@@ -25,11 +33,12 @@ export class LevelTestBotState implements State {
     }
 
     public load(): void {
+        this.createDebugElement(this._scene);
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this._scene);
         // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
         // set enemies area
-        this._e_space = new EnnemiesSpace(new BABYLON.Vector3(-20, 40, 25), new BABYLON.Vector3(-200, 100, 50), 1, this._scene);
+        this._e_space = new EnnemiesSpace(new BABYLON.Vector3(-100, 30, 25), new BABYLON.Vector3(-200, 60, 75), 1, this._scene);
         this._e_space.logDim();
         // create a new ennemy
         let ennemy = new Ennemy(this._scene, this._assetManager, this._e_space, 1, new BABYLON.Vector3(20, 10, 5));

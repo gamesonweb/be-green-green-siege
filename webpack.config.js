@@ -20,8 +20,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'src/assets', to: 'assets' },
-        { from: 'src/workers', to: 'workers'}
+        { from: 'src/assets', to: 'assets' }
       ]
     })
   ],
