@@ -1,16 +1,19 @@
 import * as BABYLON from 'babylonjs';
 import Logger from '../debug/Logger';
 import { Game } from '../game';
+import { StateManager } from '../states/stateManager';
 
 export default class Inputs {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.FreeCamera;
     private _canvas: HTMLCanvasElement;
+    private _stateManager: StateManager;
 
-    constructor(game: Game, scene: BABYLON.Scene, camera: BABYLON.FreeCamera, canvas: HTMLCanvasElement) {
+    constructor(game: Game, stateManager: StateManager, scene: BABYLON.Scene, camera: BABYLON.FreeCamera, canvas: HTMLCanvasElement) {
         this._scene = scene;
         this._camera = camera;
         this._canvas = canvas;
+        this._stateManager = stateManager;
     }
 
     public leftTrigger(pressed: boolean): void {
@@ -18,7 +21,15 @@ export default class Inputs {
     }
 
     public rightTrigger(pressed: boolean): void {
-        Logger.log('Right Trigger');
+        if (pressed) {
+            const currentstate = this._stateManager.getCurrentState();
+
+            if (currentstate.canFire()) {
+                currentstate.fire();
+            }
+
+            Logger.log('Right Trigger');
+        }
     }
 
     public leftPrimary(pressed: boolean): void {

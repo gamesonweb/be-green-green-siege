@@ -21,11 +21,17 @@ export class StateManager {
         this._assetManager = assetManager;
     }
 
+    /**
+     * Switch the current state
+     * @param state The state to switch to
+     */
     public switchState(state: StatesEnum): void {
+        // Dispose the current state
         if (this._currentState) {
             this._currentState.dispose();
         }
 
+        // Switch to the new state
         switch (state) {
             case StatesEnum.MAINMENU:
                 this._currentState = new MainMenuState(this._scene, this);
@@ -38,7 +44,16 @@ export class StateManager {
                 break;
         }
 
+        // Update the debug panel
         Game.debug.currentstate.innerHTML = 'Current state: ' + this._currentState.getName();
         this._currentState.load();
+    }
+
+    /**
+     * Get the current state
+     * @returns The current state
+     */
+    public getCurrentState(): State {
+        return this._currentState;
     }
 }

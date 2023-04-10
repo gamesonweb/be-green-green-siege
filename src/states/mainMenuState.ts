@@ -1,7 +1,8 @@
 import * as BABYLON from 'babylonjs';
+import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
 
-export class MainMenuState {
+export class MainMenuState implements State {
     private _scene: BABYLON.Scene;
     private _stateManager: StateManager;
     private _light: BABYLON.HemisphericLight;
@@ -14,8 +15,14 @@ export class MainMenuState {
         this._stateManager = stateManager;
     }
 
+    fire(): void {}
+
     public getName() {
         return 'Main Menu';
+    }
+
+    public canFire(): boolean {
+        return false;
     }
 
     public load(): void {
@@ -49,4 +56,6 @@ export class MainMenuState {
 
         return box;
     }
+
+    public animate(deltaTime: number): void {}
 }

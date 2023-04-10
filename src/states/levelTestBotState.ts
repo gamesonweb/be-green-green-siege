@@ -1,8 +1,9 @@
 import * as BABYLON from 'babylonjs';
 import { EnnemiesSpace } from '../ennemies-space';
 import { Ennemy } from '../ennemy';
+import { State } from './state';
 
-export class LevelTestBotState {
+export class LevelTestBotState implements State {
     private _scene: BABYLON.Scene;
     private _light: BABYLON.HemisphericLight;
     private _assetManager: BABYLON.AssetsManager;
@@ -13,8 +14,14 @@ export class LevelTestBotState {
         this._assetManager = assetManager;
     }
 
+    fire(): void {}
+
     public getName() {
         return 'Test bot';
+    }
+
+    public canFire(): boolean {
+        return true;
     }
 
     public load(): void {
@@ -38,4 +45,6 @@ export class LevelTestBotState {
         //     ennemy.getMesh().dispose();
         // });
     }
+
+    public animate(deltaTime: number): void {}
 }
