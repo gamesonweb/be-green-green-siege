@@ -9,6 +9,9 @@ export class Ennemy {
     private _id: number;
     private _assetManager: BABYLON.AssetsManager;
     private _enemiesSpace: EnnemiesSpace;
+    private _ready: boolean;
+    private _vibration: number;
+    private _destination: BABYLON.Mesh;
 
     public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, ennemiesSpace: EnnemiesSpace, id: number, pos: BABYLON.Vector3) {
         this._scene = scene;
@@ -29,9 +32,13 @@ export class Ennemy {
         this._assetManager.load();
         this._scene.executeWhenReady(async () => {
             this.mesh.position = pos;
+            this._vibration = 0;
+            this._destination = this._enemiesSpace.getRandomPoint();
+            this._ready = true;
+
             // this.setPosition(20,10,5);
             // this.setupNavigationPlugin().then(() => {
-            this.animate();
+            // this.animate();
             // });
         });
     }
@@ -89,21 +96,23 @@ export class Ennemy {
         return BABYLON.Vector3.Distance(destination.position, this.mesh.position);
     }
 
-    private animate(): void {
-        let vibration = 0;
-        let destination = this._enemiesSpace.getRandomPoint();
-        this._scene.registerBeforeRender(() => {
-            // animate face
-            vibration += 0.2;
-            // the enemy look at player ... for ever !
-            this.lookAtMe(Math.sin(vibration));
-            // moove !
-            console.log('destination: ', destination.position);
-            // this.moove(destination, 0.1);
-            if (Math.abs(this.moove(destination, 0.01)) < 5) {
-                destination.dispose();
-                destination = this._enemiesSpace.getRandomPoint();
-            }
-        });
+    public animate(): void {
+        if (!this._ready) {
+            return;
+        }
+
+        // this._scene.registerBeforeRender(() => {
+        // animate face
+        this._vibration += 0.2;
+        // the enemy look at player ... for ever !
+        this.lookAtMe(Math.sin(this._vibration));
+        // moove !
+        // console.log('destination: ', this._destination.position);
+        // this.moove(destination, 0.1);
+        if (Math.abs(this.moove(this._destination, 0.01)) < 5) {
+            this._destination.dispose();
+            this._destination = this._enemiesSpace.getRandomPoint();
+        }
+        // });
     }
 }

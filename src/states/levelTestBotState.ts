@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
-import { EnnemiesSpace } from '../ennemies-space';
-import { Ennemy } from '../ennemy';
+import { EnnemiesSpace } from '../ennemy/ennemies-space';
+import { Ennemy } from '../ennemy/ennemy';
 import { State } from './state';
 
 export class LevelTestBotState implements State {
@@ -55,5 +55,9 @@ export class LevelTestBotState implements State {
         // });
     }
 
-    public animate(deltaTime: number): void {}
+    // This function is called at each image rendering
+    // You must use this function to animate all the things in this level
+    public animate(deltaTime: number): void {
+        this._e_space.animate();
+    }
 }

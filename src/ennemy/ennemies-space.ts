@@ -75,4 +75,10 @@ export class EnnemiesSpace {
     public getVectorsWorld(): BABYLON.Vector3[] {
         return this._zone.getBoundingInfo().boundingBox.vectorsWorld;
     }
+
+    public animate() {
+        this._ennemies.forEach((ennemy) => {
+            ennemy.animate();
+        });
+    }
 }
