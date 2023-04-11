@@ -43,7 +43,6 @@ export class LaserGun {
         material.diffuseColor = new BABYLON.Color3(1, 0, 0);
         model.material = material;
         model.rotation.x = Math.PI / 2;
-        model.isVisible = false;
 
         return model;
     }
@@ -52,17 +51,29 @@ export class LaserGun {
         if (Game.vrSupported) {
             // If the VR is supported, the gun model is attached to the hand.
         } else {
-            this._gunModel.position = new BABYLON.Vector3(1, 1, 1.5);
-            this._gunModel.setParent(this._camera);
-        }
+            const cameraDirection = this._camera.getForwardRay().direction;
 
-        this._laserModel.setParent(this._gunModel);
-        this._laserModel.position = new BABYLON.Vector3(0, 0, 0.1);
+            // gun position
+            let offset = cameraDirection.scale(1.2);
+            this._gunModel.position = this._camera.position.add(offset);
+
+            // gun rotation
+            this._gunModel.lookAt(this._camera.position);
+
+            this._gunModel.setParent(this._camera);
+
+            // laser position
+            this._laserModel.position = this._gunModel.getAbsolutePosition().clone();
+
+            // laser rotation
+            this._laserModel.lookAt(this._camera.position);
+            this._laserModel.rotation.x = this._laserModel.rotation.x - Math.PI / 2;
+
+            this._laserModel.setParent(this._gunModel);
+        }
     }
 
     public fire(): void {
-        Logger.log('Fire!');
-
         const laserInstance = this._laserModel.createInstance('laserInstance');
         laserInstance.position = this._laserModel.getAbsolutePosition().clone();
         laserInstance.rotationQuaternion = this._laserModel.absoluteRotationQuaternion.clone();
@@ -70,7 +81,6 @@ export class LaserGun {
     }
 
     public animate(deltaTime: number): void {
-        Logger.log('Animate!');
         this._laserModel.instances.forEach((laser) => {
             laser.position.addInPlace(laser.up.scale(this._laserSpeed));
         }, this);
