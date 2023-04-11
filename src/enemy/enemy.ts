@@ -1,32 +1,36 @@
 import * as BABYLON from 'babylonjs';
 import { EnnemiesSpace } from './ennemies-space';
+import { Movement } from '../movement/movement';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
-export class Ennemy {
-    public mesh: BABYLON.AbstractMesh;
+export class Enemy {
+
+    public mesh: BABYLON.Mesh;
     private _scene: BABYLON.Scene;
-    private _id: number;
     private _assetManager: BABYLON.AssetsManager;
     private _enemiesSpace: EnnemiesSpace;
     private _ready: boolean;
     private _vibration: number;
+    // movement
+    private _movement: Movement;
     private _destination: BABYLON.Mesh;
+    private _speed: number;
+    public force: BABYLON.Vector3;
+    public velocity: BABYLON.Vector3;
 
-    public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, ennemiesSpace: EnnemiesSpace, id: number, pos: BABYLON.Vector3) {
+    public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, ennemiesSpace: EnnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number) {
         this._scene = scene;
         this._assetManager = assetManager;
-        // set mesh
-        // this._mesh = BABYLON.MeshBuilder.CreateBox("ennemy", { size: 2 }, scene);
-        // set the ennemy position (to a distance of separation_distance value)
-        // this._mesh.position = new BABYLON.Vector3(30,3,3);
-        // set movement radius
-        this._id = id;
         this._enemiesSpace = ennemiesSpace;
-        this.create(pos);
+        this._movement = movement;
+        this._speed = speed;
+        this.force = BABYLON.Vector3.Zero();
+        this.velocity = BABYLON.Vector3.Zero();
+        this.create(pos, movement);
     }
 
-    public async create(pos: BABYLON.Vector3) {
+    public async create(pos: BABYLON.Vector3, movement: Movement) {
         // set mesh
         this.setupMesh();
         this._assetManager.load();
@@ -35,7 +39,6 @@ export class Ennemy {
             this._vibration = 0;
             this._destination = this._enemiesSpace.getRandomPoint();
             this._ready = true;
-
             // this.setPosition(20,10,5);
             // this.setupNavigationPlugin().then(() => {
             // this.animate();
@@ -44,7 +47,7 @@ export class Ennemy {
     }
 
     public setupMesh() {
-        let task = this._assetManager.addMeshTask('ennemy_' + this._id, '', './assets/', 'robotAnimated.glb');
+        let task = this._assetManager.addMeshTask('ennemy', '', './assets/', 'robotAnimated.glb');
         task.onSuccess = (task) => {
             console.log('Loading ennemy');
             task.loadedAnimationGroups.forEach((anim) => {
@@ -83,36 +86,18 @@ export class Ennemy {
         this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
     }
 
-    private moove(destination: BABYLON.Mesh, speed: number): number {
-        let frequency = 0.0005;
-        let direction = destination.position.subtract(this.mesh.position).normalize();
-        let distance = BABYLON.Vector3.Distance(this.mesh.position, destination.position);
-        let moveDistance = Math.min(distance, speed);
-
-        this.mesh.translate(direction, moveDistance, BABYLON.Space.WORLD);
-        this.mesh.position = BABYLON.Vector3.Lerp(this.mesh.position, destination.position, speed);
-        // sinusoidale
-        this.mesh.position.y += 0.1 * Math.sin(frequency * Date.now());
-        return BABYLON.Vector3.Distance(destination.position, this.mesh.position);
-    }
-
-    public animate(): void {
+    public animate(deltaTime: number): void {
         if (!this._ready) {
             return;
         }
-
-        // this._scene.registerBeforeRender(() => {
         // animate face
         this._vibration += 0.2;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
-        // moove !
-        // console.log('destination: ', this._destination.position);
-        // this.moove(destination, 0.1);
-        if (Math.abs(this.moove(this._destination, 0.01)) < 5) {
+        // moove 
+        if (Math.abs(this._movement.moove(this, this._destination.position, this._speed, deltaTime)) < 10) {
             this._destination.dispose();
             this._destination = this._enemiesSpace.getRandomPoint();
         }
-        // });
     }
 }

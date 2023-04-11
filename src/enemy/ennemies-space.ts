@@ -1,6 +1,6 @@
 // import { Color4, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, VertexBuffer, int } from "babylonjs";
 import * as BABYLON from 'babylonjs';
-import { Ennemy } from './ennemy';
+import { Enemy } from './enemy';
 
 export class EnnemiesSpace {
     private _zone: BABYLON.Mesh;
@@ -11,26 +11,18 @@ export class EnnemiesSpace {
     private _width: number;
     private _height: number;
     private _depth: number;
-    // private _navigationPlugin: BABYLON.RecastJSPlugin;
-    // private _crowd: BABYLON.ICrowd;
     private _scene: BABYLON.Scene;
-    // private _nEnnemie: number;
-    // private _staticMesh: BABYLON.Mesh;
-    private _ennemies: Ennemy[];
-    // private _agents;
+    private _ennemies: Enemy[];
 
-    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, nEnnemie: number, scene: BABYLON.Scene) {
+    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, scene: BABYLON.Scene) {
         this._min = min;
         this._max = max;
         this._width = max.x - min.x;
         this._height = max.y - min.y;
         this._depth = max.z - min.z;
         this._scene = scene;
-        // this._nEnnemie = nEnnemie;
         this._ennemies = [];
-        // this._agents = [];
         this._zone = this.setupZone();
-        // this._staticMesh = this.zone;
     }
 
     public getRandomPoint(): BABYLON.Mesh {
@@ -63,7 +55,7 @@ export class EnnemiesSpace {
         return zone;
     }
 
-    public addEnnemy(ennemie: Ennemy) {
+    public addEnnemy(ennemie: Enemy) {
         this._ennemies.push(ennemie);
     }
 
@@ -72,13 +64,13 @@ export class EnnemiesSpace {
         console.log('dim_Max: (x:', this._max.x, ', y:', this._max.y, ', z:', this._max.z, ')');
     }
 
-    public getVectorsWorld(): BABYLON.Vector3[] {
-        return this._zone.getBoundingInfo().boundingBox.vectorsWorld;
-    }
+    // public getVectorsWorld(): BABYLON.Vector3[] {
+    //     return this._zone.getBoundingInfo().boundingBox.vectorsWorld;
+    // }
 
-    public animate() {
+    public animate(deltaTime: number) {
         this._ennemies.forEach((ennemy) => {
-            ennemy.animate();
+            ennemy.animate(deltaTime);
         });
     }
 }
