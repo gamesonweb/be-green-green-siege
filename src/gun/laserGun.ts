@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
+import * as GUI from 'babylonjs-gui';
 import { Game } from '../game';
-
 export class LaserGun {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.Camera;
@@ -41,7 +41,7 @@ export class LaserGun {
         const material = new BABYLON.StandardMaterial('red', this._scene);
         material.diffuseColor = new BABYLON.Color3(1, 0, 0);
         model.material = material;
-        model.rotation.x = Math.PI / 2;
+        model.isVisible = false;
 
         return model;
     }
@@ -50,6 +50,8 @@ export class LaserGun {
         if (Game.vrSupported) {
             // If the VR is supported, the gun model is attached to the hand.
         } else {
+            this.createPointeur();
+
             const cameraDirection = this._camera.getForwardRay().direction;
 
             // gun position
@@ -73,13 +75,41 @@ export class LaserGun {
             this._gunModel.position = this._gunModel.position.add(this._gunModel.right.scale(0.75));
             this._gunModel.position = this._gunModel.position.add(this._gunModel.up.scale(-0.5));
 
-            // offset laser position to the botom right of the screen
+            // // offset laser position to the botom right of the screen
             this._laserModel.position = this._laserModel.position.add(this._laserModel.right.scale(0.75));
             this._laserModel.position = this._laserModel.position.add(this._laserModel.up.scale(-0.5));
 
-            this._laserModel.isVisible = false;
             this._laserModel.setParent(this._gunModel);
         }
+    }
+
+    private createPointeur(): void {
+        const advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+        const canvasWidth = advancedTexture.getSize().width;
+        const canvasHeight = advancedTexture.getSize().height;
+
+        const crossSize = 10;
+
+        // Vertical line
+        let verticalLine = new GUI.Line();
+        verticalLine.lineWidth = 4;
+        verticalLine.color = 'white';
+        verticalLine.x1 = canvasWidth / 2;
+        verticalLine.y1 = canvasHeight / 2 - crossSize;
+        verticalLine.x2 = canvasWidth / 2;
+        verticalLine.y2 = canvasHeight / 2 + crossSize;
+
+        // Horizontal line
+        let horizontalLine = new GUI.Line();
+        horizontalLine.lineWidth = 4;
+        horizontalLine.x1 = canvasWidth / 2 - crossSize;
+        horizontalLine.y1 = canvasHeight / 2;
+        horizontalLine.x2 = canvasWidth / 2 + crossSize;
+        horizontalLine.y2 = canvasHeight / 2;
+
+        // Add lines as controls to the advanced texture
+        advancedTexture.addControl(verticalLine);
+        advancedTexture.addControl(horizontalLine);
     }
 
     public fire(): void {
