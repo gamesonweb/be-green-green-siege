@@ -10,6 +10,7 @@ export default class DebugConsole {
 
     fps = document.getElementById('fps');
     cameraSpeed = document.getElementById('cameraSpeed') as HTMLInputElement;
+    debugCamera = document.getElementById('debugCamera') as HTMLInputElement;
     currentstate = document.getElementById('currentstate');
 
     constructor(game: Game, scene: BABYLON.Scene, camera: BABYLON.FreeCamera, canvas: HTMLCanvasElement) {
@@ -29,6 +30,16 @@ export default class DebugConsole {
     addListeners() {
         this.cameraSpeed.addEventListener('input', (evt) => {
             this._camera.angularSensibility = +this.cameraSpeed.value;
+        });
+
+        this.debugCamera.addEventListener('change', (evt) => {
+            // get debugCamera
+            let debugCamera = this._scene.getCameraByName('cameraDebug');
+            if (this._scene.activeCamera == debugCamera) {
+                this._scene.activeCamera = this._camera;
+            } else {
+                this._scene.activeCamera = debugCamera;
+            }
         });
     }
 }

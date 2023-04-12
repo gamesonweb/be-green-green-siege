@@ -93,8 +93,23 @@ export class Game {
 
             this._stateManager.switchState(StatesEnum.MAINMENU);
 
+            // Debug
+            this.CreateCameraDebug();
+
             this.animate();
         });
+    }
+
+    /**
+     * Creates the debug camera.
+     */
+    CreateCameraDebug(): void {
+        const cameraDebug = new BABYLON.FreeCamera('cameraDebug', new BABYLON.Vector3(0, 0, -10), this._scene);
+        cameraDebug.position = new BABYLON.Vector3(5, 10);
+        cameraDebug.setTarget(BABYLON.Vector3.Zero());
+        cameraDebug.attachControl(this._canvas, true);
+        cameraDebug.inertia = 0;
+        cameraDebug.angularSensibility = 1000;
     }
 
     /**

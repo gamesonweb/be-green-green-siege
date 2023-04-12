@@ -60,7 +60,6 @@ export class LaserGun {
 
             // gun rotation
             this._gunModel.lookAt(this._camera.position);
-            this._gunModel.rotation.y = this._gunModel.rotation.y - Math.PI;
 
             this._gunModel.setParent(this._camera);
 
@@ -70,14 +69,6 @@ export class LaserGun {
             // laser rotation
             this._laserModel.lookAt(this._camera.position);
             this._laserModel.rotation.x = this._laserModel.rotation.x - Math.PI / 2;
-
-            // offset gun position to the botom right of the screen
-            this._gunModel.position = this._gunModel.position.add(this._gunModel.right.scale(0.75));
-            this._gunModel.position = this._gunModel.position.add(this._gunModel.up.scale(-0.5));
-
-            // // offset laser position to the botom right of the screen
-            this._laserModel.position = this._laserModel.position.add(this._laserModel.right.scale(0.75));
-            this._laserModel.position = this._laserModel.position.add(this._laserModel.up.scale(-0.5));
 
             this._laserModel.setParent(this._gunModel);
         }
