@@ -4,7 +4,8 @@ import { Projectile } from './projectile';
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 0.4;
+    private _laserSpeed: number = 40;
+    private _dispowerDistance: number = 200;
 
     public constructor(scene: BABYLON.Scene) {
         this._scene = scene;
@@ -33,6 +34,13 @@ export class Laser implements Projectile {
         return this._laserModel;
     }
 
+    private checkDistance(laser: BABYLON.InstancedMesh): void {
+        const distance = BABYLON.Vector3.Distance(laser.position, this._scene.activeCamera.position);
+        if (distance > this._dispowerDistance) {
+            laser.dispose();
+        }
+    }
+
     public fire(origin: BABYLON.Mesh): void {
         const laserInstance = this._laserModel.createInstance('laserInstance');
         laserInstance.position = origin.getAbsolutePosition().clone();
@@ -42,14 +50,20 @@ export class Laser implements Projectile {
         laserInstance.isVisible = true;
     }
 
+    private getAllLaserInstances(): BABYLON.InstancedMesh[] {
+        return this._laserModel.instances;
+    }
+
     public animate(deltaTime: number): void {
-        this._laserModel.instances.forEach((laser) => {
-            laser.position.addInPlace(laser.up.scale(this._laserSpeed));
+        this.getAllLaserInstances().forEach((laser) => {
+            var distance = this._laserSpeed * deltaTime;
+            laser.position.addInPlace(laser.up.scale(distance));
+            this.checkDistance(laser);
         }, this);
     }
 
     public dispose(): void {
-        this._laserModel.instances.forEach((laser) => {
+        this.getAllLaserInstances().forEach((laser) => {
             laser.dispose();
         }, this);
 
