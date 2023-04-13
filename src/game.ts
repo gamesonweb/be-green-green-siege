@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
-import DebugConsole from './debug/DebugConsole';
-import Logger from './debug/Logger';
+import DebugConsole from './debug/debugConsole';
+import Logger from './debug/logger';
 import { GameUtils } from './game-utils';
 import Inputs from './inputs/Inputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
@@ -94,7 +94,7 @@ export class Game {
             this._stateManager.switchState(StatesEnum.MAINMENU);
 
             // Debug
-            this.CreateCameraDebug();
+            this.CreateCameraDebug(this._scene, this._canvas);
 
             this.animate();
         });
@@ -103,11 +103,11 @@ export class Game {
     /**
      * Creates the debug camera.
      */
-    CreateCameraDebug(): void {
-        const cameraDebug = new BABYLON.FreeCamera('cameraDebug', new BABYLON.Vector3(0, 0, -10), this._scene);
+    CreateCameraDebug(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
+        const cameraDebug = new BABYLON.FreeCamera('cameraDebug', new BABYLON.Vector3(0, 0, -10), scene);
         cameraDebug.position = new BABYLON.Vector3(5, 10);
         cameraDebug.setTarget(BABYLON.Vector3.Zero());
-        cameraDebug.attachControl(this._canvas, true);
+        cameraDebug.attachControl(cavnas, true);
         cameraDebug.inertia = 0;
         cameraDebug.angularSensibility = 1000;
     }
