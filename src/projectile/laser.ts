@@ -4,7 +4,7 @@ import { Projectile } from './projectile';
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 0.4;
+    private _laserSpeed: number = 40;
 
     public constructor(scene: BABYLON.Scene) {
         this._scene = scene;
@@ -44,7 +44,8 @@ export class Laser implements Projectile {
 
     public animate(deltaTime: number): void {
         this._laserModel.instances.forEach((laser) => {
-            laser.position.addInPlace(laser.up.scale(this._laserSpeed));
+            var distance = this._laserSpeed * deltaTime;
+            laser.position.addInPlace(laser.up.scale(distance));
         }, this);
     }
 
