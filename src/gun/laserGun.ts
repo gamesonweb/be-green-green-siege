@@ -1,20 +1,23 @@
 import * as BABYLON from 'babylonjs';
-import * as GUI from 'babylonjs-gui';
 import { Game } from '../game';
-export class LaserGun {
+import { Projectile } from '../projectile/projectile';
+import { Gun } from './gun';
+import { Pointeur } from './pointeur';
+
+export class LaserGun implements Gun {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.Camera;
 
     private _gunModel: BABYLON.Mesh;
-    private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 0.4;
+    private _laser: Projectile;
+    private _pointeur: Pointeur;
 
-    public constructor(scene: BABYLON.Scene) {
+    public constructor(scene: BABYLON.Scene, laser: Projectile) {
         this._scene = scene;
         this._camera = this._scene.activeCamera;
 
         this._gunModel = this.initGunModel();
-        this._laserModel = this.initLaserModel();
+        this._laser = laser;
         this.attatch();
     }
 
@@ -28,96 +31,43 @@ export class LaserGun {
         return model;
     }
 
-    private initLaserModel(): BABYLON.Mesh {
-        const model = BABYLON.MeshBuilder.CreateCylinder(
-            'cylinder',
-            {
-                height: 0.2,
-                diameter: 0.2,
-            },
-            this._scene
-        );
-
-        const material = new BABYLON.StandardMaterial('red', this._scene);
-        material.diffuseColor = new BABYLON.Color3(1, 0, 0);
-        model.material = material;
-        model.isVisible = false;
-
-        return model;
-    }
-
     private attatch(): void {
         if (Game.vrSupported) {
             // If the VR is supported, the gun model is attached to the hand.
         } else {
-            this.createPointeur();
+            this._pointeur = new Pointeur();
 
             const cameraDirection = this._camera.getForwardRay().direction;
 
-            // gun position
+            // Gun position
             let offset = cameraDirection.scale(1.2);
             this._gunModel.position = this._camera.position.add(offset);
 
-            // gun rotation
+            // Gun rotation
             this._gunModel.lookAt(this._camera.position);
 
-            // laser position
-            this._laserModel.position = this._gunModel.getAbsolutePosition().clone();
-
-            // laser rotation
-            this._laserModel.lookAt(this._camera.position);
-            this._laserModel.rotation.x = this._laserModel.rotation.x - Math.PI / 2;
-
-            // Offset
-            this._laserModel.position = this._laserModel.absolutePosition.add(this._laserModel.right.normalize().scale(-0.75));
-            this._laserModel.position = this._laserModel.absolutePosition.add(this._laserModel.forward.normalize().scale(-0.4));
+            // Offset to bottom right corner
             this._gunModel.position = this._gunModel.absolutePosition.add(this._gunModel.right.normalize().scale(-0.75));
             this._gunModel.position = this._gunModel.absolutePosition.add(this._gunModel.up.normalize().scale(-0.4));
 
             this._gunModel.setParent(this._camera);
-            this._laserModel.setParent(this._gunModel);
         }
     }
 
-    private createPointeur(): void {
-        const advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
-        const canvasWidth = advancedTexture.getSize().width;
-        const canvasHeight = advancedTexture.getSize().height;
-
-        const crossSize = 10;
-
-        // Vertical line
-        let verticalLine = new GUI.Line();
-        verticalLine.lineWidth = 4;
-        verticalLine.color = 'white';
-        verticalLine.x1 = canvasWidth / 2;
-        verticalLine.y1 = canvasHeight / 2 - crossSize;
-        verticalLine.x2 = canvasWidth / 2;
-        verticalLine.y2 = canvasHeight / 2 + crossSize;
-
-        // Horizontal line
-        let horizontalLine = new GUI.Line();
-        horizontalLine.lineWidth = 4;
-        horizontalLine.x1 = canvasWidth / 2 - crossSize;
-        horizontalLine.y1 = canvasHeight / 2;
-        horizontalLine.x2 = canvasWidth / 2 + crossSize;
-        horizontalLine.y2 = canvasHeight / 2;
-
-        // Add lines as controls to the advanced texture
-        advancedTexture.addControl(verticalLine);
-        advancedTexture.addControl(horizontalLine);
-    }
-
     public fire(): void {
-        const laserInstance = this._laserModel.createInstance('laserInstance');
-        laserInstance.position = this._laserModel.getAbsolutePosition().clone();
-        laserInstance.rotationQuaternion = this._laserModel.absoluteRotationQuaternion.clone();
-        laserInstance.isVisible = true;
+        this._laser.fire(this._gunModel);
     }
 
     public animate(deltaTime: number): void {
-        this._laserModel.instances.forEach((laser) => {
-            laser.position.addInPlace(laser.up.scale(this._laserSpeed));
-        }, this);
+        this._laser.animate(deltaTime);
+    }
+
+    public dispose(): void {
+        this._gunModel.dispose();
+        this._laser.dispose();
+
+        if (this._pointeur) {
+            this._pointeur.dispose();
+        }
     }
 }
