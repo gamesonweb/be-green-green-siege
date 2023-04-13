@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import Logger from '../debug/Logger';
+import Logger from '../debug/logger';
 import { Game } from '../game';
 import { StateManager } from '../states/stateManager';
 
