@@ -25,9 +25,12 @@ module.exports = {
     })
   ],
   devtool: 'inline-source-map',
-  // devServer: {
-  //   contentBase: distFolder
-  // },
+  devServer: {
+    https: {
+      key: path.resolve(__dirname, 'key.pem'),
+      cert: path.resolve(__dirname, 'cert.pem'),
+    }
+  },
   module: {
     rules: [
       {

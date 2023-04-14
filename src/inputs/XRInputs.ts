@@ -20,6 +20,8 @@ export default class XRInputs {
     }
 
     initInputs() {
+        let rightAnchor = BABYLON.MeshBuilder.CreateBox("rightAnchor", { size: 0.1 }, this._scene);
+        let leftAnchor = BABYLON.MeshBuilder.CreateBox("leftAnchor", { size: 0.1 }, this._scene);
         this._xr.input.onControllerAddedObservable.add((controller) => {
             controller.onMotionControllerInitObservable.add((motionController) => {
 
@@ -39,6 +41,9 @@ export default class XRInputs {
                     leftSecondary.onButtonStateChangedObservable.add((component) => {
                         this._inputs.leftSecondary(component.pressed);
                     });
+                    leftAnchor.setParent(controller.grip);
+                    leftAnchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
+                    leftAnchor.position = new BABYLON.Vector3(0,0,0);
                 }
                 else if (motionController.handedness === "right") {
                     let rightTrigger = motionController.getComponent(xrIds[0]); // XR standard trigger
@@ -54,6 +59,10 @@ export default class XRInputs {
                     rightSecondary.onButtonStateChangedObservable.add((component) => {
                         this._inputs.rightSecondary(component.pressed);
                     });
+                    rightAnchor.setParent(controller.grip);
+                    rightAnchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
+                    rightAnchor.position = new BABYLON.Vector3(0,0,0);
+
                 }
             });
         });
