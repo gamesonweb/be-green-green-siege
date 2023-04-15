@@ -37,6 +37,9 @@ export class Commando {
             enemy.animateWithoutMoove();
             // moove and share the same destination
             if (Math.abs(this._movement.moove(enemy, positions, this._destination.position, enemy.speed, deltaTime)) < 10) {
+                // Just for a test ... @todo: remove
+                enemy.takeDamage(1);
+                // console.log("touch !");
                 this._destination.dispose();
                 this._destination = enemy.enemiesSpace.getRandomPoint();
             }

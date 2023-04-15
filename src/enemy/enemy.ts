@@ -18,6 +18,13 @@ export class Enemy {
     public speed: number;
     public force: BABYLON.Vector3;
     public velocity: BABYLON.Vector3;
+    // health
+    private readonly _MAX_LIFE_POINT: number = 3;
+    private readonly _MAX_PARTICLES: number = 10;
+    private _lifePoint: number;
+    // particles
+    private _smokeParticles: BABYLON.ParticleSystemSet;
+    private _created = false;
 
     public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
         this.scene = scene;
@@ -28,6 +35,7 @@ export class Enemy {
         this.force = BABYLON.Vector3.Zero();
         this.velocity = BABYLON.Vector3.Zero();
         this.createV2(pos);
+        this._lifePoint = this._MAX_LIFE_POINT;
     }
 
     // public async create(pos: BABYLON.Vector3, movement: Movement) {
@@ -105,16 +113,81 @@ export class Enemy {
         this._destination = destination;
     }
 
+    public takeDamage(val: number): void {
+        this._lifePoint -= val;
+    }
+
+    private _launchSmokeParticles(): void {
+        BABYLON.ParticleHelper.CreateAsync("smoke", this.scene, true).then((set) => {
+            this._smokeParticles = set;
+            this._smokeParticles.systems.forEach((system) => {
+                system.emitRate = 1;
+                system.minLifeTime = 1;
+                system.maxLifeTime = 1;
+                system.disposeOnStop = true;
+                // system.emitter = new BABYLON.Vector3(0, 0, 0); // Position de l'émetteur
+                // system.minEmitBox = new BABYLON.Vector3(-1, 0, -1); // Zone d'émission minimale
+                // system.maxEmitBox = new BABYLON.Vector3(1, 0, 1); // Zone d'émission maximale
+                // system.emitRate = intensitySlider.value * 100; // Taux d'émission initial
+                // system.start()
+            });
+            set.start(this.mesh);
+        });
+    }
+
+    private _checkHealth(): void {
+        if(this._lifePoint != this._MAX_LIFE_POINT) {
+            if(!this._created) {
+                this._launchSmokeParticles();
+                this._created = true;
+            }
+            // }
+            // this._smokeParticles.systems.forEach((system) => {
+            //     setInterval(() => {
+            //         smokeParticleSystemSet.systems.forEach((system) => {
+            //             system.emit();
+            //         });
+            //     }, 10000);
+            //     system.start();
+            // });
+            // this._smokeParticles.then((set) => {
+            //     set.systems.forEach((system) => {
+            //         system.emitRate = Math.floor(this._MAX_PARTICLES / this._lifePoint);
+            //         // system.maxLifeTime = 2;
+            //         // system.disposeOnStop = true;
+            //     });
+            //     // set.start(this.mesh);
+            //     if(this._lifePoint === 0) {
+            //         set.dispose();
+            //         BABYLON.ParticleHelper.CreateAsync("explosion", this.scene, true).then((set) => {
+            //             // set.systems.forEach((system) => {
+            //             //     system.disposeOnStop = true;
+            //             // });
+            //             set.start();
+            //         });
+            //     }
+            // });
+        }
+    }
+
+    private _die(): void {
+
+    }
+
     public animate(deltaTime: number, positions: BABYLON.Vector3[]): void {
         if (!this.ready) {
             return;
         }
+        // update health
+        // this._checkHealth();
         // animate face
         this._vibration += 0.2;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
         // moove 
         if (Math.abs(this.movement.moove(this, positions, this._destination.position, this.speed, deltaTime)) < 10) {
+            // tmp 
+            // this._takeDamage(1);
             this._destination.dispose();
             this._destination = this.enemiesSpace.getRandomPoint();
         }
@@ -140,6 +213,7 @@ export class Enemy {
         this._vibration += 0.2;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
+        // this._checkHealth();
         // moove 
         // if (Math.abs(this.movement.moove(this, destination.position, this.speed, deltaTime)) < 10) {
             // this._destination.dispose();
