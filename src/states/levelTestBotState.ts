@@ -1,10 +1,11 @@
 import * as BABYLON from 'babylonjs';
+import { Commando } from '../enemy/commando';
 import { EnemiesSpace } from '../enemy/enemies-space';
 import { Enemy } from '../enemy/enemy';
-import { State } from './state';
-import { SinusoidaleMovement } from '../movement/type/sinusoidaleMovement';
+import { LaserGun } from '../gun/laserGun';
 import { GravityMovement } from '../movement/type/gravityMovement';
-import { Commando } from '../enemy/commando';
+import { Laser } from '../projectile/laser';
+import { State } from './state';
 
 export class LevelTestBotState implements State {
     private _scene: BABYLON.Scene;
@@ -12,13 +13,16 @@ export class LevelTestBotState implements State {
     private _assetManager: BABYLON.AssetsManager;
     private _e_space: EnemiesSpace;
     private _ennemies: Enemy[];
+    private _gun: LaserGun;
 
     constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
         this._assetManager = assetManager;
     }
 
-    fire(): void {}
+    fire(): void {
+        this._gun.fire();
+    }
 
     /**
      * Creates the debug element
@@ -37,6 +41,8 @@ export class LevelTestBotState implements State {
     }
 
     public load(): void {
+        this._gun = new LaserGun(this._scene, new Laser(this._scene));
+
         this.createDebugElement(this._scene);
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this._scene);
@@ -66,5 +72,6 @@ export class LevelTestBotState implements State {
     // You must use this function to animate all the things in this level
     public animate(deltaTime: number): void {
         this._e_space.animate(deltaTime);
+        this._gun.animate(deltaTime);
     }
 }
