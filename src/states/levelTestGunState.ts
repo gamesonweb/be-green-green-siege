@@ -13,6 +13,7 @@ export class LevelTestGunState implements State {
     private _gun: LaserGun;
     private _target: TestTarget;
     private _shield: Shield;
+    private _fakeEnemy: any;
 
     constructor(scene: BABYLON.Scene) {
         this._scene = scene;
@@ -55,10 +56,8 @@ export class LevelTestGunState implements State {
         // shield
         this._shield = new Shield(this._scene);
 
-        // fake ennemy
-        const ennemy = Game.instanceLoader.getBot('ennemy');
-        ennemy.position = new BABYLON.Vector3(10, 4, 0);
-        ennemy.lookAt(this._scene.activeCamera.position);
+        // fake enemy
+        this._fakeEnemy = new fakeEnnemy(this._scene, new BABYLON.Vector3(10, 4, 0));
     }
 
     public dispose(): void {
@@ -71,5 +70,49 @@ export class LevelTestGunState implements State {
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
         this._target.animate(deltaTime);
+
+        this._fakeEnemy.animate(deltaTime);
+    }
+}
+
+class fakeEnnemy {
+    private _scene: BABYLON.Scene;
+    private _mesh: BABYLON.Mesh;
+    private _laser: Laser;
+
+    private _timeSinceLastFire: number = 0;
+    private readonly FIRE_INTERVAL: number = 1;
+
+    constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
+        this._scene = Scene;
+        this._mesh = Game.instanceLoader.getBot('ennemy');
+        this._mesh.position = position;
+        this._mesh.lookAt(this._scene.activeCamera.position);
+
+        this._laser = new Laser(this._scene, 4);
+    }
+
+    public fire(): void {
+        // get right laser childre name "RightLaser" from robot mesh
+        const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
+
+        // fire in camera direction
+        this._laser.fireDirection(result, this._scene.activeCamera.position);
+    }
+
+    public animate(deltaTime: number): void {
+        this._timeSinceLastFire += deltaTime;
+
+        this._mesh.lookAt(this._scene.activeCamera.position);
+
+        if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
+            this._timeSinceLastFire = 0;
+            this.fire();
+        }
+        this._laser.animate(deltaTime);
+    }
+
+    public dispose(): void {
+        this._mesh.dispose();
     }
 }

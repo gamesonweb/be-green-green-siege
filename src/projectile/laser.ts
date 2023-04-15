@@ -5,11 +5,12 @@ import { Projectile } from './projectile';
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 20;
+    private _laserSpeed: number;
     private _dispowerDistance: number = 200;
 
-    public constructor(scene: BABYLON.Scene) {
+    public constructor(scene: BABYLON.Scene, speed: number = 20) {
         this._scene = scene;
+        this._laserSpeed = speed;
         this._laserModel = this.initLaserModel();
         this._laserModel.metadata = this;
     }
@@ -48,6 +49,17 @@ export class Laser implements Projectile {
         laserInstance.position = origin.getAbsolutePosition().clone();
         laserInstance.rotationQuaternion = origin.absoluteRotationQuaternion.clone();
         laserInstance.rotationQuaternion = laserInstance.rotationQuaternion.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X, -Math.PI / 2));
+
+        laserInstance.isVisible = true;
+    }
+
+    public fireDirection(origin: BABYLON.Mesh, direction: BABYLON.Vector3): void {
+        const laserInstance = this._laserModel.createInstance('laserInstance');
+        laserInstance.position = origin.getAbsolutePosition().clone();
+        laserInstance.lookAt(direction);
+
+        // Rotate the laser instance to make its forward direction become its up direction
+        laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
 
         laserInstance.isVisible = true;
     }
