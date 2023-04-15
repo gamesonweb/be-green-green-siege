@@ -3,6 +3,7 @@ import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
+import { Shield } from '../shield/shield';
 
 export class LevelTestGunState implements State {
     private _scene: BABYLON.Scene;
@@ -10,6 +11,7 @@ export class LevelTestGunState implements State {
 
     private _gun: LaserGun;
     private _target: TestTarget;
+    private _shield: Shield;
 
     constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
@@ -35,11 +37,16 @@ export class LevelTestGunState implements State {
 
         // target
         this._target = new TestTarget(this._scene, new BABYLON.Vector3(0, 4, 10));
+
+        // shield
+        this._shield = new Shield(this._scene);
     }
 
     public dispose(): void {
-        // dispose the light
         this._light.dispose();
+        this._gun.dispose();
+        this._target.dispose();
+        this._shield.dispose();
     }
 
     public animate(deltaTime: number): void {

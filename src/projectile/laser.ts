@@ -5,7 +5,7 @@ import { Projectile } from './projectile';
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 40;
+    private _laserSpeed: number = 20;
     private _dispowerDistance: number = 200;
 
     public constructor(scene: BABYLON.Scene) {
