@@ -22,6 +22,8 @@ export class Game {
     private _spawnPoint: BABYLON.AbstractMesh;
     private _stateManager: StateManager;
 
+    testRobot: BABYLON.AbstractMesh;
+
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
         this._engine = new BABYLON.Engine(this._canvas, true);
@@ -78,7 +80,19 @@ export class Game {
 
         // Load platform
         this._assetManager.addMeshTask('platform', '', './assets/', 'platform.glb');
-        this._assetManager.load();
+
+        let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
+
+        testTask.onSuccess = (task) => {
+            task.loadedMeshes.forEach((mesh) => {
+                console.log(mesh.name);
+                if (mesh.name == 'Robot') {
+                    mesh.parent = null
+                }
+            });
+        };
+        
+        this._assetManager.load();                                 
 
         this._scene.executeWhenReady(async () => {
             Logger.log('Scene is ready');
