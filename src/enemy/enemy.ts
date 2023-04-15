@@ -1,11 +1,10 @@
 import * as BABYLON from 'babylonjs';
-import { EnemiesSpace } from './enemies-space';
 import { Movement } from '../movement/movement';
+import { EnemiesSpace } from './enemies-space';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
 export class Enemy {
-
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
     public assetManager: BABYLON.AssetsManager;
@@ -26,9 +25,8 @@ export class Enemy {
     private _smokeParticles: BABYLON.ParticleSystemSet;
     private _created = false;
 
-    public constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
+    public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
         this.scene = scene;
-        this.assetManager = assetManager;
         this.enemiesSpace = enemiesSpace;
         this.movement = movement;
         this.speed = speed;
@@ -62,10 +60,10 @@ export class Enemy {
         this.mesh.position = pos;
         this._vibration = 0;
         this.ready = true;
-            // this.setPosition(20,10,5);
-            // this.setupNavigationPlugin().then(() => {
-            // this.animate();
-            // });
+        // this.setPosition(20,10,5);
+        // this.setupNavigationPlugin().then(() => {
+        // this.animate();
+        // });
         // });
     }
 
@@ -118,7 +116,7 @@ export class Enemy {
     }
 
     private _launchSmokeParticles(): void {
-        BABYLON.ParticleHelper.CreateAsync("smoke", this.scene, true).then((set) => {
+        BABYLON.ParticleHelper.CreateAsync('smoke', this.scene, true).then((set) => {
             this._smokeParticles = set;
             this._smokeParticles.systems.forEach((system) => {
                 system.emitRate = 1;
@@ -136,8 +134,8 @@ export class Enemy {
     }
 
     private _checkHealth(): void {
-        if(this._lifePoint != this._MAX_LIFE_POINT) {
-            if(!this._created) {
+        if (this._lifePoint != this._MAX_LIFE_POINT) {
+            if (!this._created) {
                 this._launchSmokeParticles();
                 this._created = true;
             }
@@ -170,9 +168,7 @@ export class Enemy {
         }
     }
 
-    private _die(): void {
-
-    }
+    private _die(): void {}
 
     public animate(deltaTime: number, positions: BABYLON.Vector3[]): void {
         if (!this.ready) {
@@ -184,9 +180,9 @@ export class Enemy {
         this._vibration += 0.2;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
-        // moove 
+        // moove
         if (Math.abs(this.movement.moove(this, positions, this._destination.position, this.speed, deltaTime)) < 10) {
-            // tmp 
+            // tmp
             // this._takeDamage(1);
             this._destination.dispose();
             this._destination = this.enemiesSpace.getRandomPoint();
@@ -194,12 +190,17 @@ export class Enemy {
     }
 
     public checkCollision(positions: BABYLON.Vector3[]): BABYLON.Vector3 {
-        let offset = BABYLON.Vector3.Zero()
+        let offset = BABYLON.Vector3.Zero();
         positions.forEach((position) => {
             let distance = BABYLON.Vector3.Distance(this.mesh.position, position);
-            if(distance != 0) {
-            // let pos = this.mesh.position; 
-                offset.addInPlace(this.mesh.position.subtract(position).normalize().scale(50 / distance));
+            if (distance != 0) {
+                // let pos = this.mesh.position;
+                offset.addInPlace(
+                    this.mesh.position
+                        .subtract(position)
+                        .normalize()
+                        .scale(50 / distance)
+                );
             }
         });
         return offset;
@@ -214,10 +215,10 @@ export class Enemy {
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
         // this._checkHealth();
-        // moove 
+        // moove
         // if (Math.abs(this.movement.moove(this, destination.position, this.speed, deltaTime)) < 10) {
-            // this._destination.dispose();
-            // this._destination = this.enemiesSpace.getRandomPoint();
+        // this._destination.dispose();
+        // this._destination = this.enemiesSpace.getRandomPoint();
         // }
     }
 }

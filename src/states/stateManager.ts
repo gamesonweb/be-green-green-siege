@@ -13,12 +13,10 @@ export enum StatesEnum {
 
 export class StateManager {
     private _scene: BABYLON.Scene;
-    private _assetManager: BABYLON.AssetsManager;
     private _currentState: State;
 
-    constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
+    constructor(scene: BABYLON.Scene) {
         this._scene = scene;
-        this._assetManager = assetManager;
     }
 
     /**
@@ -37,10 +35,10 @@ export class StateManager {
                 this._currentState = new MainMenuState(this._scene, this);
                 break;
             case StatesEnum.LEVELTESTBOT:
-                this._currentState = new LevelTestBotState(this._scene, this._assetManager);
+                this._currentState = new LevelTestBotState(this._scene);
                 break;
             case StatesEnum.LEVELTESTGUN:
-                this._currentState = new LevelTestGunState(this._scene, this._assetManager);
+                this._currentState = new LevelTestGunState(this._scene);
                 break;
         }
 

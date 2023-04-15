@@ -10,14 +10,12 @@ import { State } from './state';
 export class LevelTestBotState implements State {
     private _scene: BABYLON.Scene;
     private _light: BABYLON.HemisphericLight;
-    private _assetManager: BABYLON.AssetsManager;
     private _e_space: EnemiesSpace;
     private _ennemies: Enemy[];
     private _gun: LaserGun;
 
-    constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
+    constructor(scene: BABYLON.Scene) {
         this._scene = scene;
-        this._assetManager = assetManager;
     }
 
     fire(): void {
@@ -54,7 +52,7 @@ export class LevelTestBotState implements State {
         // let ennemySinusoidale = new Ennemy(this._scene, this._assetManager, this._e_space, new BABYLON.Vector3(20, 10, 5), new SinusoidaleMovement(0.0005), 0.01);
         // this._e_space.addEnnemy(ennemySinusoidale);
         // let ennemyGravity = new Enemy(this._scene, this._assetManager, this._e_space, new BABYLON.Vector3(20, 10, 5), new GravityMovement(), 0.5, this._e_space.getRandomPoint());
-        let commando = new Commando(4, this._scene, this._assetManager, this._e_space, new BABYLON.Vector3(20, 10, 5), new GravityMovement(), 5, this._e_space.getRandomPoint());
+        let commando = new Commando(4, this._scene, this._e_space, new BABYLON.Vector3(20, 10, 5), new GravityMovement(), 5, this._e_space.getRandomPoint());
         this._e_space.addCommando(commando);
         // this._e_space.addEnnemy(ennemyGravity);
         // remove it when it's finished

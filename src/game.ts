@@ -5,6 +5,7 @@ import { GameUtils } from './game-utils';
 import Inputs from './inputs/Inputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
+import { InstanceLoader } from './instanceLoader';
 import { StateManager, StatesEnum } from './states/stateManager';
 
 export class Game {
@@ -17,6 +18,7 @@ export class Game {
 
     public static debug: DebugConsole;
     public static vrSupported: Boolean;
+    public static instanceLoader: InstanceLoader;
 
     private _assetManager: BABYLON.AssetsManager;
     private _spawnPoint: BABYLON.AbstractMesh;
@@ -69,7 +71,7 @@ export class Game {
         this._scene = this.createBasicScene(this._engine);
         this._camera = this.createFreeCamera(this._scene, this._canvas);
         this._assetManager = new BABYLON.AssetsManager(this._scene);
-        this._stateManager = new StateManager(this._scene, this._assetManager);
+        this._stateManager = new StateManager(this._scene);
         this._inputs = new Inputs(this, this._stateManager, this._scene, this._camera, this._canvas);
 
         Game.vrSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar');
@@ -79,6 +81,7 @@ export class Game {
         GameUtils.createSkybox('skybox', './assets/texture/skybox/TropicalSunnyDay', this._scene);
 
         // Load platform
+        // FIXME : Changer pour chargé l'objet unique
         this._assetManager.addMeshTask('platform', '', './assets/', 'platform.glb');
 
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
@@ -87,15 +90,17 @@ export class Game {
             task.loadedMeshes.forEach((mesh) => {
                 console.log(mesh.name);
                 if (mesh.name == 'Robot') {
-                    mesh.parent = null
+                    mesh.parent = null;
                 }
             });
         };
-        
-        this._assetManager.load();                                 
+
+        this._assetManager.load();
 
         this._scene.executeWhenReady(async () => {
             Logger.log('Scene is ready');
+
+            Game.instanceLoader = new InstanceLoader(this._scene);
 
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
