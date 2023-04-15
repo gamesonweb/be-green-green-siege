@@ -39,7 +39,7 @@ export class LaserGun implements Gun {
 
             this._gunModel.setParent(rightAnchor);
             this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
-            this._gunModel.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
+            // this._gunModel.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
         } else {
             this._pointeur = new Pointeur();
 
