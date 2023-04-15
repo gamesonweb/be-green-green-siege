@@ -1,51 +1,57 @@
 import * as GUI from 'babylonjs-gui';
 
 export class Pointeur {
-    private gui: GUI.AdvancedDynamicTexture;
+    private _gui: GUI.AdvancedDynamicTexture;
 
     private _width = 2;
     private _color = 'white';
     private _length = 10;
 
+    private _verticalLine: GUI.Line;
+    private _horizontalLine: GUI.Line;
+
     constructor() {
-        this.gui = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+        this._gui = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-        const canvasWidth = this.gui.getSize().width;
-        const canvasHeight = this.gui.getSize().height;
+        this.drawCross();
 
-        // Vertical line
-        const verticalLine = new GUI.Line();
-        verticalLine.lineWidth = this._width;
-        verticalLine.color = this._color;
-        verticalLine.x1 = canvasWidth / 2;
-        verticalLine.y1 = canvasHeight / 2 - this._length;
-        verticalLine.x2 = canvasWidth / 2;
-        verticalLine.y2 = canvasHeight / 2 + this._length;
+        window.addEventListener('resize', () => {
+            // Clear the GUI
+            this._verticalLine.dispose();
+            this._horizontalLine.dispose();
 
-        // Horizontal line
-        const horizontalLine = new GUI.Line();
-        horizontalLine.lineWidth = this._width;
-        horizontalLine.color = this._color;
-        horizontalLine.x1 = canvasWidth / 2 - this._length;
-        horizontalLine.y1 = canvasHeight / 2;
-        horizontalLine.x2 = canvasWidth / 2 + this._length;
-        horizontalLine.y2 = canvasHeight / 2;
-
-        // Add lines as controls to the advanced texture
-        this.gui.addControl(verticalLine);
-        this.gui.addControl(horizontalLine);
-
-        window.addEventListener('resize', function () {
-            updateGUI();
+            this.drawCross();
         });
     }
 
-    public dispose(): void {
-        this.gui.dispose();
-    }
-}
+    private drawCross() {
+        const canvasWidth = this._gui.getSize().width;
+        const canvasHeight = this._gui.getSize().height;
 
-function updateGUI() {
-    this.gui.idealHeight = window.innerHeight;
-    this.gui.idealWidth = window.innerWidth;
+        // Vertical line
+        this._verticalLine = new GUI.Line();
+        this._verticalLine.lineWidth = this._width;
+        this._verticalLine.color = this._color;
+        this._verticalLine.x1 = canvasWidth / 2;
+        this._verticalLine.y1 = canvasHeight / 2 - this._length;
+        this._verticalLine.x2 = canvasWidth / 2;
+        this._verticalLine.y2 = canvasHeight / 2 + this._length;
+
+        // Horizontal line
+        this._horizontalLine = new GUI.Line();
+        this._horizontalLine.lineWidth = this._width;
+        this._horizontalLine.color = this._color;
+        this._horizontalLine.x1 = canvasWidth / 2 - this._length;
+        this._horizontalLine.y1 = canvasHeight / 2;
+        this._horizontalLine.x2 = canvasWidth / 2 + this._length;
+        this._horizontalLine.y2 = canvasHeight / 2;
+
+        // Add lines as controls to the advanced texture
+        this._gui.addControl(this._verticalLine);
+        this._gui.addControl(this._horizontalLine);
+    }
+
+    public dispose(): void {
+        this._gui.dispose();
+    }
 }
