@@ -5,7 +5,7 @@ import { Projectile } from './projectile';
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number = 40;
+    private _laserSpeed: number = 50;
     private _dispowerDistance: number = 200;
 
     public constructor(scene: BABYLON.Scene) {
@@ -18,8 +18,8 @@ export class Laser implements Projectile {
         const model = BABYLON.MeshBuilder.CreateCylinder(
             'laser',
             {
-                height: 0.2,
-                diameter: 0.2,
+                height: 0.1,
+                diameter: 0.1,
             },
             this._scene
         );
@@ -42,6 +42,7 @@ export class Laser implements Projectile {
             laser.dispose();
         }
     }
+    
 
     public fire(origin: BABYLON.Mesh): void {
         const laserInstance = this._laserModel.createInstance('laserInstance');
@@ -57,7 +58,7 @@ export class Laser implements Projectile {
     }
 
     private checkCollision(laser: BABYLON.InstancedMesh): void {
-        const ray = new BABYLON.Ray(laser.position, laser.up, 0.8);
+        const ray = new BABYLON.Ray(laser.position, laser.up, this._laserSpeed * 0.02);
         const hit = this._scene.pickWithRay(ray);
 
         if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata instanceof Target) {
