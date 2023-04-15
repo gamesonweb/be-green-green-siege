@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
+import { TestTarget } from '../target/testTarget';
 import { State } from './state';
 
 export class LevelTestGunState implements State {
@@ -8,6 +9,7 @@ export class LevelTestGunState implements State {
     private _light: BABYLON.HemisphericLight;
 
     private _gun: LaserGun;
+    private _target: TestTarget;
 
     constructor(scene: BABYLON.Scene, assetManager: BABYLON.AssetsManager) {
         this._scene = scene;
@@ -30,6 +32,9 @@ export class LevelTestGunState implements State {
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this._scene);
 
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
+
+        // target
+        this._target = new TestTarget(this._scene, new BABYLON.Vector3(0, 4, 10));
     }
 
     public dispose(): void {
@@ -39,5 +44,6 @@ export class LevelTestGunState implements State {
 
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
+        this._target.animate(deltaTime);
     }
 }

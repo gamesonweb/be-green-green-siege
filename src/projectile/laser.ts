@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { Target } from '../target/target';
 import { Projectile } from './projectile';
 
 export class Laser implements Projectile {
@@ -10,11 +11,12 @@ export class Laser implements Projectile {
     public constructor(scene: BABYLON.Scene) {
         this._scene = scene;
         this._laserModel = this.initLaserModel();
+        this._laserModel.metadata = this;
     }
 
     private initLaserModel(): BABYLON.Mesh {
         const model = BABYLON.MeshBuilder.CreateCylinder(
-            'cylinder',
+            'laser',
             {
                 height: 0.2,
                 diameter: 0.2,
@@ -54,11 +56,27 @@ export class Laser implements Projectile {
         return this._laserModel.instances;
     }
 
+    private checkCollision(laser: BABYLON.InstancedMesh): void {
+        const ray = new BABYLON.Ray(laser.position, laser.up, 0.8);
+        const hit = this._scene.pickWithRay(ray);
+
+        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata instanceof Target) {
+            hit.pickedMesh.metadata.touch();
+            laser.dispose();
+        }
+
+        // dispose if hit something
+        if (hit.pickedMesh && hit.pickedMesh.name !== 'laserInstance') {
+            laser.dispose();
+        }
+    }
+
     public animate(deltaTime: number): void {
         this.getAllLaserInstances().forEach((laser) => {
             var distance = this._laserSpeed * deltaTime;
             laser.position.addInPlace(laser.up.scale(distance));
             this.checkDistance(laser);
+            this.checkCollision(laser);
         }, this);
     }
 

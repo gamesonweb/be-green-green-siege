@@ -3,7 +3,6 @@ import { Game } from '../game';
 import { Projectile } from '../projectile/projectile';
 import { Gun } from './gun';
 import { Pointeur } from './pointeur';
-import Logger from '../debug/logger';
 
 export class LaserGun implements Gun {
     private _scene: BABYLON.Scene;
@@ -37,14 +36,11 @@ export class LaserGun implements Gun {
             // If the VR is supported, the gun model is attached to the hand.
             let leftAnchor = this._scene.getMeshByName('leftAnchor');
             let rightAnchor = this._scene.getMeshByName('rightAnchor');
-            
+
             this._gunModel.setParent(rightAnchor);
             this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
-            this._gunModel.rotate(BABYLON.Axis.Y,
-                 Math.PI, BABYLON.Space.LOCAL);
-
+            this._gunModel.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
         } else {
-
             this._pointeur = new Pointeur();
 
             const cameraDirection = this._camera.getForwardRay().direction;
