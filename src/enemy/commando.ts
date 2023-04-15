@@ -27,6 +27,10 @@ export class Commando {
         return this._enemies;
     }
 
+    public removeEnemy(enemy: Enemy) {
+        this._enemies.splice(this._enemies.indexOf(enemy), 1);
+    }
+
     public animate(deltaTime: number, positions: BABYLON.Vector3[]) {
         this._enemies.forEach((enemy) => {
             enemy.animateWithoutMoove();

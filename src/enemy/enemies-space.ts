@@ -85,22 +85,21 @@ export class EnemiesSpace {
         return this._max;
     }
 
-    // public logDim() {
-    //     console.log('dim_Min: (x:', this._min.x, ', y:', this._min.y, ', z:', this._min.z, ')');
-    //     console.log('dim_Max: (x:', this._max.x, ', y:', this._max.y, ', z:', this._max.z, ')');
-    // }
-
-    // public getVectorsWorld(): BABYLON.Vector3[] {
-    //     return this._zone.getBoundingInfo().boundingBox.vectorsWorld;
-    // }
-
     private getPositions() {
         this._classicEnemies.forEach((enemy) => {
-            this._positions.push(enemy.mesh.position);
+            if(!enemy.isDeath) {
+                this._positions.push(enemy.mesh.position);
+            } else {
+                this._classicEnemies.splice(this._classicEnemies.indexOf(enemy), 1);
+            }
         });
         this._commandos.forEach((commando) => {
             commando.getEnemies().forEach((enemy) => {
-                this._positions.push(enemy.mesh.position);
+                if(!enemy.isDeath) {
+                    this._positions.push(enemy.mesh.position);
+                } else {
+                    commando.removeEnemy(enemy);
+                }
             });
         });
     }
@@ -115,18 +114,6 @@ export class EnemiesSpace {
         this._commandos.forEach((commando) => {
             commando.animate(deltaTime, this._positions);
         });
-        // // collisions
-        // this._allEnemies.forEach((enemy) => {
-        //     let current = enemy;
-        //     this._allEnemies.forEach((another) => {
-        //         let distance = BABYLON.Vector3.Distance(current.mesh.position, another.mesh.position);
-        //         if (distance < this._minDistance) {
-        //             // Éviter la collision
-        //             var direction = current.mesh.position.subtract(another.mesh.position).normalize();
-        //             current.mesh.position.addInPlace(direction.scale(0.1));
-        //         }
-        //     });
-        // });
         this._positions = [];
     }
 }
