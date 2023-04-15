@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import { Target } from '../target/target';
+import { Targetable } from '../target/targetable';
 import { Projectile } from './projectile';
 
 export class Laser implements Projectile {
@@ -42,7 +42,6 @@ export class Laser implements Projectile {
             laser.dispose();
         }
     }
-    
 
     public fire(origin: BABYLON.Mesh): void {
         const laserInstance = this._laserModel.createInstance('laserInstance');
@@ -61,7 +60,7 @@ export class Laser implements Projectile {
         const ray = new BABYLON.Ray(laser.position, laser.up, this._laserSpeed * 0.02);
         const hit = this._scene.pickWithRay(ray);
 
-        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata instanceof Target) {
+        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata instanceof Targetable) {
             hit.pickedMesh.metadata.touch();
             laser.dispose();
         }

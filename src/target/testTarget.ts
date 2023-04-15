@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
-import { Target } from './target';
+import { Targetable } from './targetable';
 
-export class TestTarget extends Target {
+export class TestTarget extends Targetable {
     private _scene: BABYLON.Scene;
 
     private _targetModel: BABYLON.Mesh;
