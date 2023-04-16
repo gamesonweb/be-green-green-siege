@@ -135,8 +135,13 @@ export class Game {
      * Starts the animation loop.
      */
     animate(): void {
+        let lastTime = performance.now(); // Get the current time
+
         this._scene.registerBeforeRender(() => {
-            let deltaTime: number = 1 / this._engine.getFps();
+            const currentTime = performance.now(); // Get the new current time
+            let deltaTime: number = (currentTime - lastTime) / 1000; // Calculate deltaTime in seconds
+            lastTime = currentTime; // Update lastTime for the next frame
+
             Game.debug.fps.innerHTML = 'FPS: ' + this._engine.getFps().toFixed();
             this._stateManager.getCurrentState().animate(deltaTime);
         });
