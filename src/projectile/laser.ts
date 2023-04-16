@@ -6,7 +6,7 @@ export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number;
-    private _dispowerDistance: number = 200;
+    private _dispowerDistance: number = 80;
 
     public constructor(scene: BABYLON.Scene, speed: number = 70) {
         this._scene = scene;
@@ -71,34 +71,23 @@ export class Laser implements Projectile {
     private checkCollision(laser: BABYLON.InstancedMesh, deltaTime: number): void {
         const steps = 5; // The number of intermediaate collision checks
         const stepDistance = (this._laserSpeed * deltaTime) / steps;
-        let collided = false;
 
-        for (let i = 0; i < steps && !collided; i++) {
+        for (let i = 0; i < steps; i++) {
             const newPosition = laser.position.add(laser.up.scale(stepDistance * i));
             const ray = new BABYLON.Ray(newPosition, laser.up, stepDistance);
             const hit = this._scene.pickWithRay(ray);
 
             if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata.parentClass instanceof Targetable) {
                 hit.pickedMesh.metadata.parentClass.touch();
-                laser.position = newPosition;
-                setTimeout(() => {
-                    laser.dispose();
-                }, 50); // Add a 50ms delay before the laser is removed so that the laser is visually at the obstacle when it is removed.
-                collided = true;
+                laser.dispose();
+                break;
             }
 
             // Dispose if the laser hits something
             if (hit.pickedMesh && hit.pickedMesh.name !== 'laserInstance') {
-                laser.position = newPosition;
-                setTimeout(() => {
-                    laser.dispose();
-                }, 50); // Add a 50 ms delay before the laser is available
-                collided = true;
+                laser.dispose();
+                break;
             }
-        }
-
-        if (!collided) {
-            laser.position.addInPlace(laser.up.scale(this._laserSpeed * deltaTime));
         }
     }
 
