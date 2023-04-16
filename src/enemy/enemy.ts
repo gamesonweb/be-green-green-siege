@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
+import { Game } from '../game';
 import { Movement } from '../movement/movement';
 import { EnemiesSpace } from './enemies-space';
-import { Game } from '../game';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
@@ -38,14 +38,14 @@ export class Enemy {
     }
 
     public createMesh(pos: BABYLON.Vector3) {
-        this.mesh = Game.instanceLoader.getBot('enemy_'+pos);
-        this.mesh.scaling = new BABYLON.Vector3(2,2,2);
+        this.mesh = Game.instanceLoader.getBot('enemy_' + pos);
+        this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
         this.mesh.position = pos;
         this._vibration = 0;
     }
 
     private lookAtMe(biais: number) {
-        let origin: BABYLON.Vector3 = this.scene.activeCamera.position;
+        let origin: BABYLON.Vector3 = this.scene.getCameraById('PlayerCamera').position;
         this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
     }
 
@@ -58,8 +58,8 @@ export class Enemy {
     }
 
     private _launchSmokeParticles() {
-        this._smokeParticles = new BABYLON.ParticleSystem("smoke", this._MAX_PARTICLES, this.scene);
-        this._smokeParticles.particleTexture = new BABYLON.Texture("./assets/cloud.png", this.scene);
+        this._smokeParticles = new BABYLON.ParticleSystem('smoke', this._MAX_PARTICLES, this.scene);
+        this._smokeParticles.particleTexture = new BABYLON.Texture('./assets/cloud.png', this.scene);
         this._smokeParticles.color1 = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
         this._smokeParticles.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 0);
         this._smokeParticles.emitter = this.mesh;
@@ -67,14 +67,14 @@ export class Enemy {
     }
 
     private _checkHealth() {
-        if(this._lifePoint != this._MAX_LIFE_POINT) {
+        if (this._lifePoint != this._MAX_LIFE_POINT) {
             // console.log("Point: ", this._lifePoint);
-            if(!this._created) {
+            if (!this._created) {
                 this._launchSmokeParticles();
                 this._created = true;
             }
             this._smokeParticles.emitRate = this._MAX_PARTICLES / this._lifePoint;
-            if(this._lifePoint == 0) {
+            if (this._lifePoint == 0) {
                 this._smokeParticles.stop();
                 this._die();
             }
@@ -82,9 +82,9 @@ export class Enemy {
     }
 
     private _die(): void {
-        BABYLON.ParticleHelper.CreateAsync("explosion", this.scene).then((set) => {
+        BABYLON.ParticleHelper.CreateAsync('explosion', this.scene).then((set) => {
             // console.log(set.systems.length); == 4
-            set.systems.forEach(s => {
+            set.systems.forEach((s) => {
                 s.disposeOnStop = true;
             });
             console.log('0: ', set.systems[0].emitRate);
@@ -124,9 +124,9 @@ export class Enemy {
         // console.log('pos: ', this.mesh.position);
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
-        // moove 
+        // moove
         if (Math.abs(this.movement.moove(this, positions, this._destination.position, this.speed, deltaTime)) < 10) {
-            // tmp 
+            // tmp
             // this._takeDamage(1);
             this._destination.dispose();
             this._destination = this.enemiesSpace.getRandomPoint();
@@ -139,7 +139,7 @@ export class Enemy {
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
         this._checkHealth();
-        // moove 
+        // moove
         // if (Math.abs(this.movement.moove(this, destination.position, this.speed, deltaTime)) < 10) {
         // this._destination.dispose();
         // this._destination = this.enemiesSpace.getRandomPoint();

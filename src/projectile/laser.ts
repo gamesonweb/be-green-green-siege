@@ -38,7 +38,7 @@ export class Laser implements Projectile {
     }
 
     private checkDistance(laser: BABYLON.InstancedMesh): void {
-        const distance = BABYLON.Vector3.Distance(laser.position, this._scene.activeCamera.position);
+        const distance = BABYLON.Vector3.Distance(laser.position, this._scene.getCameraById('PlayerCamera').position);
         if (distance > this._dispowerDistance) {
             laser.dispose();
         }

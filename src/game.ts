@@ -39,7 +39,7 @@ export class Game {
     }
 
     createFreeCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): BABYLON.FreeCamera {
-        const camera = new BABYLON.FreeCamera('Camera', BABYLON.Vector3.Zero(), scene);
+        const camera = new BABYLON.FreeCamera('PlayerCamera', BABYLON.Vector3.Zero(), scene);
         camera.attachControl(cavnas, true);
         camera.inertia = 0;
         camera.angularSensibility = 1000;
