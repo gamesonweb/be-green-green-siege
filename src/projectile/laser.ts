@@ -12,7 +12,7 @@ export class Laser implements Projectile {
         this._scene = scene;
         this._laserSpeed = speed;
         this._laserModel = this.initLaserModel();
-        this._laserModel.metadata = this;
+        this._laserModel.metadata = { parentClass: this };
     }
 
     private initLaserModel(): BABYLON.Mesh {
@@ -72,8 +72,8 @@ export class Laser implements Projectile {
         const ray = new BABYLON.Ray(laser.position, laser.up, this._laserSpeed * 0.02);
         const hit = this._scene.pickWithRay(ray);
 
-        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata instanceof Targetable) {
-            hit.pickedMesh.metadata.touch();
+        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata.parentClass instanceof Targetable) {
+            hit.pickedMesh.metadata.parentClass.touch();
             laser.dispose();
         }
 
