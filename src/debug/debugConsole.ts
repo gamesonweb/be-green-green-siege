@@ -34,7 +34,7 @@ export default class DebugConsole {
 
         this.debugCamera.addEventListener('change', (evt) => {
             // get debugCamera
-            let debugCamera = this._scene.getCameraByName('cameraDebug');
+            let debugCamera = this._scene.getCameraByName('DebugCamera');
             if (this._scene.activeCamera == debugCamera) {
                 this._scene.activeCamera = this._camera;
             } else {

@@ -113,7 +113,7 @@ export class Game {
             this._stateManager.switchState(StatesEnum.MAINMENU);
 
             // Debug
-            this.CreateCameraDebug(this._scene, this._canvas);
+            this.createDebugCamera(this._scene, this._canvas);
 
             this.animate();
         });
@@ -122,13 +122,14 @@ export class Game {
     /**
      * Creates the debug camera.
      */
-    CreateCameraDebug(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
-        const cameraDebug = new BABYLON.FreeCamera('cameraDebug', new BABYLON.Vector3(0, 0, -10), scene);
-        cameraDebug.position = new BABYLON.Vector3(5, 10);
-        cameraDebug.setTarget(BABYLON.Vector3.Zero());
-        cameraDebug.attachControl(cavnas, true);
-        cameraDebug.inertia = 0;
-        cameraDebug.angularSensibility = 1000;
+    createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
+        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(0, 0, -10), scene);
+        debugCamera.position = new BABYLON.Vector3(5, 10);
+        debugCamera.setTarget(BABYLON.Vector3.Zero());
+        debugCamera.attachControl(cavnas, true);
+        debugCamera.speed = 10;
+        debugCamera.inertia = 0;
+        debugCamera.angularSensibility = 1000;
     }
 
     /**
