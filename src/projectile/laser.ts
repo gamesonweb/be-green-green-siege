@@ -8,7 +8,7 @@ export class Laser implements Projectile {
     private _laserSpeed: number;
     private _dispowerDistance: number = 200;
 
-    public constructor(scene: BABYLON.Scene, speed: number = 20) {
+    public constructor(scene: BABYLON.Scene, speed: number = 70) {
         this._scene = scene;
         this._laserSpeed = speed;
         this._laserModel = this.initLaserModel();
@@ -68,18 +68,37 @@ export class Laser implements Projectile {
         return this._laserModel.instances;
     }
 
-    private checkCollision(laser: BABYLON.InstancedMesh): void {
-        const ray = new BABYLON.Ray(laser.position, laser.up, this._laserSpeed * 0.02);
-        const hit = this._scene.pickWithRay(ray);
+    private checkCollision(laser: BABYLON.InstancedMesh, deltaTime: number): void {
+        const steps = 5; // The number of intermediaate collision checks
+        const stepDistance = (this._laserSpeed * deltaTime) / steps;
+        let collided = false;
 
-        if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata.parentClass instanceof Targetable) {
-            hit.pickedMesh.metadata.parentClass.touch();
-            laser.dispose();
+        for (let i = 0; i < steps && !collided; i++) {
+            const newPosition = laser.position.add(laser.up.scale(stepDistance * i));
+            const ray = new BABYLON.Ray(newPosition, laser.up, stepDistance);
+            const hit = this._scene.pickWithRay(ray);
+
+            if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata.parentClass instanceof Targetable) {
+                hit.pickedMesh.metadata.parentClass.touch();
+                laser.position = newPosition;
+                setTimeout(() => {
+                    laser.dispose();
+                }, 50); // Add a 50ms delay before the laser is removed so that the laser is visually at the obstacle when it is removed.
+                collided = true;
+            }
+
+            // Dispose if the laser hits something
+            if (hit.pickedMesh && hit.pickedMesh.name !== 'laserInstance') {
+                laser.position = newPosition;
+                setTimeout(() => {
+                    laser.dispose();
+                }, 50); // Add a 50 ms delay before the laser is available
+                collided = true;
+            }
         }
 
-        // dispose if hit something
-        if (hit.pickedMesh && hit.pickedMesh.name !== 'laserInstance') {
-            laser.dispose();
+        if (!collided) {
+            laser.position.addInPlace(laser.up.scale(this._laserSpeed * deltaTime));
         }
     }
 
@@ -88,7 +107,7 @@ export class Laser implements Projectile {
             var distance = this._laserSpeed * deltaTime;
             laser.position.addInPlace(laser.up.scale(distance));
             this.checkDistance(laser);
-            this.checkCollision(laser);
+            this.checkCollision(laser, deltaTime);
         }, this);
     }
 
