@@ -97,7 +97,7 @@ class fakeEnnemy {
         const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
 
         // fire in camera direction
-        this._laser.fireDirection(result, this._scene.getCameraById('PlayerCamera').position);
+        this._laser.fire(result, this._scene.getCameraById('PlayerCamera').position);
     }
 
     public animate(deltaTime: number): void {

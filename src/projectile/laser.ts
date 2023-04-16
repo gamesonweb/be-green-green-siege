@@ -46,24 +46,25 @@ export class Laser implements Projectile {
         return BABYLON.Vector3.Distance(laser.position, this._scene.getCameraById('PlayerCamera').position);
     }
 
-    public fire(origin: BABYLON.Mesh): void {
-        const laserInstance = this._laserModel.createInstance('laserInstance');
-        laserInstance.position = origin.getAbsolutePosition().clone();
-        laserInstance.rotationQuaternion = origin.absoluteRotationQuaternion.clone();
-        laserInstance.rotationQuaternion = laserInstance.rotationQuaternion.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X, -Math.PI / 2));
-
+    public fire(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): void {
+        const laserInstance = this.createLaserInstance(origin, direction);
         laserInstance.isVisible = true;
     }
 
-    public fireDirection(origin: BABYLON.Mesh, direction: BABYLON.Vector3): void {
+    private createLaserInstance(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): BABYLON.InstancedMesh {
         const laserInstance = this._laserModel.createInstance('laserInstance');
         laserInstance.position = origin.getAbsolutePosition().clone();
-        laserInstance.lookAt(direction);
 
-        // Rotate the laser instance to make its forward direction become its up direction
-        laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
+        if (direction) {
+            laserInstance.lookAt(direction);
+            // Rotate the laser instance to make its forward direction become its up direction
+            laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
+        } else {
+            laserInstance.rotationQuaternion = origin.absoluteRotationQuaternion.clone();
+            laserInstance.rotationQuaternion = laserInstance.rotationQuaternion.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X, -Math.PI / 2));
+        }
 
-        laserInstance.isVisible = true;
+        return laserInstance;
     }
 
     private getAllLaserInstances(): BABYLON.InstancedMesh[] {
