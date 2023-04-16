@@ -81,7 +81,7 @@ class fakeEnnemy {
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 1;
+    private readonly FIRE_INTERVAL: number = 0.4;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
         this._scene = Scene;
@@ -89,7 +89,7 @@ class fakeEnnemy {
         this._mesh.position = position;
         this._mesh.lookAt(this._scene.getCameraById('PlayerCamera').position);
 
-        this._laser = new Laser(this._scene, 4);
+        this._laser = new Laser(this._scene, 40, 40, 10, 1);
     }
 
     public fire(): void {

@@ -6,11 +6,16 @@ export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number;
-    private _dispowerDistance: number = 80;
+    private _dispowerDistance: number;
+    private _collisionDistance: number;
+    private _collisionPresicion: number;
 
-    public constructor(scene: BABYLON.Scene, speed: number = 70) {
+    public constructor(scene: BABYLON.Scene, speed: number = 70, dispowerDistance: number = 80, collisionDistance: number = 40, collisionPresicion: number = 5) {
         this._scene = scene;
         this._laserSpeed = speed;
+        this._dispowerDistance = dispowerDistance;
+        this._collisionDistance = collisionDistance;
+        this._collisionPresicion = collisionPresicion;
         this._laserModel = this.initLaserModel();
         this._laserModel.metadata = { parentClass: this };
     }
@@ -37,11 +42,8 @@ export class Laser implements Projectile {
         return this._laserModel;
     }
 
-    private checkDistance(laser: BABYLON.InstancedMesh): void {
-        const distance = BABYLON.Vector3.Distance(laser.position, this._scene.getCameraById('PlayerCamera').position);
-        if (distance > this._dispowerDistance) {
-            laser.dispose();
-        }
+    private getDistanceWithPlayer(laser: BABYLON.InstancedMesh): number {
+        return BABYLON.Vector3.Distance(laser.position, this._scene.getCameraById('PlayerCamera').position);
     }
 
     public fire(origin: BABYLON.Mesh): void {
@@ -69,7 +71,7 @@ export class Laser implements Projectile {
     }
 
     private checkCollision(laser: BABYLON.InstancedMesh, deltaTime: number): void {
-        const steps = 5; // The number of intermediaate collision checks
+        const steps = 1; // The number of intermediaate collision checks
         const stepDistance = (this._laserSpeed * deltaTime) / steps;
 
         for (let i = 0; i < steps; i++) {
@@ -95,8 +97,17 @@ export class Laser implements Projectile {
         this.getAllLaserInstances().forEach((laser) => {
             var distance = this._laserSpeed * deltaTime;
             laser.position.addInPlace(laser.up.scale(distance));
-            this.checkDistance(laser);
-            this.checkCollision(laser, deltaTime);
+            const laserDistance = this.getDistanceWithPlayer(laser);
+
+            // Dispose if the laser is too far away from the player
+            if (laserDistance > this._dispowerDistance) {
+                laser.dispose();
+            }
+
+            // Check collision if the laser is close enough to the player
+            if (laserDistance < this._collisionDistance) {
+                this.checkCollision(laser, deltaTime);
+            }
         }, this);
     }
 
