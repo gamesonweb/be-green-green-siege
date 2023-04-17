@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import DebugConsole from './debug/debugConsole';
+import Debug3D from './debug/debugConsole3D';
 import Logger from './debug/logger';
 import { GameUtils } from './game-utils';
 import Inputs from './inputs/Inputs';
@@ -17,6 +18,7 @@ export class Game {
     private _inputs: Inputs;
 
     public static debug: DebugConsole;
+    public static debug3D: Debug3D;
     public static vrSupported: Boolean;
     public static instanceLoader: InstanceLoader;
 
@@ -76,6 +78,7 @@ export class Game {
 
         Game.vrSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar');
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
+        Game.debug3D = new Debug3D(this._scene, this._camera);
 
         // create the skybox
         GameUtils.createSkybox('skybox', './assets/texture/skybox/TropicalSunnyDay', this._scene);
@@ -143,7 +146,10 @@ export class Game {
             let deltaTime: number = (currentTime - lastTime) / 1000; // Calculate deltaTime in seconds
             lastTime = currentTime; // Update lastTime for the next frame
 
-            Game.debug.fps.innerHTML = 'FPS: ' + this._engine.getFps().toFixed();
+            const fps = 'FPS: ' + this._engine.getFps().toFixed();
+            Game.debug.fps.innerHTML = fps;
+            Game.debug3D.updateFps(fps);
+
             this._stateManager.getCurrentState().animate(deltaTime);
         });
 

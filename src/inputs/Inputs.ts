@@ -43,6 +43,7 @@ export default class Inputs {
     public leftSecondary(pressed: boolean): void {
         if (pressed) {
             Game.debug.toggleDebug();
+            Game.debug3D.toggleDebug();
         }
     }
 
