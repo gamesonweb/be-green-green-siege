@@ -39,7 +39,7 @@ export class Game {
     }
 
     createFreeCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): BABYLON.FreeCamera {
-        const camera = new BABYLON.FreeCamera('Camera', BABYLON.Vector3.Zero(), scene);
+        const camera = new BABYLON.FreeCamera('PlayerCamera', BABYLON.Vector3.Zero(), scene);
         camera.attachControl(cavnas, true);
         camera.inertia = 0;
         camera.angularSensibility = 1000;
@@ -113,7 +113,7 @@ export class Game {
             this._stateManager.switchState(StatesEnum.MAINMENU);
 
             // Debug
-            this.CreateCameraDebug(this._scene, this._canvas);
+            this.createDebugCamera(this._scene, this._canvas);
 
             this.animate();
         });
@@ -122,21 +122,27 @@ export class Game {
     /**
      * Creates the debug camera.
      */
-    CreateCameraDebug(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
-        const cameraDebug = new BABYLON.FreeCamera('cameraDebug', new BABYLON.Vector3(0, 0, -10), scene);
-        cameraDebug.position = new BABYLON.Vector3(5, 10);
-        cameraDebug.setTarget(BABYLON.Vector3.Zero());
-        cameraDebug.attachControl(cavnas, true);
-        cameraDebug.inertia = 0;
-        cameraDebug.angularSensibility = 1000;
+    createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
+        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(0, 0, -10), scene);
+        debugCamera.position = new BABYLON.Vector3(5, 10);
+        debugCamera.setTarget(BABYLON.Vector3.Zero());
+        debugCamera.attachControl(cavnas, true);
+        debugCamera.speed = 10;
+        debugCamera.inertia = 0;
+        debugCamera.angularSensibility = 1000;
     }
 
     /**
      * Starts the animation loop.
      */
     animate(): void {
+        let lastTime = performance.now(); // Get the current time
+
         this._scene.registerBeforeRender(() => {
-            let deltaTime: number = 1 / this._engine.getFps();
+            const currentTime = performance.now(); // Get the new current time
+            let deltaTime: number = (currentTime - lastTime) / 1000; // Calculate deltaTime in seconds
+            lastTime = currentTime; // Update lastTime for the next frame
+
             Game.debug.fps.innerHTML = 'FPS: ' + this._engine.getFps().toFixed();
             this._stateManager.getCurrentState().animate(deltaTime);
         });

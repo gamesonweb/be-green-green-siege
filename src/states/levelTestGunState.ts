@@ -81,15 +81,15 @@ class fakeEnnemy {
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 1;
+    private readonly FIRE_INTERVAL: number = 0.4;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
         this._scene = Scene;
         this._mesh = Game.instanceLoader.getBot('ennemy');
         this._mesh.position = position;
-        this._mesh.lookAt(this._scene.activeCamera.position);
+        this._mesh.lookAt(this._scene.getCameraById('PlayerCamera').position);
 
-        this._laser = new Laser(this._scene, 4);
+        this._laser = new Laser(this._scene, 40, 40, 10, 1);
     }
 
     public fire(): void {
@@ -97,13 +97,13 @@ class fakeEnnemy {
         const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
 
         // fire in camera direction
-        this._laser.fireDirection(result, this._scene.activeCamera.position);
+        this._laser.fire(result, this._scene.getCameraById('PlayerCamera').position);
     }
 
     public animate(deltaTime: number): void {
         this._timeSinceLastFire += deltaTime;
 
-        this._mesh.lookAt(this._scene.activeCamera.position);
+        this._mesh.lookAt(this._scene.getCameraById('PlayerCamera').position);
 
         if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
             this._timeSinceLastFire = 0;

@@ -27,7 +27,7 @@ export class TestTarget extends Targetable {
 
         this._targetModel = BABYLON.MeshBuilder.CreateBox('target', { size: 2 }, this._scene);
         this._targetModel.position = position;
-        this._targetModel.metadata = this;
+        this._targetModel.metadata = { parentClass: this };
 
         const material = new BABYLON.StandardMaterial('targetMaterial', this._scene);
         this._targetModel.material = material;
