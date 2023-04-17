@@ -18,49 +18,54 @@ export default class XRInputs {
         this.initInputs();
     }
 
-    initInputs() {
-        let rightAnchor = BABYLON.MeshBuilder.CreateBox('rightAnchor', { size: 0.1 }, this._scene);
-        let leftAnchor = BABYLON.MeshBuilder.CreateBox('leftAnchor', { size: 0.1 }, this._scene);
-        leftAnchor.isVisible = false;
-        rightAnchor.isVisible = false;
+    private initInputs(): void {
+        const createAnchor = (name: string): BABYLON.Mesh => {
+            const anchor = BABYLON.MeshBuilder.CreateBox(name, { size: 0.1 }, this._scene);
+            anchor.isVisible = false;
+            return anchor;
+        };
+
+        const leftAnchor = createAnchor('leftAnchor');
+        const rightAnchor = createAnchor('rightAnchor');
+
+        const setupButtonListeners = (
+            controller: string,
+            trigger: BABYLON.WebXRControllerComponent,
+            primary: BABYLON.WebXRControllerComponent,
+            secondary: BABYLON.WebXRControllerComponent,
+            squeeze: BABYLON.WebXRControllerComponent
+        ): void => {
+            trigger.onButtonStateChangedObservable.add((component) => {
+                this._inputs[controller + 'Trigger'](component.pressed);
+            });
+            primary.onButtonStateChangedObservable.add((component) => {
+                this._inputs[controller + 'Primary'](component.pressed);
+            });
+            secondary.onButtonStateChangedObservable.add((component) => {
+                this._inputs[controller + 'Secondary'](component.pressed);
+            });
+            squeeze.onButtonStateChangedObservable.add((component) => {
+                this._inputs[controller + 'Squeeze'](component.pressed);
+            });
+        };
+
         this._xr.input.onControllerAddedObservable.add((controller) => {
             controller.onMotionControllerInitObservable.add((motionController) => {
-                let xrIds = motionController.getComponentIds();
+                const [triggerId, squeezeId, , primaryId, secondaryId] = motionController.getComponentIds();
+                const handedness = motionController.handedness;
 
-                if (motionController.handedness === 'left') {
-                    let leftTrigger = motionController.getComponent(xrIds[0]); // XR standard trigger
-                    let leftPrimary = motionController.getComponent(xrIds[3]); // XR standard primary button
-                    let leftSecondary = motionController.getComponent(xrIds[4]); // XR standard primary button
+                if (handedness === 'left' || handedness === 'right') {
+                    const anchor = handedness === 'left' ? leftAnchor : rightAnchor;
+                    anchor.setParent(controller.grip);
+                    anchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
+                    anchor.position = new BABYLON.Vector3(0, 0, 0);
 
-                    leftTrigger.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.leftTrigger(component.pressed);
-                    });
-                    leftPrimary.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.leftPrimary(component.pressed);
-                    });
-                    leftSecondary.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.leftSecondary(component.pressed);
-                    });
-                    leftAnchor.setParent(controller.grip);
-                    leftAnchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
-                    leftAnchor.position = new BABYLON.Vector3(0, 0, 0);
-                } else if (motionController.handedness === 'right') {
-                    let rightTrigger = motionController.getComponent(xrIds[0]); // XR standard trigger
-                    let rightPrimary = motionController.getComponent(xrIds[3]); // XR standard primary button
-                    let rightSecondary = motionController.getComponent(xrIds[4]); // XR standard primary button
+                    const trigger = motionController.getComponent(triggerId);
+                    const primary = motionController.getComponent(primaryId);
+                    const secondary = motionController.getComponent(secondaryId);
+                    const squeeze = motionController.getComponent(squeezeId);
 
-                    rightTrigger.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.rightTrigger(component.pressed);
-                    });
-                    rightPrimary.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.rightPrimary(component.pressed);
-                    });
-                    rightSecondary.onButtonStateChangedObservable.add((component) => {
-                        this._inputs.rightSecondary(component.pressed);
-                    });
-                    rightAnchor.setParent(controller.grip);
-                    rightAnchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
-                    rightAnchor.position = new BABYLON.Vector3(0, 0, 0);
+                    setupButtonListeners(handedness, trigger, primary, secondary, squeeze);
                 }
             });
         });

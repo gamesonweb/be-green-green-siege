@@ -31,6 +31,12 @@ export default class KeyboardInputs {
                 case 'e':
                     this._inputs.leftSecondary(true);
                     break;
+                case 'r':
+                    this._inputs.leftSqueeze(true);
+                    break;
+                case 't':
+                    this._inputs.rightSqueeze(true);
+                    break;
                 case 'Escape':
                     this._scene.getEngine().exitPointerlock();
             }
@@ -49,6 +55,12 @@ export default class KeyboardInputs {
                     break;
                 case 'e':
                     this._inputs.leftSecondary(false);
+                    break;
+                case 'r':
+                    this._inputs.leftSqueeze(false);
+                    break;
+                case 't':
+                    this._inputs.rightSqueeze(false);
                     break;
             }
         });
