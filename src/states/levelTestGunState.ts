@@ -47,7 +47,7 @@ export class LevelTestGunState implements State {
     public load(): void {
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
-        this._light.intensity = 3;
+        this._light.intensity = 0.3;
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
         // target
@@ -81,7 +81,7 @@ class fakeEnnemy {
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 0.4;
+    private readonly FIRE_INTERVAL: number = 1;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
         this._scene = Scene;
@@ -89,7 +89,7 @@ class fakeEnnemy {
         this._mesh.position = position;
         this._mesh.lookAt(this._scene.getCameraById('PlayerCamera').position);
 
-        this._laser = new Laser(this._scene, 40, 40, 10, 1);
+        this._laser = new Laser(this._scene, 20, 40, 10, 1);
     }
 
     public fire(): void {
