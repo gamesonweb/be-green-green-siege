@@ -53,7 +53,7 @@ export class Game {
             Logger.log('VR supported');
 
             // Get platform
-            let platform = scene.getMeshByName('Platform');
+            let platform = scene.getMeshByName('n7b7');
 
             // Load input
             let xr = await scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
@@ -81,11 +81,11 @@ export class Game {
         Game.debug3D = new Debug3D(this._scene, this._camera);
 
         // create the skybox
-        GameUtils.createSkybox('skybox', './assets/texture/skybox/TropicalSunnyDay', this._scene);
+        GameUtils.createSkybox('skybox', './assets/texture/skybox/space', this._scene);
 
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
-        this._assetManager.addMeshTask('platform', '', './assets/', 'platform.glb');
+        this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
 
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
 

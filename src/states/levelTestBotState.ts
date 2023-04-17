@@ -43,7 +43,8 @@ export class LevelTestBotState implements State {
 
         this.createDebugElement(this._scene);
         // create a basic light, aiming 0,1,0 - meaning, to the sky
-        this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this._scene);
+        this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
+        this._light.intensity = 3;
         // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
         // set enemies area
         this._e_space = new EnemiesSpace(new BABYLON.Vector3(-30, 30, 10), new BABYLON.Vector3(-20, 60, 30), this._scene);
