@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack serve"
+    "start": "webpack serve",
+    "vr" : "webpack && http-server -S –c-1 -C cert.pem dist/"
   },
   "keywords": [],
   "author": "",
