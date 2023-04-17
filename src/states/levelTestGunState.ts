@@ -46,8 +46,8 @@ export class LevelTestGunState implements State {
 
     public load(): void {
         // create a basic light, aiming 0,1,0 - meaning, to the sky
-        this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this._scene);
-
+        this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
+        this._light.intensity = 3;
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
         // target
