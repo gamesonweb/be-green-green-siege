@@ -16,14 +16,14 @@ export default class Inputs {
         this._stateManager = stateManager;
     }
 
-    public leftTrigger(pressed: boolean): void {
-        Logger.log('Left Trigger');
-        Game.debug3D.log = 'Left Trigger';
+    public leftTrigger(pressed: boolean, force: number): void {
+        Logger.log('Left Trigger : ' + force);
+        Game.debug3D.log = 'Left Trigger : ' + force;
     }
 
-    public rightTrigger(pressed: boolean): void {
-        Logger.log('Right Trigger');
-        Game.debug3D.log = 'Right Trigger';
+    public rightTrigger(pressed: boolean, force: number): void {
+        Logger.log('Right Trigger : ' + force);
+        Game.debug3D.log = 'Right Trigger : ' + force;
         if (pressed) {
             const currentstate = this._stateManager.getCurrentState();
 
@@ -31,6 +31,16 @@ export default class Inputs {
                 currentstate.fire();
             }
         }
+    }
+
+    public leftSqueeze(pressed: boolean, force: number): void {
+        Logger.log('Left Squeeze : ' + force);
+        Game.debug3D.log = 'Left Squeeze : ' + force;
+    }
+
+    public rightSqueeze(pressed: boolean, force: number): void {
+        Logger.log('Right Squeeze' + force);
+        Game.debug3D.log = 'Right Squeeze : ' + force;
     }
 
     public leftPrimary(pressed: boolean): void {
@@ -55,15 +65,5 @@ export default class Inputs {
     public rightSecondary(pressed: boolean): void {
         Logger.log('Right Secondary');
         Game.debug3D.log = 'Right Secondary';
-    }
-
-    public leftSqueeze(pressed: boolean): void {
-        Logger.log('Left Squeeze');
-        Game.debug3D.log = 'Left Squeeze';
-    }
-
-    public rightSqueeze(pressed: boolean): void {
-        Logger.log('Right Squeeze');
-        Game.debug3D.log = 'Right Squeeze';
     }
 }

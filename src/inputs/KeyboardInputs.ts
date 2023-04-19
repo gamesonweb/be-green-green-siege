@@ -23,7 +23,7 @@ export default class KeyboardInputs {
                     this._inputs.rightSecondary(true);
                     break;
                 case 'a':
-                    this._inputs.leftTrigger(true);
+                    this._inputs.leftTrigger(true, 1);
                     break;
                 case 'z':
                     this._inputs.leftPrimary(true);
@@ -32,10 +32,10 @@ export default class KeyboardInputs {
                     this._inputs.leftSecondary(true);
                     break;
                 case 'r':
-                    this._inputs.leftSqueeze(true);
+                    this._inputs.leftSqueeze(true, 1);
                     break;
                 case 't':
-                    this._inputs.rightSqueeze(true);
+                    this._inputs.rightSqueeze(true, 1);
                     break;
                 case 'Escape':
                     this._scene.getEngine().exitPointerlock();
@@ -48,7 +48,7 @@ export default class KeyboardInputs {
                     this._inputs.rightSecondary(false);
                     break;
                 case 'a':
-                    this._inputs.leftTrigger(false);
+                    this._inputs.leftTrigger(false, 0);
                     break;
                 case 'z':
                     this._inputs.leftPrimary(false);
@@ -57,10 +57,10 @@ export default class KeyboardInputs {
                     this._inputs.leftSecondary(false);
                     break;
                 case 'r':
-                    this._inputs.leftSqueeze(false);
+                    this._inputs.leftSqueeze(false, 0);
                     break;
                 case 't':
-                    this._inputs.rightSqueeze(false);
+                    this._inputs.rightSqueeze(false, 0);
                     break;
             }
         });
@@ -71,7 +71,7 @@ export default class KeyboardInputs {
             }
             switch (evt.button) {
                 case 0:
-                    this._inputs.rightTrigger(true);
+                    this._inputs.rightTrigger(true, 1);
                     break;
                 case 2:
                     this._inputs.rightPrimary(true);
@@ -81,7 +81,7 @@ export default class KeyboardInputs {
         this._canvas.addEventListener('pointerup', (evt) => {
             switch (evt.button) {
                 case 0:
-                    this._inputs.rightTrigger(false);
+                    this._inputs.rightTrigger(false, 0);
                     break;
                 case 2:
                     this._inputs.rightPrimary(false);

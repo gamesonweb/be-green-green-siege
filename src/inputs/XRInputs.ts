@@ -36,7 +36,7 @@ export default class XRInputs {
             squeeze: BABYLON.WebXRControllerComponent
         ): void => {
             trigger.onButtonStateChangedObservable.add((component) => {
-                this._inputs[controller + 'Trigger'](component.pressed);
+                this._inputs[controller + 'Trigger'](component.pressed, component.value);
             });
             primary.onButtonStateChangedObservable.add((component) => {
                 this._inputs[controller + 'Primary'](component.pressed);
@@ -45,7 +45,7 @@ export default class XRInputs {
                 this._inputs[controller + 'Secondary'](component.pressed);
             });
             squeeze.onButtonStateChangedObservable.add((component) => {
-                this._inputs[controller + 'Squeeze'](component.pressed);
+                this._inputs[controller + 'Squeeze'](component.pressed, component.value);
             });
         };
 
