@@ -7,22 +7,16 @@ export default class Debug3D {
     private _plane: BABYLON.Mesh;
     private _debugPanel: GUI.TextBlock;
     private _scene: BABYLON.Scene;
-    private _camera: BABYLON.FreeCamera;
 
-    constructor(scene: BABYLON.Scene, camera: BABYLON.FreeCamera) {
+    constructor(scene: BABYLON.Scene) {
         this._scene = scene;
-        this._camera = camera;
         this.log = '';
         this.initDebugPanel();
     }
 
     private initDebugPanel(): void {
         this._plane = BABYLON.MeshBuilder.CreatePlane('debugPanel', { width: 1, height: 0.25 }, this._scene);
-        this._plane.parent = this._camera;
         this._plane.isVisible = false;
-
-        const forward = new BABYLON.Vector3(0, -0.2, 1);
-        this._plane.position = this._camera.getDirection(forward).scale(2);
 
         const advancedTexture = GUI.AdvancedDynamicTexture.CreateForMesh(this._plane, 1024, 256, true);
 
@@ -42,8 +36,18 @@ export default class Debug3D {
         debugPanel.addControl(this._debugPanel);
     }
 
-    public updateFps(fps: string): void {
+    public update(fps: string): void {
         this._debugPanel.text = `Debug Info\n${fps}\n\n ${this.log}`;
+
+        // Update the position of the debug panel
+        const camera = this._scene.activeCamera;
+        const cameraPosition = camera.position;
+        const forward = new BABYLON.Vector3(0, -0.2, 1);
+        this._plane.position = cameraPosition.add(camera.getDirection(forward).scale(2));
+
+        // Rotate the debug panel to face the camera
+        this._plane.lookAt(cameraPosition);
+        this._plane.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
     }
 
     public toggleDebug() {

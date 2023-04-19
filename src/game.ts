@@ -78,7 +78,7 @@ export class Game {
 
         Game.vrSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar');
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
-        Game.debug3D = new Debug3D(this._scene, this._camera);
+        Game.debug3D = new Debug3D(this._scene);
 
         // create the skybox
         GameUtils.createSkybox('skybox', './assets/texture/skybox/space', this._scene);
@@ -148,7 +148,7 @@ export class Game {
 
             const fps = 'FPS: ' + this._engine.getFps().toFixed();
             Game.debug.fps.innerHTML = fps;
-            Game.debug3D.updateFps(fps);
+            Game.debug3D.update(fps);
 
             this._stateManager.getCurrentState().animate(deltaTime);
         });
