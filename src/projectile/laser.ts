@@ -43,7 +43,7 @@ export class Laser implements Projectile {
     }
 
     private getDistanceWithPlayer(laser: BABYLON.InstancedMesh): number {
-        return BABYLON.Vector3.Distance(laser.position, this._scene.getCameraById('PlayerCamera').position);
+        return BABYLON.Vector3.Distance(laser.position, this._scene.activeCamera.position);
     }
 
     public fire(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): void {

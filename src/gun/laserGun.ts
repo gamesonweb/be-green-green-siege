@@ -14,7 +14,7 @@ export class LaserGun implements Gun {
 
     public constructor(scene: BABYLON.Scene, laser: Projectile) {
         this._scene = scene;
-        this._camera = this._scene.getCameraById('PlayerCamera');
+        this._camera = this._scene.activeCamera;
 
         this._gunModel = this.initGunModel();
         this._laser = laser;

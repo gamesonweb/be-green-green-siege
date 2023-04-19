@@ -22,7 +22,7 @@ export class Shield extends Targetable {
         this.shieldMesh.material = shieldMaterial;
 
         // camera
-        this._camera = this._scene.getCameraById('PlayerCamera');
+        this._camera = this._scene.activeCamera;
 
         this.attatch();
     }

@@ -45,7 +45,7 @@ export class Enemy {
     }
 
     private lookAtMe(biais: number) {
-        let origin: BABYLON.Vector3 = this.scene.getCameraById('PlayerCamera').position;
+        let origin: BABYLON.Vector3 = this.scene.activeCamera.position;
         this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
     }
 
