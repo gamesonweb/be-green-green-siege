@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { TimeControl } from './TimeControl';
 import DebugConsole from './debug/debugConsole';
 import Debug3D from './debug/debugConsole3D';
 import Logger from './debug/logger';
@@ -150,7 +151,7 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
-            this._stateManager.getCurrentState().animate(deltaTime);
+            this._stateManager.getCurrentState().animate(deltaTime * TimeControl.getTimeScale());
         });
 
         // run the render loop
