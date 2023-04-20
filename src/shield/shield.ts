@@ -12,7 +12,6 @@ export class Shield extends Targetable {
     private readonly _camera: BABYLON.Camera;
     private _isTouched = false;
 
-    private readonly _alphaLerpSpeed = 0.15;
     private readonly _noTouchAlpha = 0.65;
     private readonly _touchAlpha = 0.95;
 
@@ -66,21 +65,23 @@ export class Shield extends Targetable {
     }
 
     public animate(deltaTime: number, shieldSize: number): void {
-        this._updateScaling(shieldSize);
-        this._updateAlpha();
+        this._updateScaling(shieldSize, deltaTime);
+        this._updateAlpha(deltaTime);
     }
 
-    private _updateScaling(shieldSize: number): void {
-        const scalingLerpSpeed = 0.17;
+    private _updateScaling(shieldSize: number, deltaTime: number): void {
+        const scalingLerpSpeed = 11 * deltaTime;
         const currentScaling = this._shieldMesh.scaling;
         const targetScaling = new BABYLON.Vector3(shieldSize, shieldSize, shieldSize);
         this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
     }
 
-    private _updateAlpha(): void {
+    private _updateAlpha(deltaTime: number): void {
+        const alphaLerpSpeed = 7.8 * deltaTime;
+
         const currentAlpha = this._shieldMesh.material.alpha;
         const targetAlpha = this._isTouched ? this._touchAlpha : this._noTouchAlpha;
-        this._shieldMesh.material.alpha = BABYLON.Scalar.Lerp(currentAlpha, targetAlpha, this._alphaLerpSpeed);
+        this._shieldMesh.material.alpha = BABYLON.Scalar.Lerp(currentAlpha, targetAlpha, alphaLerpSpeed);
 
         // Reset the touch flag if the alpha is close to the touch alpha
         if (Math.abs(currentAlpha - this._touchAlpha) < 0.1) {

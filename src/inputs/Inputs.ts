@@ -42,6 +42,8 @@ export default class Inputs {
 
         if (pressed) {
             TimeControl.setTimeScale(1.03 - force);
+        } else {
+            TimeControl.setTimeScale(1);
         }
     }
 
