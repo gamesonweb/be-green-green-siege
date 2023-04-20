@@ -47,7 +47,7 @@ export class StarManager {
         const numberOfStars = this._starCounts[color];
         const starSystem = new BABYLON.ParticleSystem(`stars_${color}`, numberOfStars, this._scene);
 
-        starSystem.particleTexture = new BABYLON.Texture(`./assets/flare${color}.png`, this._scene);
+        starSystem.particleTexture = new BABYLON.Texture(`./assets/flare/flare${color}.png`, this._scene);
         starSystem.emitter = new BABYLON.Vector3(0, 0, 0);
         starSystem.minSize = 0.5;
         starSystem.maxSize = 2;
