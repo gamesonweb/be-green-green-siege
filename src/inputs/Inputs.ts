@@ -20,6 +20,10 @@ export default class Inputs {
     public leftTrigger(pressed: boolean, force: number): void {
         Logger.log('Left Trigger : ' + force);
         Game.debug3D.log = 'Left Trigger : ' + force;
+
+        const currentstate = this._stateManager.getCurrentState();
+
+        currentstate.shieldSize = force;
     }
 
     public rightTrigger(pressed: boolean, force: number): void {
@@ -28,9 +32,7 @@ export default class Inputs {
         if (pressed) {
             const currentstate = this._stateManager.getCurrentState();
 
-            if (currentstate.canFire()) {
-                currentstate.fire();
-            }
+            currentstate.fire();
         }
     }
 

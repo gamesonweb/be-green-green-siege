@@ -16,6 +16,8 @@ export class LevelTestGunState implements State {
     private _shield: Shield;
     private _fakeEnemy: any;
 
+    public shieldSize: number = 0;
+
     constructor(scene: BABYLON.Scene) {
         this._scene = scene;
     }
@@ -26,10 +28,6 @@ export class LevelTestGunState implements State {
 
     public getName() {
         return 'Test gun';
-    }
-
-    public canFire(): boolean {
-        return true;
     }
 
     public load(): void {
@@ -65,6 +63,7 @@ export class LevelTestGunState implements State {
 
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
+        this._shield.animate(deltaTime, this.shieldSize);
         this._target.animate(deltaTime);
 
         this._fakeEnemy.animate(deltaTime);

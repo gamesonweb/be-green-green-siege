@@ -1,7 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { Commando } from '../enemy/commando';
 import { EnemiesSpace } from '../enemy/enemies-space';
-import { Enemy } from '../enemy/enemy';
 import { LaserGun } from '../gun/laserGun';
 import { GravityMovement } from '../movement/type/gravityMovement';
 import { Laser } from '../projectile/laser';
@@ -13,6 +12,7 @@ export class LevelTestBotState implements State {
     private _e_space: EnemiesSpace;
     // private _ennemies: Enemy[];
     private _gun: LaserGun;
+    shieldSize: number;
 
     constructor(scene: BABYLON.Scene) {
         this._scene = scene;
@@ -32,10 +32,6 @@ export class LevelTestBotState implements State {
 
     public getName() {
         return 'Test bot';
-    }
-
-    public canFire(): boolean {
-        return true;
     }
 
     public load(): void {

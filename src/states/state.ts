@@ -1,8 +1,8 @@
 export interface State {
+    shieldSize: number;
     load(): void;
     dispose(): void;
     getName(): String;
-    canFire(): boolean;
     fire(): void;
     animate(deltaTime: number): void;
 }

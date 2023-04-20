@@ -14,15 +14,12 @@ export class MainMenuState implements State {
         this._scene = scene;
         this._stateManager = stateManager;
     }
+    shieldSize: number;
 
     fire(): void {}
 
     public getName() {
         return 'Main Menu';
-    }
-
-    public canFire(): boolean {
-        return false;
     }
 
     public load(): void {
