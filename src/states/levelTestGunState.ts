@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { StarManager } from '../StarManager';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
@@ -31,19 +32,6 @@ export class LevelTestGunState implements State {
         return true;
     }
 
-    // private createMeshInstanceWithChildren(mesh, newInstanceName) {
-    //     const newInstance = mesh.createInstance(newInstanceName);
-
-    //     mesh.getChildren().forEach((child, index) => {
-    //         if (child instanceof BABYLON.AbstractMesh) {
-    //             const childInstance = this.createMeshInstanceWithChildren(child, `${newInstanceName}_child_${index}`);
-    //             childInstance.parent = newInstance;
-    //         }
-    //     });
-
-    //     return newInstance;
-    // }
-
     public load(): void {
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
@@ -58,6 +46,14 @@ export class LevelTestGunState implements State {
 
         // fake enemy
         this._fakeEnemy = new fakeEnnemy(this._scene, new BABYLON.Vector3(10, 4, 0));
+
+        // stars
+        const starManager = new StarManager(this._scene, 400, {
+            Y: 400,
+            W: 1600,
+            B: 100,
+            R: 100,
+        });
     }
 
     public dispose(): void {
