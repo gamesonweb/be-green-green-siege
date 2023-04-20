@@ -2,91 +2,103 @@ import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 
+/**
+ * Shield class that creates and animates a shield in the scene.
+ * @extends Targetable
+ */
 export class Shield extends Targetable {
-    private _scene: BABYLON.Scene;
-    private _shieldMesh: BABYLON.Mesh;
-    private _camera: BABYLON.Camera;
+    private readonly _scene: BABYLON.Scene;
+    private readonly _shieldMesh: BABYLON.Mesh;
+    private readonly _camera: BABYLON.Camera;
+    private _isTouched = false;
 
-    private _istouched: boolean = false;
+    private readonly _alphaLerpSpeed = 0.15;
+    private readonly _noTouchAlpha = 0.65;
+    private readonly _touchAlpha = 0.95;
 
+    /**
+     * Shield constructor.
+     * @param {BABYLON.Scene} scene - The Babylon.js scene.
+     */
     constructor(scene: BABYLON.Scene) {
         super();
         this._scene = scene;
-
-        // create a 3D rectangle
-        this._shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, scene);
-        this._shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
-        this._shieldMesh.metadata = { parentClass: this };
-
-        // material
-        const shieldMaterial = new BABYLON.StandardMaterial('shieldMaterial', scene);
-        shieldMaterial.diffuseColor = new BABYLON.Color3(0, 0, 1);
-        shieldMaterial.alpha = 0.65;
-        this._shieldMesh.material = shieldMaterial;
-
-        // camera
+        this._shieldMesh = this._createShieldMesh();
         this._camera = this._scene.activeCamera;
-
-        this.attatch();
-        this._shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
+        this._attach();
     }
 
-    private attatch(): void {
+    private _createShieldMesh(): BABYLON.Mesh {
+        const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
+        shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
+        shieldMesh.metadata = { parentClass: this };
+        shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
+
+        const shieldMaterial = new BABYLON.StandardMaterial('shieldMaterial', this._scene);
+        shieldMaterial.diffuseColor = new BABYLON.Color3(0, 0, 1);
+        shieldMaterial.alpha = this._noTouchAlpha;
+        shieldMesh.material = shieldMaterial;
+
+        return shieldMesh;
+    }
+
+    private _attach(): void {
         if (Game.vrSupported) {
-            // If the VR is supported, the gun model is attached to the hand.
-            let leftAnchor = this._scene.getMeshByName('leftAnchor');
-
+            const leftAnchor = this._scene.getMeshByName('leftAnchor');
             this._shieldMesh.setParent(leftAnchor);
-            this._shieldMesh.position = new BABYLON.Vector3(0, 0, 0);
+            this._shieldMesh.position = BABYLON.Vector3.Zero();
         } else {
-            const cameraDirection = this._camera.getForwardRay().direction;
-
-            // Shield position
-            let offset = cameraDirection.scale(1.2);
-            this._shieldMesh.position = this._camera.position.add(offset);
-
-            // Shield rotation
-            this._shieldMesh.lookAt(this._camera.position);
-
-            // Offset to bottom left corner
-            this._shieldMesh.position = this._shieldMesh.absolutePosition.add(this._shieldMesh.right.normalize().scale(0.75));
-            this._shieldMesh.position = this._shieldMesh.absolutePosition.add(this._shieldMesh.up.normalize().scale(-0.4));
-
-            this._shieldMesh.setParent(this._camera);
+            this._attachToCamera();
         }
     }
 
-    private _alphaLerpSpeed = 0.15; // Adjust this value for faster or slower alpha transitions
-    private _noTouchAlpha = 0.65;
-    private _touchAlpha = 0.95;
+    private _attachToCamera(): void {
+        const cameraDirection = this._camera.getForwardRay().direction;
+        const offset = cameraDirection.scale(1.2);
+        this._shieldMesh.position = this._camera.position.add(offset);
+        this._shieldMesh.lookAt(this._camera.position);
+
+        const rightOffset = this._shieldMesh.right.normalize().scale(-0.75);
+        const upOffset = this._shieldMesh.up.normalize().scale(-0.4);
+        this._shieldMesh.position = this._shieldMesh.absolutePosition.add(rightOffset).add(upOffset);
+
+        this._shieldMesh.setParent(this._camera);
+    }
 
     public animate(deltaTime: number, shieldSize: number): void {
-        const scalingLerpSpeed = 0.17; // Adjust this value for faster or slower scaling transitions
+        this._updateScaling(shieldSize);
+        this._updateAlpha();
+    }
 
-        // Smoothly transition the shield scaling
+    private _updateScaling(shieldSize: number): void {
+        const scalingLerpSpeed = 0.17;
         const currentScaling = this._shieldMesh.scaling;
         const targetScaling = new BABYLON.Vector3(shieldSize, shieldSize, shieldSize);
-        const newScaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
-        this._shieldMesh.scaling = newScaling;
+        this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
+    }
 
-        // ===
-
-        // Smoothly transition the shield alpha
+    private _updateAlpha(): void {
         const currentAlpha = this._shieldMesh.material.alpha;
-        const targetAlpha = this._istouched ? this._touchAlpha : this._noTouchAlpha;
-        const newAlpha = BABYLON.Scalar.Lerp(currentAlpha, targetAlpha, this._alphaLerpSpeed);
-        this._shieldMesh.material.alpha = newAlpha;
+        const targetAlpha = this._isTouched ? this._touchAlpha : this._noTouchAlpha;
+        this._shieldMesh.material.alpha = BABYLON.Scalar.Lerp(currentAlpha, targetAlpha, this._alphaLerpSpeed);
 
+        // Reset the touch flag if the alpha is close to the touch alpha
         if (Math.abs(currentAlpha - this._touchAlpha) < 0.1) {
-            this._istouched = false;
+            this._isTouched = false;
         }
     }
 
+    /**
+     * Triggers the touch event and vibrates the left controller.
+     */
     public touch(): void {
-        this._istouched = true;
+        this._isTouched = true;
         Game.hapticManager.vibrateController('left', 0.8, 100);
     }
 
+    /**
+     * Disposes of the shield mesh.
+     */
     public dispose(): void {
         this._shieldMesh.dispose();
     }
