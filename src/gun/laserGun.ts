@@ -18,7 +18,7 @@ export class LaserGun implements Gun {
 
         this._gunModel = this.initGunModel();
         this._laser = laser;
-        this.attatch();
+        this.attach();
     }
 
     private initGunModel(): BABYLON.Mesh {
@@ -31,9 +31,12 @@ export class LaserGun implements Gun {
         return model;
     }
 
-    private attatch(): void {
+/**
+     * Attaches the gun model to either the VR hand or the camera, depending on whether VR is supported.
+     */
+    private attach(): void {
         if (Game.vrSupported) {
-            // If the VR is supported, the gun model is attached to the hand.
+            // If VR is supported, attach the gun model to the VR hand
             let leftAnchor = this._scene.getMeshByName('leftAnchor');
             let rightAnchor = this._scene.getMeshByName('rightAnchor');
 
@@ -41,24 +44,28 @@ export class LaserGun implements Gun {
             this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
             // this._gunModel.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
         } else {
+            // If VR is not supported, attach the gun model to the camera
             this._pointeur = new Pointeur();
 
+            // Calculate the direction the camera is facing
             const cameraDirection = this._camera.getForwardRay().direction;
 
-            // Gun position
+            // Set the gun position to be in front of the camera
             let offset = cameraDirection.scale(1.2);
             this._gunModel.position = this._camera.position.add(offset);
 
-            // Gun rotation
+            // Point the gun towards the camera
             this._gunModel.lookAt(this._camera.position);
 
-            // Offset to bottom right corner
+            // Offset the gun to the bottom right corner of the camera view
             this._gunModel.position = this._gunModel.absolutePosition.add(this._gunModel.right.normalize().scale(-0.75));
             this._gunModel.position = this._gunModel.absolutePosition.add(this._gunModel.up.normalize().scale(-0.4));
 
+            // Attach the gun to the camera
             this._gunModel.setParent(this._camera);
         }
     }
+
 
     public fire(): void {
         this._laser.fire(this._gunModel);
