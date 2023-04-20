@@ -4,7 +4,6 @@ import { TimeControl } from './TimeControl';
 import DebugConsole from './debug/debugConsole';
 import Debug3D from './debug/debugConsole3D';
 import Logger from './debug/logger';
-import { GameUtils } from './game-utils';
 import Inputs from './inputs/Inputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
@@ -38,6 +37,7 @@ export class Game {
 
     createBasicScene(engine: BABYLON.Engine): BABYLON.Scene {
         const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
         const glowLayeer = new BABYLON.GlowLayer('glow', scene);
         glowLayeer.intensity = 0.3;
         return scene;
@@ -84,9 +84,6 @@ export class Game {
         Game.vrSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar');
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
         Game.debug3D = new Debug3D(this._scene);
-
-        // create the skybox
-        GameUtils.createSkybox('skybox', './assets/texture/skybox/space', this._scene);
 
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
