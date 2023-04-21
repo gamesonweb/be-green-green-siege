@@ -57,7 +57,7 @@ export class Shield extends Targetable {
         this._shieldMesh.position = this._camera.position.add(offset);
         this._shieldMesh.lookAt(this._camera.position);
 
-        const rightOffset = this._shieldMesh.right.normalize().scale(-0.75);
+        const rightOffset = this._shieldMesh.right.normalize().scale(0.75);
         const upOffset = this._shieldMesh.up.normalize().scale(-0.4);
         this._shieldMesh.position = this._shieldMesh.absolutePosition.add(rightOffset).add(upOffset);
 
