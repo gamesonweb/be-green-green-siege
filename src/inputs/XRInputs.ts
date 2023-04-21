@@ -57,7 +57,7 @@ export default class XRInputs {
                 if (handedness === 'left' || handedness === 'right') {
                     const anchor = handedness === 'left' ? leftAnchor : rightAnchor;
                     anchor.setParent(controller.grip);
-                    anchor.rotationQuaternion = controller.grip.rotationQuaternion.clone();
+                    anchor.rotation = controller.grip.rotation.clone();
                     anchor.position = new BABYLON.Vector3(0, 0, 0);
 
                     const trigger = motionController.getComponent(triggerId);
