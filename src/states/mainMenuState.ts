@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { StarManager } from '../StarManager';
 import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
 
@@ -9,6 +10,7 @@ export class MainMenuState implements State {
 
     private _levelTestBotSelector: BABYLON.Mesh;
     private _levelTestGunSelector: BABYLON.Mesh;
+    private _levelEmptySelector: BABYLON.Mesh;
 
     constructor(scene: BABYLON.Scene, stateManager: StateManager) {
         this._scene = scene;
@@ -28,6 +30,15 @@ export class MainMenuState implements State {
         // this._light.intensity = 0.3;
         this._levelTestBotSelector = this.createLevel(new BABYLON.Vector3(15, 2, -25), StatesEnum.LEVELTESTBOT);
         this._levelTestGunSelector = this.createLevel(new BABYLON.Vector3(17, 2, -25), StatesEnum.LEVELTESTGUN);
+        this._levelEmptySelector = this.createLevel(new BABYLON.Vector3(19, 2, -25), StatesEnum.EMPTY);
+
+        // stars
+        const starManager = new StarManager(this._scene, 400, {
+            Y: 400,
+            W: 1600,
+            B: 100,
+            R: 100,
+        });
     }
 
     public dispose(): void {
@@ -37,6 +48,7 @@ export class MainMenuState implements State {
         // dispose the cube
         this._levelTestBotSelector.dispose();
         this._levelTestGunSelector.dispose();
+        this._levelEmptySelector.dispose();
     }
 
     private createLevel(position: BABYLON.Vector3, levelenum: StatesEnum): BABYLON.Mesh {

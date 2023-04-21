@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import { StarManager } from '../StarManager';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
@@ -43,15 +42,7 @@ export class LevelTestGunState implements State {
         this._shield = new Shield(this._scene);
 
         // fake enemy
-        this._fakeEnemy = new fakeEnnemy(this._scene, new BABYLON.Vector3(10, 4, 0));
-
-        // stars
-        const starManager = new StarManager(this._scene, 400, {
-            Y: 400,
-            W: 1600,
-            B: 100,
-            R: 100,
-        });
+        this._fakeEnemy = new fakeEnnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
     }
 
     public dispose(): void {
@@ -76,7 +67,7 @@ class fakeEnnemy {
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 1;
+    private readonly FIRE_INTERVAL: number = 5;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
         this._scene = Scene;

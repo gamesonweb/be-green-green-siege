@@ -2,6 +2,7 @@ import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import { LevelTestBotState } from './levelTestBotState';
 import { LevelTestGunState } from './levelTestGunState';
+import { LevelTestEmpty } from './levelTestempty';
 import { MainMenuState } from './mainMenuState';
 import { State } from './state';
 
@@ -9,6 +10,7 @@ export enum StatesEnum {
     MAINMENU = 0,
     LEVELTESTBOT = 1,
     LEVELTESTGUN = 2,
+    EMPTY = 3,
 }
 
 export class StateManager {
@@ -40,6 +42,8 @@ export class StateManager {
             case StatesEnum.LEVELTESTGUN:
                 this._currentState = new LevelTestGunState(this._scene);
                 break;
+            case StatesEnum.EMPTY:
+                this._currentState = new LevelTestEmpty(this._scene);
         }
 
         // Update the debug panel
