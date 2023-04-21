@@ -57,7 +57,7 @@ export class LevelTestBotState implements State {
 
     public dispose(): void {
         // dispose the light
-        this._light.dispose();
+        // this._light.dispose();
         // this._ennemies.forEach(function(ennemy) {
         //     ennemy.getMesh().dispose();
         // });

@@ -55,7 +55,7 @@ export class LevelTestGunState implements State {
     }
 
     public dispose(): void {
-        this._light.dispose();
+        // this._light.dispose();
         this._gun.dispose();
         this._target.dispose();
         this._shield.dispose();

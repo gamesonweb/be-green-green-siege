@@ -24,15 +24,15 @@ export class MainMenuState implements State {
 
     public load(): void {
         // create a basic light, aiming 0,1,0 - meaning, to the sky
-        this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
-        this._light.intensity = 0.3;
-        this._levelTestBotSelector = this.createLevel(new BABYLON.Vector3(0, 2, 6), StatesEnum.LEVELTESTBOT);
-        this._levelTestGunSelector = this.createLevel(new BABYLON.Vector3(2, 2, 6), StatesEnum.LEVELTESTGUN);
+        // this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
+        // this._light.intensity = 0.3;
+        this._levelTestBotSelector = this.createLevel(new BABYLON.Vector3(15, 2, -25), StatesEnum.LEVELTESTBOT);
+        this._levelTestGunSelector = this.createLevel(new BABYLON.Vector3(17, 2, -25), StatesEnum.LEVELTESTGUN);
     }
 
     public dispose(): void {
         // dispose the light
-        this._light.dispose();
+        // this._light.dispose();
 
         // dispose the cube
         this._levelTestBotSelector.dispose();

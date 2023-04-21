@@ -56,7 +56,7 @@ export class Game {
             Logger.log('VR supported');
 
             // Get platform
-            let platform = scene.getMeshByName('n7b7');
+            let platform = scene.getMeshByName('n1b14');
 
             // Load input
             let xr = await scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
@@ -87,9 +87,28 @@ export class Game {
 
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
-        this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
+        let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
 
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
+
+        platformTask.onSuccess = (task) => {
+
+            task.loadedMeshes.forEach((mesh) => {
+                // if (mesh.name === '__root__') {
+                //     mesh.getChildren().forEach((m) => {
+                //         m.parent = null;
+                //     })
+                // }
+
+            });
+
+            task.loadedAnimationGroups.forEach((animationGroup) => {
+                console.log(animationGroup.name);
+                animationGroup.loopAnimation = true;
+                animationGroup.start();
+                animationGroup.speedRatio = 0.1
+            });
+        };
 
         testTask.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
@@ -109,8 +128,12 @@ export class Game {
 
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
+            this._spawnPoint.visibility = 0;
+            
             const upVector = new BABYLON.Vector3(0, 1, 0);
-            this._camera.position = this._spawnPoint.position.clone().add(upVector);
+            this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
+            console.log(this._camera.position);
+            this._camera.rotation.y -= Math.PI;
 
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs);
