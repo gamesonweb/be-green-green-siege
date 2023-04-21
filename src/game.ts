@@ -38,8 +38,6 @@ export class Game {
     createBasicScene(engine: BABYLON.Engine): BABYLON.Scene {
         const scene = new BABYLON.Scene(engine);
         scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
-        const glowLayeer = new BABYLON.GlowLayer('glow', scene);
-        glowLayeer.intensity = 0.3;
         return scene;
     }
 
@@ -92,21 +90,19 @@ export class Game {
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
 
         platformTask.onSuccess = (task) => {
-
             task.loadedMeshes.forEach((mesh) => {
                 // if (mesh.name === '__root__') {
                 //     mesh.getChildren().forEach((m) => {
                 //         m.parent = null;
                 //     })
                 // }
-
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {
                 console.log(animationGroup.name);
                 animationGroup.loopAnimation = true;
                 animationGroup.start();
-                animationGroup.speedRatio = 0.1
+                animationGroup.speedRatio = 0.1;
             });
         };
 
@@ -129,7 +125,7 @@ export class Game {
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
             this._spawnPoint.visibility = 0;
-            
+
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
             console.log(this._camera.position);
