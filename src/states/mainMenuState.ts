@@ -34,10 +34,10 @@ export class MainMenuState implements State {
 
         // stars
         const starManager = new StarManager(this._scene, 400, {
-            Y: 400,
-            W: 1600,
-            B: 100,
-            R: 100,
+            Y: 266,
+            W: 1066,
+            B: 66,
+            R: 66,
         });
     }
 

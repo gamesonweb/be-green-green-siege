@@ -50,7 +50,7 @@ export class StarManager {
         starSystem.particleTexture = new BABYLON.Texture(`./assets/flare/flare${color}.png`, this._scene);
         starSystem.emitter = new BABYLON.Vector3(0, 0, 0);
         starSystem.minSize = 0.5;
-        starSystem.maxSize = 2;
+        starSystem.maxSize = 1.5;
         starSystem.maxLifeTime = 20000000;
         starSystem.minLifeTime = 1;
         starSystem.minEmitPower = 0;
@@ -67,8 +67,8 @@ export class StarManager {
     }
 
     /**
-     * Returns a random point on a sphere with radius 1.
-     * @returns a random point on a sphere with radius 1
+     * Returns a random point on a sphere.
+     * @returns a random point on a sphere
      */
     private randomSpherePoint(): BABYLON.Vector3 {
         const theta = 2 * Math.PI * Math.random();
@@ -76,6 +76,12 @@ export class StarManager {
         const x = this._radius * Math.sin(phi) * Math.cos(theta);
         const y = this._radius * Math.sin(phi) * Math.sin(theta);
         const z = this._radius * Math.cos(phi);
+
+        // Modification ici pour limiter les étoiles aux deux tiers supérieurs de la sphère
+        if (y < -this._radius / 4 || z > this._radius - 10) {
+            return this.randomSpherePoint();
+        }
+
         return new BABYLON.Vector3(x, y, z);
     }
 
