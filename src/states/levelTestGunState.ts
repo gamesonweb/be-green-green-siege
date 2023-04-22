@@ -68,7 +68,7 @@ class fakeEnnemy extends Targetable {
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 1225;
+    private readonly FIRE_INTERVAL: number = 5;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
         super();
