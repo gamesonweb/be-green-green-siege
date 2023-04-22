@@ -12,15 +12,15 @@ export class LaserGun implements Gun {
     private _laser: Projectile;
     private _pointeur: Pointeur;
 
-    private _fireRate: number;
+    private _coolDown: number;
 
     private _timeSinceLastShot: number;
 
-    public constructor(scene: BABYLON.Scene, laser: Projectile, fireRate: number = 0.2) {
+    public constructor(scene: BABYLON.Scene, laser: Projectile, coolDown: number = 0.1) {
         this._scene = scene;
         this._camera = this._scene.activeCamera;
         this._timeSinceLastShot = 0;
-        this._fireRate = fireRate;
+        this._coolDown = coolDown;
 
         this._gunModel = this.initGunModel();
         this._laser = laser;
@@ -28,10 +28,10 @@ export class LaserGun implements Gun {
     }
 
     private initGunModel(): BABYLON.Mesh {
-        const model = BABYLON.MeshBuilder.CreateBox('refGun', { size: 0.2 }, this._scene);
+        const model = BABYLON.MeshBuilder.CreateBox('gun', { size: 0.2 }, this._scene);
 
-        const material = new BABYLON.StandardMaterial('red', this._scene);
-        material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+        const material = new BABYLON.StandardMaterial('gunMaterial', this._scene);
+        material.diffuseColor = new BABYLON.Color3(0, 1, 0.32);
         model.material = material;
 
         return model;
@@ -73,9 +73,10 @@ export class LaserGun implements Gun {
     }
 
     public fire(force: number): void {
-        if (this._timeSinceLastShot * force >= this._fireRate) {
+        if (this._timeSinceLastShot * force >= this._coolDown) {
             this._laser.fire(this._gunModel);
             this._timeSinceLastShot = 0;
+            Game.hapticManager.vibrateController('right', 1, 60);
         }
     }
 
