@@ -30,6 +30,7 @@ export class Laser implements Projectile {
 
         const material = new BABYLON.StandardMaterial('red', this._scene);
         material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+        material.alpha = 0.5;
         model.material = material;
         model.isVisible = false;
 
