@@ -28,7 +28,7 @@ export class Shield extends Targetable {
     }
 
     private _createShieldMesh(): BABYLON.Mesh {
-        const shieldMesh = BABYLON.MeshBuilder.CreateBox('shieldHitBox', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
+        const shieldMesh = BABYLON.MeshBuilder.CreateBox('shieldHitBox', { width: 0.5, height: 1, depth: 0.01 }, this._scene);
         shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
         shieldMesh.metadata = { parentClass: this };
         shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
@@ -73,7 +73,7 @@ export class Shield extends Targetable {
     private _updateScaling(shieldSize: number, deltaTime: number): void {
         const scalingLerpSpeed = 11 * deltaTime;
         const currentScaling = this._shieldMesh.scaling;
-        const targetScaling = new BABYLON.Vector3(shieldSize, shieldSize, shieldSize);
+        const targetScaling = new BABYLON.Vector3(1, shieldSize, shieldSize);
         this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
     }
 
