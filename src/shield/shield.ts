@@ -12,8 +12,8 @@ export class Shield extends Targetable {
     private readonly _camera: BABYLON.Camera;
     private _isTouched = false;
 
-    private readonly _noTouchAlpha = 0.65;
-    private readonly _touchAlpha = 0.95;
+    private readonly _noTouchAlpha = 0.75;
+    private readonly _touchAlpha = 0.98;
 
     /**
      * Shield constructor.
@@ -34,7 +34,7 @@ export class Shield extends Targetable {
         shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
 
         const shieldMaterial = new BABYLON.StandardMaterial('shieldMaterial', this._scene);
-        shieldMaterial.diffuseColor = new BABYLON.Color3(0, 0, 1);
+        shieldMaterial.diffuseColor = new BABYLON.Color3(0.0471, 0.4078, 0.4706);
         shieldMaterial.alpha = this._noTouchAlpha;
         shieldMesh.material = shieldMaterial;
 
@@ -46,6 +46,7 @@ export class Shield extends Targetable {
             const leftAnchor = this._scene.getMeshByName('leftAnchor');
             this._shieldMesh.setParent(leftAnchor);
             this._shieldMesh.position = BABYLON.Vector3.Zero();
+            this._shieldMesh.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
         } else {
             this._attachToCamera();
         }
@@ -94,7 +95,7 @@ export class Shield extends Targetable {
      */
     public touch(): void {
         this._isTouched = true;
-        Game.hapticManager.vibrateController('left', 0.8, 100);
+        Game.hapticManager.vibrateController('left', 0.2, 300);
     }
 
     /**
