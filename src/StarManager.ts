@@ -18,6 +18,7 @@ export class StarManager {
     private readonly _radius: number;
     private readonly _starCounts: StarCounts;
     private readonly _starSystems: Map<string, BABYLON.ParticleSystem>;
+    private readonly _shootingStarSystem: BABYLON.ParticleSystem;
 
     /**
      * Creates a new star manager.
@@ -30,6 +31,8 @@ export class StarManager {
         this._radius = radius;
         this._starCounts = starCounts;
         this._starSystems = new Map();
+        this._shootingStarSystem = this.createShootingStar();
+        this._shootingStarSystem.start();
 
         // Create particle systems for each color
         for (const color of Object.keys(starCounts) as ('Y' | 'W' | 'B' | 'R')[]) {
@@ -86,6 +89,34 @@ export class StarManager {
     }
 
     /**
+     * Creates the particle system for the shooting star.
+     * @returns the created particle system
+     */
+    private createShootingStar(): BABYLON.ParticleSystem {
+        const shootingStarSystem = new BABYLON.ParticleSystem('shooting_star', 1, this._scene);
+
+        shootingStarSystem.particleTexture = new BABYLON.Texture('./assets/flare/flareW.png', this._scene);
+        shootingStarSystem.emitter = new BABYLON.Vector3(0, 0, 0);
+        shootingStarSystem.minSize = 0.5;
+        shootingStarSystem.maxSize = 2;
+        shootingStarSystem.maxLifeTime = 3;
+        shootingStarSystem.minLifeTime = 0.5;
+        shootingStarSystem.minEmitPower = 20;
+        shootingStarSystem.maxEmitPower = 30;
+        shootingStarSystem.updateSpeed = 0.04;
+
+        shootingStarSystem.startPositionFunction = (worldMatrix, positionToUpdate) => {
+            const position = this.randomSpherePoint();
+            BABYLON.Vector3.TransformCoordinatesToRef(position, worldMatrix, positionToUpdate);
+        };
+
+        shootingStarSystem.direction1 = new BABYLON.Vector3(-5, 0, 5);
+        shootingStarSystem.direction2 = new BABYLON.Vector3(5, 0, 5);
+
+        return shootingStarSystem;
+    }
+
+    /**
      * Gets the particle system for the given color.
      * @param color color of the star system to get
      * @returns the particle system for the given color
@@ -103,5 +134,6 @@ export class StarManager {
             starSystem.dispose();
         }
         this._starSystems.clear();
+        this._shootingStarSystem.dispose();
     }
 }
