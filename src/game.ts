@@ -98,6 +98,12 @@ export class Game {
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
 
         platformTask.onSuccess = (task) => {
+            task.loadedMeshes.forEach((mesh) => {
+                if (mesh.name.includes("HitBox")) {
+                    mesh.visibility = 0;
+                }
+            });
+
             task.loadedAnimationGroups.forEach((animationGroup) => {
                 console.log(animationGroup.name);
                 animationGroup.loopAnimation = true;
@@ -126,8 +132,8 @@ export class Game {
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
 
-            let upperLight = this._scene.getLightByName('Sun.003');
-            let underLight = this._scene.getLightByName('Sun.004');
+            let upperLight = this._scene.getLightByName('UpperSun');
+            let underLight = this._scene.getLightByName('DownSun');
             upperLight.intensity = 1;
             underLight.intensity = 1;
 
