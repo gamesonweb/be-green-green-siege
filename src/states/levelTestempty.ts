@@ -10,7 +10,7 @@ export class LevelTestEmpty implements State {
         this._scene = scene;
     }
 
-    fire(): void {}
+    fire(force: number): void {}
 
     public getName() {
         return 'Test bot';

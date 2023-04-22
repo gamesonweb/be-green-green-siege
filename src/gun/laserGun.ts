@@ -12,9 +12,15 @@ export class LaserGun implements Gun {
     private _laser: Projectile;
     private _pointeur: Pointeur;
 
-    public constructor(scene: BABYLON.Scene, laser: Projectile) {
+    private _fireRate: number;
+
+    private _timeSinceLastShot: number;
+
+    public constructor(scene: BABYLON.Scene, laser: Projectile, fireRate: number = 0.2) {
         this._scene = scene;
         this._camera = this._scene.activeCamera;
+        this._timeSinceLastShot = 0;
+        this._fireRate = fireRate;
 
         this._gunModel = this.initGunModel();
         this._laser = laser;
@@ -31,7 +37,7 @@ export class LaserGun implements Gun {
         return model;
     }
 
-/**
+    /**
      * Attaches the gun model to either the VR hand or the camera, depending on whether VR is supported.
      */
     private attach(): void {
@@ -66,12 +72,15 @@ export class LaserGun implements Gun {
         }
     }
 
-
-    public fire(): void {
-        this._laser.fire(this._gunModel);
+    public fire(force: number): void {
+        if (this._timeSinceLastShot * force >= this._fireRate) {
+            this._laser.fire(this._gunModel);
+            this._timeSinceLastShot = 0;
+        }
     }
 
     public animate(deltaTime: number): void {
+        this._timeSinceLastShot += deltaTime;
         this._laser.animate(deltaTime);
     }
 

@@ -6,16 +6,14 @@ export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number;
-    private _dispowerDistance: number;
+    private _dispownDistance: number;
     private _collisionDistance: number;
-    private _collisionPresicion: number;
 
-    public constructor(scene: BABYLON.Scene, speed: number = 70, dispowerDistance: number = 80, collisionDistance: number = 40, collisionPresicion: number = 5) {
+    public constructor(scene: BABYLON.Scene, speed: number = 70, dispowerDistance: number = 80, collisionDistance: number = 40) {
         this._scene = scene;
         this._laserSpeed = speed;
-        this._dispowerDistance = dispowerDistance;
+        this._dispownDistance = dispowerDistance;
         this._collisionDistance = collisionDistance;
-        this._collisionPresicion = collisionPresicion;
         this._laserModel = this.initLaserModel();
         this._laserModel.metadata = { parentClass: this };
     }
@@ -40,10 +38,6 @@ export class Laser implements Projectile {
 
     public get laserModel(): BABYLON.Mesh {
         return this._laserModel;
-    }
-
-    private getDistanceWithPlayer(laser: BABYLON.InstancedMesh): number {
-        return BABYLON.Vector3.Distance(laser.position, this._scene.activeCamera.position);
     }
 
     public fire(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): void {
@@ -71,43 +65,43 @@ export class Laser implements Projectile {
         return this._laserModel.instances;
     }
 
-    private checkCollision(laser: BABYLON.InstancedMesh, deltaTime: number): void {
-        const steps = 1; // The number of intermediaate collision checks
-        const stepDistance = (this._laserSpeed * deltaTime) / steps;
+    private checkCollision(laser: BABYLON.InstancedMesh, nextPosition: BABYLON.Vector3): void {
+        const currentPosition = laser.absolutePosition;
+        const direction = nextPosition.subtract(currentPosition).normalize();
+        const rayLength = BABYLON.Vector3.Distance(currentPosition, nextPosition) + 0.1;
 
-        for (let i = 0; i < steps; i++) {
-            const newPosition = laser.position.add(laser.up.scale(stepDistance * i));
-            const ray = new BABYLON.Ray(newPosition, laser.up, stepDistance);
-            const hit = this._scene.pickWithRay(ray);
+        const ray = new BABYLON.Ray(currentPosition, direction, rayLength);
 
-            if (hit.pickedMesh && hit.pickedMesh.metadata && hit.pickedMesh.metadata.parentClass instanceof Targetable) {
-                hit.pickedMesh.metadata.parentClass.touch();
-                laser.dispose();
-                break;
+        const predicate = (mesh) => {
+            return mesh.name.indexOf('HitBox') !== -1;
+        };
+
+        const hitInfo = this._scene.pickWithRay(ray, predicate, true);
+
+        if (hitInfo.hit) {
+            const hitObject = hitInfo.pickedMesh;
+
+            if (hitObject.metadata && hitObject.metadata.parentClass instanceof Targetable) {
+                hitObject.metadata.parentClass.touch();
             }
 
-            // Dispose if the laser hits something
-            if (hit.pickedMesh && hit.pickedMesh.name !== 'laserInstance') {
-                laser.dispose();
-                break;
-            }
+            laser.dispose();
         }
     }
 
     public animate(deltaTime: number): void {
         this.getAllLaserInstances().forEach((laser) => {
-            var distance = this._laserSpeed * deltaTime;
-            laser.position.addInPlace(laser.up.scale(distance));
-            const laserDistance = this.getDistanceWithPlayer(laser);
+            const nextPosition = laser.position.addInPlace(laser.up.scale(this._laserSpeed * deltaTime));
+            const distancePlayer = BABYLON.Vector3.Distance(nextPosition, this._scene.activeCamera.position);
 
             // Dispose if the laser is too far away from the player
-            if (laserDistance > this._dispowerDistance) {
+            if (distancePlayer > this._dispownDistance) {
                 laser.dispose();
             }
 
             // Check collision if the laser is close enough to the player
-            if (laserDistance < this._collisionDistance) {
-                this.checkCollision(laser, deltaTime);
+            if (distancePlayer < this._collisionDistance) {
+                this.checkCollision(laser, nextPosition);
             }
         }, this);
     }

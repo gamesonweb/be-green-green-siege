@@ -3,6 +3,6 @@ export interface State {
     load(): void;
     dispose(): void;
     getName(): String;
-    fire(): void;
+    fire(force: number): void;
     animate(deltaTime: number): void;
 }

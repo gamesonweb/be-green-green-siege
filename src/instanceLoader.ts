@@ -21,15 +21,16 @@ export class InstanceLoader {
         });
     }
 
-    private createMeshInstanceWithChildren(mesh, newInstanceName, uniqueSuffix) {
+    private createMeshInstanceWithChildren(mesh, newInstanceName, uniqueSuffix, metadata) {
         const newInstance = mesh.createInstance(newInstanceName);
 
         // Add a unique identifier to the robot instance
-        newInstance.metadata = { instanceId: uniqueSuffix };
+        const completedMetaData = Object.assign({ instanceId: uniqueSuffix }, metadata);
+        newInstance.metadata = completedMetaData;
 
         mesh.getChildren().forEach((child) => {
             if (child instanceof BABYLON.AbstractMesh) {
-                const childInstance = this.createMeshInstanceWithChildren(child, `instance_${child.name}_${uniqueSuffix}`, uniqueSuffix);
+                const childInstance = this.createMeshInstanceWithChildren(child, `instance_${child.name}_${uniqueSuffix}`, uniqueSuffix, metadata);
                 childInstance.parent = newInstance;
             }
         });
@@ -37,10 +38,10 @@ export class InstanceLoader {
         return newInstance;
     }
 
-    public getBot(newInstanceName: string) {
+    public getBot(newInstanceName: string, metadata: object) {
         // Generate a unique identifier based on the instance counter
         const uniqueSuffix = this._instanceCounter++;
-        const bot = this.createMeshInstanceWithChildren(this._botRef, newInstanceName, uniqueSuffix);
+        const bot = this.createMeshInstanceWithChildren(this._botRef, newInstanceName, uniqueSuffix, metadata);
         return bot;
     }
 

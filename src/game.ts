@@ -50,7 +50,7 @@ export class Game {
     }
 
     configureMaterials(scene: BABYLON.Scene) {
-        let mat = ['m1.002', 'm10.002', 'm3.002', 'm2.003', 'm14']
+        let mat = ['m1.002', 'm10.002', 'm3.002', 'm2.003', 'm14'];
         mat.forEach((materialName) => {
             let material = scene.getMaterialByName(materialName) as BABYLON.PBRMaterial;
             material.metallicF0Factor = 0;
@@ -121,7 +121,7 @@ export class Game {
             Logger.log('Scene is ready');
 
             Game.instanceLoader = new InstanceLoader(this._scene);
-            
+
             this.configureMaterials(this._scene);
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
@@ -139,7 +139,6 @@ export class Game {
 
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
-            console.log(this._camera.position);
             this._camera.rotation.y -= Math.PI;
 
             // Load input

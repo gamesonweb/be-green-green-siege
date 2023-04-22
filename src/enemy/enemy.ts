@@ -1,11 +1,12 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import { Movement } from '../movement/movement';
+import { Targetable } from '../target/targetable';
 import { EnemiesSpace } from './enemies-space';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
-export class Enemy {
+export class Enemy extends Targetable {
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
     public enemiesSpace: EnemiesSpace;
@@ -26,6 +27,7 @@ export class Enemy {
     private _created = false;
 
     public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
+        super();
         this.scene = scene;
         this._destination = destination;
         this.enemiesSpace = enemiesSpace;
@@ -38,7 +40,8 @@ export class Enemy {
     }
 
     public createMesh(pos: BABYLON.Vector3) {
-        this.mesh = Game.instanceLoader.getBot('enemy_' + pos);
+        this.mesh = Game.instanceLoader.getBot('enemy_' + pos, { parentClass: this });
+        this.mesh.metadata = { parentClass: this };
         this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
         this.mesh.position = pos;
         this._vibration = 0;
@@ -87,10 +90,10 @@ export class Enemy {
             set.systems.forEach((s) => {
                 s.disposeOnStop = true;
             });
-            console.log('0: ', set.systems[0].emitRate);
-            console.log('1: ', set.systems[1].emitRate);
-            console.log('2: ', set.systems[2].emitRate);
-            console.log('3: ', set.systems[3].emitRate);
+            // console.log('0: ', set.systems[0].emitRate);
+            // console.log('1: ', set.systems[1].emitRate);
+            // console.log('2: ', set.systems[2].emitRate);
+            // console.log('3: ', set.systems[3].emitRate);
             set.systems[0].emitRate = 150;
             set.systems[1].emitRate = 400;
             set.systems[2].emitRate = 150;

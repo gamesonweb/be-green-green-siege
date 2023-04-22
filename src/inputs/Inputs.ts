@@ -19,7 +19,7 @@ export default class Inputs {
 
     public leftTrigger(pressed: boolean, force: number): void {
         Logger.log('Left Trigger : ' + force);
-        Game.debug3D.log = 'Left Trigger : ' + force;
+        // Game.debug3D.log = 'Left Trigger : ' + force;
 
         const currentstate = this._stateManager.getCurrentState();
 
@@ -28,17 +28,16 @@ export default class Inputs {
 
     public rightTrigger(pressed: boolean, force: number): void {
         Logger.log('Right Trigger : ' + force);
-        Game.debug3D.log = 'Right Trigger : ' + force;
-        if (pressed) {
+        // Game.debug3D.log = 'Right Trigger : ' + force;
+        if (force > 0.1) {
             const currentstate = this._stateManager.getCurrentState();
-
-            currentstate.fire();
+            currentstate.fire(force);
         }
     }
 
     public leftSqueeze(pressed: boolean, force: number): void {
         Logger.log('Left Squeeze : ' + force);
-        Game.debug3D.log = 'Left Squeeze : ' + force;
+        // Game.debug3D.log = 'Left Squeeze : ' + force;
 
         if (pressed) {
             TimeControl.setTimeScale(1.03 - force);
@@ -49,22 +48,22 @@ export default class Inputs {
 
     public rightSqueeze(pressed: boolean, force: number): void {
         Logger.log('Right Squeeze' + force);
-        Game.debug3D.log = 'Right Squeeze : ' + force;
+        // Game.debug3D.log = 'Right Squeeze : ' + force;
     }
 
     public leftPrimary(pressed: boolean): void {
         Logger.log('Left Primary');
-        Game.debug3D.log = 'Left Primary';
+        // Game.debug3D.log = 'Left Primary';
     }
 
     public rightPrimary(pressed: boolean): void {
         Logger.log('Right Primary');
-        Game.debug3D.log = 'Right Primary';
+        // Game.debug3D.log = 'Right Primary';
     }
 
     public leftSecondary(pressed: boolean): void {
         Logger.log('Left Secondary');
-        Game.debug3D.log = 'Left Secondary';
+        // Game.debug3D.log = 'Left Secondary';
         if (pressed) {
             Game.debug.toggleDebug();
             Game.debug3D.toggleDebug();
@@ -73,6 +72,6 @@ export default class Inputs {
 
     public rightSecondary(pressed: boolean): void {
         Logger.log('Right Secondary');
-        Game.debug3D.log = 'Right Secondary';
+        // Game.debug3D.log = 'Right Secondary';
     }
 }

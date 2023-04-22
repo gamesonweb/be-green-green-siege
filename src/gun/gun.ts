@@ -1,5 +1,5 @@
 export interface Gun {
-    fire(): void;
+    fire(force: number): void;
     animate(deltaTime: number): void;
     dispose(): void;
 }

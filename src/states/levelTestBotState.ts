@@ -18,8 +18,8 @@ export class LevelTestBotState implements State {
         this._scene = scene;
     }
 
-    fire(): void {
-        this._gun.fire();
+    fire(force: number): void {
+        this._gun.fire(force);
     }
 
     /**

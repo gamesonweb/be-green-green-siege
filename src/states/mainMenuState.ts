@@ -18,7 +18,7 @@ export class MainMenuState implements State {
     }
     shieldSize: number;
 
-    fire(): void {}
+    fire(force: number): void {}
 
     public getName() {
         return 'Main Menu';

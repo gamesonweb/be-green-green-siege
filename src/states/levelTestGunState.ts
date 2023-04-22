@@ -3,6 +3,7 @@ import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
+import { Targetable } from '../target/targetable';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
 
@@ -21,8 +22,8 @@ export class LevelTestGunState implements State {
         this._scene = scene;
     }
 
-    fire(): void {
-        this._gun.fire();
+    fire(force: number): void {
+        this._gun.fire(force);
     }
 
     public getName() {
@@ -61,20 +62,22 @@ export class LevelTestGunState implements State {
     }
 }
 
-class fakeEnnemy {
+class fakeEnnemy extends Targetable {
     private _scene: BABYLON.Scene;
     private _mesh: BABYLON.Mesh;
     private _laser: Laser;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 5;
+    private readonly FIRE_INTERVAL: number = 1225;
 
     constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
+        super();
         this._scene = Scene;
-        this._mesh = Game.instanceLoader.getBot('ennemy');
+        const metadata = { parentClass: this };
+        this._mesh = Game.instanceLoader.getBot('ennemy', metadata);
         this._mesh.position = position;
 
-        this._laser = new Laser(this._scene, 20, 40, 10, 1);
+        this._laser = new Laser(this._scene, 20, 40, 10);
     }
 
     public fire(): void {

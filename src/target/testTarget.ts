@@ -25,7 +25,7 @@ export class TestTarget extends Targetable {
 
         this._secondCounter = this._RESET_TOUCHE_TIME;
 
-        this._targetModel = BABYLON.MeshBuilder.CreateBox('target', { size: 2 }, this._scene);
+        this._targetModel = BABYLON.MeshBuilder.CreateBox('targetHitBox', { size: 2 }, this._scene);
         this._targetModel.position = position;
         this._targetModel.metadata = { parentClass: this };
 
