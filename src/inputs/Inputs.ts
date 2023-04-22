@@ -26,12 +26,34 @@ export default class Inputs {
         currentstate.shieldSize = force;
     }
 
+    private _rightTriggerMaintained: boolean = false;
+    private _rightTriggerFireInterval: NodeJS.Timer;
+    private _rightTriggerCurrentForce: number = 0;
+
     public rightTrigger(pressed: boolean, force: number): void {
         Logger.log('Right Trigger : ' + force);
         // Game.debug3D.log = 'Right Trigger : ' + force;
-        if (force > 0.1) {
-            const currentstate = this._stateManager.getCurrentState();
-            currentstate.fire(force);
+
+        const currentstate = this._stateManager.getCurrentState();
+
+        if (pressed) {
+            if (!this._rightTriggerMaintained) {
+                this._rightTriggerMaintained = true;
+                this._rightTriggerCurrentForce = force;
+
+                this._rightTriggerFireInterval = setInterval(() => {
+                    if (this._rightTriggerCurrentForce > 0.1) {
+                        currentstate.fire(this._rightTriggerCurrentForce);
+                    }
+                }, 50); // 100 ms interval, you can adjust this value
+            } else {
+                this._rightTriggerCurrentForce = force;
+            }
+        } else {
+            if (this._rightTriggerMaintained) {
+                this._rightTriggerMaintained = false;
+                clearInterval(this._rightTriggerFireInterval);
+            }
         }
     }
 
