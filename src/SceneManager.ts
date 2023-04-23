@@ -42,8 +42,8 @@ export default class SceneManager {
     static initShield(tasks: BABYLON.MeshAssetTask): void {
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name == 'ShieldGrip') {
-                    mesh.parent = null;
+                if (mesh.name == '__root__') {
+                    mesh.name = 'ShieldGrip';
                 }
             });
         };
