@@ -19,10 +19,21 @@ export default class HapticManager {
         }
     }
 
-    public vibrateController(handedness: 'left' | 'right', intensity: number, duration: number): void {
-        const controller = handedness === 'left' ? this._leftController : this._rightController;
-        if (controller) {
-            controller.pulse(intensity, duration);
+    public vibrateController(handedness: 'left' | 'right' | 'all', intensity: number, duration: number, timeout: number = 0): void {
+        const vibrate = (controller: BABYLON.WebXRAbstractMotionController) => {
+            if (controller) {
+                setTimeout(() => {
+                    controller.pulse(intensity, duration);
+                }, timeout);
+            }
+        };
+
+        if (handedness === 'all') {
+            vibrate(this._leftController);
+            vibrate(this._rightController);
+        } else {
+            const controller = handedness === 'left' ? this._leftController : this._rightController;
+            vibrate(controller);
         }
     }
 }
