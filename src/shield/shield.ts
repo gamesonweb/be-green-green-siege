@@ -31,13 +31,13 @@ export class Shield extends Targetable {
     }
 
     private _initShield(): void {
-        this._shieldMesh = this._scene.getMeshByName('Shield') as BABYLON.Mesh;
+        this._shieldMesh = this._scene.getMeshByName('ShieldHitBox') as BABYLON.Mesh;
         this._shieldGrip = this._scene.getMeshByName('ShieldGrip') as BABYLON.Mesh;
         this._baseScale = this._shieldMesh.scaling;
+        this._shieldMesh.metadata = { parentClass: this };
         
         // const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
         // shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
-        // shieldMesh.metadata = { parentClass: this };
         // shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
 
         const shieldMaterial = new BABYLON.StandardMaterial('shieldMaterial', this._scene);
