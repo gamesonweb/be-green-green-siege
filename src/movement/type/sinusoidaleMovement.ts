@@ -10,17 +10,11 @@ export class SinusoidaleMovement implements Movement {
         this.frequency = frequency;
     }
 
-    moove(enemy: Enemy, positions: BABYLON.Vector3[], destination: BABYLON.Vector3, speed: number, deltaTime: number): number {
-        // @todo : à modifier comme dans gravityMovement
-        // this.frequency = 0.0005;
-        let direction = destination.subtract(enemy.mesh.position).normalize();
-        let distance = BABYLON.Vector3.Distance(enemy.mesh.position, destination);
-        let moveDistance = Math.min(distance, speed);
-        enemy.mesh.translate(direction, moveDistance, BABYLON.Space.WORLD);
-        enemy.mesh.position = BABYLON.Vector3.Lerp(enemy.mesh.position, destination, speed);
-        // sinusoidale
-        enemy.mesh.position.y += 0.1 * Math.sin(this.frequency * deltaTime);
-        enemy.mesh.position = enemy.checkCollision(positions);
+    moove(enemy: Enemy, positions: BABYLON.Vector3[], destination: BABYLON.Vector3, speed: number, deltaTime: number): number {        let deplacement = BABYLON.Vector3.Zero();
+        deplacement.addInPlace(destination.subtract(enemy.mesh.position).normalize().scale(speed));
+        deplacement.addInPlace(new BABYLON.Vector3(0, Math.sin(this.frequency * deltaTime), 0));
+        deplacement.addInPlace(enemy.checkCollision(positions));
+        enemy.mesh.position.addInPlace(deplacement.scale(deltaTime));
         return BABYLON.Vector3.Distance(destination, enemy.mesh.position);
     }
 

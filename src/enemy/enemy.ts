@@ -2,11 +2,14 @@ import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import { Movement } from '../movement/movement';
 import { Targetable } from '../target/targetable';
-import { EnemiesSpace } from './enemies-space';
+import { EnemiesSpace } from './enemiesSpace';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
 export class Enemy extends Targetable {
+
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
     public enemiesSpace: EnemiesSpace;
@@ -14,17 +17,27 @@ export class Enemy extends Targetable {
     // movement
     public movement: Movement;
     private _destination: BABYLON.Mesh;
-    public speed: number;
+    private _speed: number;
     public force: BABYLON.Vector3;
     public velocity: BABYLON.Vector3;
     // health
     private readonly _MAX_LIFE_POINT: number = 3;
-    private readonly _MAX_PARTICLES: number = 100;
+    private readonly _MAX_PARTICLES: number = 30;
     private _lifePoint: number;
     public isDeath: boolean = false;
     // particles
     private _smokeParticles: BABYLON.ParticleSystem;
     private _created = false;
+    // eyes effect
+    private _eyes: BABYLON.AbstractMesh;
+    private _t: number = 0;
+    private _eyesFreq: number = 0.2;
+    // fire !
+    private _fireFreq: number;
+    private _nBullets: number;
+    // sounds effect
+    private _bip_bip: SoundPlayer;
+
 
     public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
         super();
@@ -32,11 +45,14 @@ export class Enemy extends Targetable {
         this._destination = destination;
         this.enemiesSpace = enemiesSpace;
         this.movement = movement;
-        this.speed = speed;
+        this._speed = speed;
         this.force = BABYLON.Vector3.Zero();
         this.velocity = BABYLON.Vector3.Zero();
         this.createMesh(pos);
         this._lifePoint = this._MAX_LIFE_POINT;
+        // sounds
+        this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 200, scene, this.mesh);
+        this._bip_bip.playWithRepeater(10);
     }
 
     public createMesh(pos: BABYLON.Vector3) {
@@ -44,12 +60,16 @@ export class Enemy extends Targetable {
         this.mesh.metadata = { parentClass: this };
         this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
         this.mesh.position = pos;
+        this._eyes = Game.instanceLoader.findInstanceSubMeshByName(this.mesh, "Eyes");
+        // eyes effect 
         this._vibration = 0;
     }
 
     private lookAtMe(biais: number) {
         let origin: BABYLON.Vector3 = this.scene.activeCamera.position;
         this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
+        // animate face
+        this._vibration += 0.2 + 2 * (this._MAX_LIFE_POINT - this._lifePoint);
     }
 
     public setDestination(destination: BABYLON.Mesh): void {
@@ -66,10 +86,15 @@ export class Enemy extends Targetable {
         this._smokeParticles.color1 = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
         this._smokeParticles.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 0);
         this._smokeParticles.emitter = this.mesh;
-        // this._smokeParticles.start();
+        this._smokeParticles.start();
     }
 
     private _checkHealth() {
+        if(this._lifePoint != 0) {
+            this._eyes.material.alpha = (1 + Math.cos(this._t)) / 2;// * (this._MAX_LIFE_POINT - this._lifePoint);
+            this._t += this._eyesFreq * (this._MAX_LIFE_POINT - this._lifePoint);
+            // console.log("t= ", this._eyes.material.alpha);
+        }
         if (this._lifePoint != this._MAX_LIFE_POINT) {
             // console.log("Point: ", this._lifePoint);
             if (!this._created) {
@@ -94,12 +119,19 @@ export class Enemy extends Targetable {
             // console.log('1: ', set.systems[1].emitRate);
             // console.log('2: ', set.systems[2].emitRate);
             // console.log('3: ', set.systems[3].emitRate);
-            set.systems[0].emitRate = 150;
-            set.systems[1].emitRate = 400;
-            set.systems[2].emitRate = 150;
+            set.systems[0].emitRate = 50;
+            set.systems[1].emitRate = 100;
+            set.systems[2].emitRate = 50;
             set.systems[3].emitRate = 25;
             set.start(this.mesh);
         });
+        // sound 
+        let sound = new BABYLON.Sound("explosion", "./assets/sound/explosion.mp3", this.scene, null, {
+            autoplay: true,
+            spatialSound: true,
+            volume: 1 / (1 + BABYLON.Vector3.Distance(this.mesh.position, this.scene.activeCamera.position))
+        });
+        sound.setPosition(this.mesh.position);
         this.mesh.dispose();
         this.isDeath = true;
     }
@@ -122,30 +154,54 @@ export class Enemy extends Targetable {
     }
 
     public animate(deltaTime: number, positions: BABYLON.Vector3[]): void {
-        // animate face
-        this._vibration += 0.2;
         // console.log('pos: ', this.mesh.position);
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
         // moove
-        if (Math.abs(this.movement.moove(this, positions, this._destination.position, this.speed, deltaTime)) < 10) {
+        if (Math.abs(this.movement.moove(this, positions, this._destination.position, this._speed, deltaTime)) < 10) {
             // tmp
             // this._takeDamage(1);
             this._destination.dispose();
             this._destination = this.enemiesSpace.getRandomPoint();
         }
+        this._checkHealth();
     }
 
     public animateWithoutMoove(): void {
         // animate face
-        this._vibration += 0.4;
+        // this._vibration += 0.4;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
-        this._checkHealth();
+        // this._checkHealth();
         // moove
         // if (Math.abs(this.movement.moove(this, destination.position, this.speed, deltaTime)) < 10) {
         // this._destination.dispose();
         // this._destination = this.enemiesSpace.getRandomPoint();
         // }
     }
+
+    public setSpeed(speed: number): void {
+        this._speed = speed;
+    }
+
+    public getSpeed(): number {
+        return this._speed;
+    }
+
+    public setFireFreq(fireFreq: number): void {
+        this._fireFreq = fireFreq;
+    }
+
+    public getFireFreq(): number {
+        return this._fireFreq;
+    }
+
+    public setNBullets(nBullets: number): void {
+        this._nBullets = nBullets;
+    }
+
+    public getNBullets(): number {
+        return this._nBullets;
+    }
+    
 }
