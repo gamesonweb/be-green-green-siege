@@ -51,7 +51,9 @@ export class Laser implements Projectile {
         laserInstance.position = origin.getAbsolutePosition().clone();
 
         if (direction) {
-            laserInstance.lookAt(direction);
+            const targetPosition = origin.getAbsolutePosition().add(direction);
+            laserInstance.lookAt(targetPosition);
+            
             // Rotate the laser instance to make its forward direction become its up direction
             laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
         } else {

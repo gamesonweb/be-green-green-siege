@@ -9,6 +9,7 @@ import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
 import { InstanceLoader } from './instanceLoader';
 import { StateManager, StatesEnum } from './states/stateManager';
+import { animations } from './AnimationController';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -94,8 +95,10 @@ export class Game {
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
-
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
+        let gunTask = this._assetManager.addMeshTask('fun', '', './assets/', 'gun.glb');
+        let shieldTask = this._assetManager.addMeshTask('shield', '', './assets/', 'shield.glb');
+
 
         platformTask.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
@@ -116,6 +119,31 @@ export class Game {
             task.loadedMeshes.forEach((mesh) => {
                 console.log(mesh.name);
                 if (mesh.name == 'Robot') {
+                    mesh.parent = null;
+                }
+            });
+        };
+
+        gunTask.onSuccess = (task) => {
+            task.loadedMeshes.forEach((mesh) => {
+                if (mesh.name == 'Gun') {
+                    mesh.parent = null;
+                }
+                else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
+                    mesh.visibility = 0;
+                }
+            });
+
+            task.loadedAnimationGroups.forEach((animationGroup) => {
+                animationGroup.loopAnimation = false;
+                animationGroup.stop();
+                animations.ShotAnimation = animationGroup;
+            });
+        };
+
+        shieldTask.onSuccess = (task) => {
+            task.loadedMeshes.forEach((mesh) => {
+                if (mesh.name == 'ShieldGrip') {
                     mesh.parent = null;
                 }
             });
@@ -146,7 +174,7 @@ export class Game {
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
             this._camera.rotation.y -= Math.PI;
-
+            
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs);
 

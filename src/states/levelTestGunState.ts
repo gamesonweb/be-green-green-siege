@@ -85,7 +85,9 @@ class fakeEnnemy extends Targetable {
         const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
 
         // fire in camera direction
-        this._laser.fire(result, this._scene.activeCamera.position);
+        const laserDirection = this._scene.activeCamera.position.subtract(result.absolutePosition);
+        // fire in camera direction
+        this._laser.fire(result, laserDirection);
     }
 
     public animate(deltaTime: number): void {
