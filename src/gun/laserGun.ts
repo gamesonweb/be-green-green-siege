@@ -4,6 +4,8 @@ import { Projectile } from '../projectile/projectile';
 import { Gun } from './gun';
 import { Pointeur } from './pointeur';
 import { animations } from '../AnimationController';
+import Logger from '../debug/logger';
+import xrHandler from '../XRHandler';
 
 export class LaserGun implements Gun {
     private _scene: BABYLON.Scene;
@@ -33,7 +35,7 @@ export class LaserGun implements Gun {
     }
 
     private initGunModel(): void {
-        this._gunModel = this._scene.getMeshByName('Gun') as BABYLON.Mesh;
+        this._gunModel = this._scene.getMeshByName('GunParent') as BABYLON.Mesh;
         this._laserPoint = this._scene.getMeshByName('GunLaser') as BABYLON.Mesh;     
         this._gunBack = this._scene.getMeshByName('GunBack') as BABYLON.Mesh;
     }
@@ -54,8 +56,14 @@ export class LaserGun implements Gun {
     }
 
     private attachToVRHand(rightAnchor: BABYLON.AbstractMesh): void {
+        // Set the controller visibility to false
+        xrHandler.isControllerVisible(false);
+
         this._gunModel.setParent(rightAnchor);
         this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
+        this._gunModel.rotation = rightAnchor.rotation.clone();
+        this._gunModel.rotate(BABYLON.Axis.X, -2*Math.PI / 3, BABYLON.Space.LOCAL);
+        this._gunModel.rotate(BABYLON.Axis.Z, -0.1745, BABYLON.Space.LOCAL);
     }
 
     private attachToCamera(rightAnchor: BABYLON.AbstractMesh): void {
