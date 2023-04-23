@@ -23,7 +23,7 @@ export default class Inputs {
 
         const currentstate = this._stateManager.getCurrentState();
 
-        currentstate.shieldSize = force;
+        currentstate.shieldSize = force*8;
     }
 
     private _rightTriggerMaintained: boolean = false;

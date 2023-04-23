@@ -8,12 +8,15 @@ import { Targetable } from '../target/targetable';
  */
 export class Shield extends Targetable {
     private readonly _scene: BABYLON.Scene;
-    private readonly _shieldMesh: BABYLON.Mesh;
     private readonly _camera: BABYLON.Camera;
     private _isTouched = false;
 
     private readonly _noTouchAlpha = 0.75;
     private readonly _touchAlpha = 0.98;
+
+    private _shieldMesh: BABYLON.Mesh;
+    private _shieldGrip: BABYLON.Mesh;
+    private _baseScale: BABYLON.Vector3;
 
     /**
      * Shield constructor.
@@ -22,48 +25,68 @@ export class Shield extends Targetable {
     constructor(scene: BABYLON.Scene) {
         super();
         this._scene = scene;
-        this._shieldMesh = this._createShieldMesh();
+        this._initShield();
         this._camera = this._scene.activeCamera;
         this._attach();
     }
 
-    private _createShieldMesh(): BABYLON.Mesh {
-        const shieldMesh = BABYLON.MeshBuilder.CreateBox('shieldHitBox', { width: 0.5, height: 1, depth: 0.01 }, this._scene);
-        shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
-        shieldMesh.metadata = { parentClass: this };
-        shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
+    private _initShield(): void {
+        this._shieldMesh = this._scene.getMeshByName('ShieldHitBox') as BABYLON.Mesh;
+        this._shieldGrip = this._scene.getMeshByName('ShieldGrip') as BABYLON.Mesh;
+        this._baseScale = this._shieldMesh.scaling;
+        this._shieldMesh.metadata = { parentClass: this };
+        
+        // const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
+        // shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
+        // shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
 
         const shieldMaterial = new BABYLON.StandardMaterial('shieldMaterial', this._scene);
         shieldMaterial.diffuseColor = new BABYLON.Color3(0.0471, 0.4078, 0.4706);
         shieldMaterial.alpha = this._noTouchAlpha;
-        shieldMesh.material = shieldMaterial;
+        this._shieldMesh.material = shieldMaterial;
 
-        return shieldMesh;
+        // return shieldMesh;
     }
 
+        /**
+     * Attaches the gun model to either the VR hand or the camera, depending on whether VR is supported.
+     */
     private _attach(): void {
+        const leftAnchor = this._scene.getMeshByName('leftAnchor');
+
         if (Game.vrSupported) {
-            const leftAnchor = this._scene.getMeshByName('leftAnchor');
-            this._shieldMesh.setParent(leftAnchor);
-            this._shieldMesh.position = BABYLON.Vector3.Zero();
-            this._shieldMesh.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
+            // If VR is supported, attach the gun model to the VR hand
+            this.attachToVRHand(leftAnchor);
         } else {
-            this._attachToCamera();
+            // If VR is not supported, attach the gun model to the camera
+            this.attachToCamera(leftAnchor);
         }
     }
 
-    private _attachToCamera(): void {
-        const cameraDirection = this._camera.getForwardRay().direction;
-        const offset = cameraDirection.scale(1.2);
-        this._shieldMesh.position = this._camera.position.add(offset);
-        this._shieldMesh.lookAt(this._camera.position);
+    private attachToVRHand(leftAnchor: BABYLON.AbstractMesh): void {
+        this._shieldGrip.setParent(leftAnchor);
+        this._shieldGrip.position = new BABYLON.Vector3(0, 0, 0);
+        this._shieldGrip.rotation = leftAnchor.rotation.clone();
+        this._shieldGrip.rotate(BABYLON.Axis.Y, Math.PI / 2, BABYLON.Space.LOCAL);
 
-        const rightOffset = this._shieldMesh.right.normalize().scale(0.75);
-        const upOffset = this._shieldMesh.up.normalize().scale(-0.4);
-        this._shieldMesh.position = this._shieldMesh.absolutePosition.add(rightOffset).add(upOffset);
+        // Rotate 20° around z axis to align the shield with the hand
 
-        this._shieldMesh.setParent(this._camera);
+        this._shieldGrip.rotate(BABYLON.Axis.Z, Math.PI / 8, BABYLON.Space.LOCAL);
+        
+        // this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI / 3, BABYLON.Space.LOCAL);
     }
+
+    private attachToCamera(leftAnchor: BABYLON.AbstractMesh): void {
+        leftAnchor.setParent(this._camera);
+        leftAnchor.position = new BABYLON.Vector3(-0.3, -0.3, 0.7);
+        leftAnchor.rotation = new BABYLON.Vector3(0, 0, 0);
+        leftAnchor.isVisible = false;
+
+        this._shieldGrip.setParent(leftAnchor);
+        this._shieldGrip.position = leftAnchor.position;
+        this._shieldGrip.rotate(BABYLON.Axis.Y, -Math.PI / 2, BABYLON.Space.LOCAL);
+    }
+
 
     public animate(deltaTime: number, shieldSize: number): void {
         this._updateScaling(shieldSize, deltaTime);
@@ -73,7 +96,7 @@ export class Shield extends Targetable {
     private _updateScaling(shieldSize: number, deltaTime: number): void {
         const scalingLerpSpeed = 11 * deltaTime;
         const currentScaling = this._shieldMesh.scaling;
-        const targetScaling = new BABYLON.Vector3(1, shieldSize, shieldSize);
+        const targetScaling = new BABYLON.Vector3(this._baseScale.x, this._baseScale.y + shieldSize, this._baseScale.z);
         this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
     }
 
@@ -102,6 +125,6 @@ export class Shield extends Targetable {
      * Disposes of the shield mesh.
      */
     public dispose(): void {
-        this._shieldMesh.dispose();
+        this._shieldGrip.dispose();
     }
 }
