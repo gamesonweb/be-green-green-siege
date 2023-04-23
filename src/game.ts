@@ -1,6 +1,8 @@
 import * as BABYLON from 'babylonjs';
 import HapticManager from './HapticManager';
+import SceneManager from './SceneManager';
 import { TimeControl } from './TimeControl';
+import xrHandler from './XRHandler';
 import DebugConsole from './debug/debugConsole';
 import Debug3D from './debug/debugConsole3D';
 import Logger from './debug/logger';
@@ -8,10 +10,8 @@ import Inputs from './inputs/Inputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
 import { InstanceLoader } from './instanceLoader';
+import { Player } from './player/player';
 import { StateManager, StatesEnum } from './states/stateManager';
-import { animations } from './AnimationController';
-import xrHandler from './XRHandler';
-import SceneManager from './SceneManager';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -31,6 +31,8 @@ export class Game {
     private _spawnPoint: BABYLON.AbstractMesh;
     private _stateManager: StateManager;
 
+    private static _player: Player;
+
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
         this._engine = new BABYLON.Engine(this._canvas, true);
@@ -49,7 +51,7 @@ export class Game {
         camera.angularSensibility = 1000;
         return camera;
     }
-    
+
     /**
      * Creates the debug camera.
      */
@@ -62,7 +64,6 @@ export class Game {
         debugCamera.inertia = 0;
         debugCamera.angularSensibility = 1000;
     }
-
 
     async createInput(scene: BABYLON.Scene, camera: BABYLON.FreeCamera, cavnas: HTMLCanvasElement, inputs: Inputs) {
         if (Game.vrSupported) {
@@ -96,6 +97,9 @@ export class Game {
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
         Game.debug3D = new Debug3D(this._scene);
 
+        // Player
+        Game._player = new Player(this._scene);
+
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
@@ -123,7 +127,7 @@ export class Game {
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
             this._camera.rotation.y -= Math.PI;
-            
+
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs);
 
@@ -151,6 +155,7 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
+            Game._player.animate(deltaTime * TimeControl.getTimeScale());
             this._stateManager.getCurrentState().animate(deltaTime * TimeControl.getTimeScale());
         });
 

@@ -2,7 +2,6 @@ import * as BABYLON from 'babylonjs';
 import { animations } from './AnimationController';
 
 export default class SceneManager {
-
     static configureLights(scene: BABYLON.Scene) {
         let upperLight = scene.getLightByName('UpperSun');
         let underLight = scene.getLightByName('DownSun');
@@ -25,7 +24,7 @@ export default class SceneManager {
     static initPlatform(tasks: BABYLON.MeshAssetTask): void {
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name.includes("HitBox")) {
+                if (mesh.name.includes('HitBox')) {
                     mesh.visibility = 0;
                 }
             });
@@ -53,36 +52,33 @@ export default class SceneManager {
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
                 if (mesh.name == '__root__') {
-                    mesh.name = 'GunParent'
-                }
-                else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
+                    mesh.name = 'GunParent';
+                } else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
                     mesh.visibility = 0;
                 }
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {
                 console.log(animationGroup.name);
-                
+
                 if (animationGroup.name == 'BarelShot') {
                     animationGroup.loopAnimation = false;
                     animationGroup.stop();
                     animations.BarelShot = animationGroup;
-                }
-                else if (animationGroup.name == 'OverHeatBack') {
+                } else if (animationGroup.name == 'OverHeatBack') {
                     animationGroup.loopAnimation = false;
                     animationGroup.stop();
                     animations.overHeatBack = animationGroup;
-                }
-                else if (animationGroup.name == 'OverHeatFront') {
+                } else if (animationGroup.name == 'OverHeatFront') {
                     animationGroup.loopAnimation = false;
                     animationGroup.stop();
                     animations.overHeatFront = animationGroup;
-                }
-                else if (animationGroup.name == 'GunIdle') {
-                    console.log("GunEnergyAction");
-                    
+                } else if (animationGroup.name == 'GunIdle') {
+                    console.log('GunEnergyAction');
+
                     animationGroup.loopAnimation = true;
                     animationGroup.play(true);
+                    animations.gunIdle = animationGroup;
                 }
             });
         };
@@ -98,6 +94,4 @@ export default class SceneManager {
             });
         };
     }
-
-    
 }
