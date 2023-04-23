@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { Movement } from '../movement/movement';
-import { EnemiesSpace } from './enemies-space';
+import { EnemiesSpace } from './enemiesSpace';
 import { Enemy } from './enemy';
 
 export class Commando {
@@ -35,7 +35,7 @@ export class Commando {
         this._enemies.forEach((enemy) => {
             enemy.animateWithoutMoove();
             // moove and share the same destination
-            if (Math.abs(this._movement.moove(enemy, positions, this._destination.position, enemy.speed, deltaTime)) < 10) {
+            if (Math.abs(this._movement.moove(enemy, positions, this._destination.position, enemy.getSpeed(), deltaTime)) < 10) {
                 // Just for a test ... @todo: remove
                 enemy.takeDamage(1);
                 // console.log("touch !");

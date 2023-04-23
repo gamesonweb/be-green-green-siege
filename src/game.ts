@@ -1,7 +1,8 @@
 import * as BABYLON from 'babylonjs';
-import { animations } from './AnimationController';
 import HapticManager from './HapticManager';
+import SceneManager from './SceneManager';
 import { TimeControl } from './TimeControl';
+import xrHandler from './XRHandler';
 import DebugConsole from './debug/debugConsole';
 import Debug3D from './debug/debugConsole3D';
 import Logger from './debug/logger';
@@ -51,25 +52,28 @@ export class Game {
         return camera;
     }
 
-    configureMaterials(scene: BABYLON.Scene) {
-        let mat = ['m1.002', 'm10.002', 'm3.002', 'm2.003', 'm14'];
-        mat.forEach((materialName) => {
-            let material = scene.getMaterialByName(materialName) as BABYLON.PBRMaterial;
-            material.metallicF0Factor = 0;
-        });
+    /**
+     * Creates the debug camera.
+     */
+    createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
+        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(0, 0, -10), scene);
+        debugCamera.position = new BABYLON.Vector3(5, 10);
+        debugCamera.setTarget(BABYLON.Vector3.Zero());
+        debugCamera.attachControl(cavnas, true);
+        debugCamera.speed = 10;
+        debugCamera.inertia = 0;
+        debugCamera.angularSensibility = 1000;
     }
 
     async createInput(scene: BABYLON.Scene, camera: BABYLON.FreeCamera, cavnas: HTMLCanvasElement, inputs: Inputs) {
         if (Game.vrSupported) {
             Logger.log('VR supported');
 
-            // Get platform
-            let platform = scene.getMeshByName('n1b14');
-
             // Load input
-            let xr = await scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
-            new XRInputs(scene, camera, cavnas, xr, inputs);
-            Game.hapticManager = new HapticManager(xr);
+            await xrHandler.initXR(scene);
+
+            new XRInputs(scene, camera, cavnas, xrHandler.xr, inputs);
+            Game.hapticManager = new HapticManager(xrHandler.xr);
         } else {
             Logger.log('VR not supported');
 
@@ -103,74 +107,21 @@ export class Game {
         let gunTask = this._assetManager.addMeshTask('fun', '', './assets/', 'gun.glb');
         let shieldTask = this._assetManager.addMeshTask('shield', '', './assets/', 'shield.glb');
 
-        platformTask.onSuccess = (task) => {
-            task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name.includes('HitBox')) {
-                    mesh.visibility = 0;
-                }
-            });
-
-            task.loadedAnimationGroups.forEach((animationGroup) => {
-                console.log(animationGroup.name);
-                animationGroup.loopAnimation = true;
-                animationGroup.start();
-                animationGroup.speedRatio = 0.1;
-            });
-        };
-
-        testTask.onSuccess = (task) => {
-            task.loadedMeshes.forEach((mesh) => {
-                console.log(mesh.name);
-                if (mesh.name == 'Robot') {
-                    mesh.parent = null;
-                }
-            });
-        };
-
-        gunTask.onSuccess = (task) => {
-            task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name == 'Gun') {
-                    mesh.parent = null;
-                } else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
-                    mesh.visibility = 0;
-                }
-            });
-
-            task.loadedAnimationGroups.forEach((animationGroup) => {
-                animationGroup.loopAnimation = false;
-                animationGroup.stop();
-                animations.ShotAnimation = animationGroup;
-            });
-        };
-
-        shieldTask.onSuccess = (task) => {
-            task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name == 'ShieldGrip') {
-                    mesh.parent = null;
-                }
-            });
-        };
+        SceneManager.initPlatform(platformTask);
+        SceneManager.initRobot(testTask);
+        SceneManager.initGun(gunTask);
+        SceneManager.initShield(shieldTask);
 
         this._assetManager.load();
 
         this._scene.executeWhenReady(async () => {
-            Logger.log('Scene is ready');
-
             Game.instanceLoader = new InstanceLoader(this._scene);
 
-            this.configureMaterials(this._scene);
+            SceneManager.configureMaterials(this._scene);
+            SceneManager.configureLights(this._scene);
+
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
-
-            let upperLight = this._scene.getLightByName('UpperSun');
-            let underLight = this._scene.getLightByName('DownSun');
-            upperLight.intensity = 1;
-            underLight.intensity = 1;
-
-            let lightTest = new BABYLON.HemisphericLight('lightTest', new BABYLON.Vector3(0, 1, 0), this._scene);
-            lightTest.direction = new BABYLON.Vector3(0, 1, 0);
-            lightTest.intensity = 0.5;
-
             this._spawnPoint.visibility = 0;
 
             const upVector = new BABYLON.Vector3(0, 1, 0);
@@ -187,19 +138,6 @@ export class Game {
 
             this.animate();
         });
-    }
-
-    /**
-     * Creates the debug camera.
-     */
-    createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
-        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(0, 0, -10), scene);
-        debugCamera.position = new BABYLON.Vector3(5, 10);
-        debugCamera.setTarget(BABYLON.Vector3.Zero());
-        debugCamera.attachControl(cavnas, true);
-        debugCamera.speed = 10;
-        debugCamera.inertia = 0;
-        debugCamera.angularSensibility = 1000;
     }
 
     /**

@@ -11,7 +11,7 @@ export class Shield extends Targetable {
     private readonly _camera: BABYLON.Camera;
     private _isTouched = false;
 
-    private readonly _noTouchAlpha = 0.75;
+    private readonly _noTouchAlpha = 0.4;
     private readonly _touchAlpha = 0.98;
 
     private _shieldMesh: BABYLON.Mesh;
@@ -68,6 +68,7 @@ export class Shield extends Targetable {
         this._shieldGrip.position = new BABYLON.Vector3(0, 0, 0);
         this._shieldGrip.rotation = leftAnchor.rotation.clone();
         this._shieldGrip.rotate(BABYLON.Axis.Y, Math.PI / 2, BABYLON.Space.LOCAL);
+        
 
         // Rotate 20° around z axis to align the shield with the hand
 

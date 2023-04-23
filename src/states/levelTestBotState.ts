@@ -1,8 +1,11 @@
 import * as BABYLON from 'babylonjs';
 import { Commando } from '../enemy/commando';
-import { EnemiesSpace } from '../enemy/enemies-space';
+import { EnemiesSpace } from '../enemy/enemiesSpace';
+import { Enemy } from '../enemy/enemy';
 import { LaserGun } from '../gun/laserGun';
 import { GravityMovement } from '../movement/type/gravityMovement';
+import { SinusoidaleMovement } from '../movement/type/sinusoidaleMovement';
+import { AroundPlatform } from '../movement/type/aroundPlatform';
 import { Laser } from '../projectile/laser';
 import { State } from './state';
 
@@ -43,13 +46,13 @@ export class LevelTestBotState implements State {
         this._light.intensity = 0.3;
         // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
         // set enemies area
-        this._e_space = new EnemiesSpace(new BABYLON.Vector3(-30, 30, 10), new BABYLON.Vector3(-20, 60, 30), this._scene);
+        this._e_space = new EnemiesSpace(new BABYLON.Vector3(40, 30, -100), new BABYLON.Vector3(60, 60, -150), this._scene);
         // this._e_space.logDim();
         // create a new ennemy
         // let ennemySinusoidale = new Ennemy(this._scene, this._e_space, new BABYLON.Vector3(20, 10, 5), new SinusoidaleMovement(0.0005), 0.01);
         // this._e_space.addEnnemy(ennemySinusoidale);
         // let ennemyGravity = new Enemy(this._scene, this._e_space, new BABYLON.Vector3(0, 50, 0), new GravityMovement(), 5, this._e_space.getRandomPoint());
-        let commando = new Commando(100, this._scene, this._e_space, new BABYLON.Vector3(20, 10, 5), new GravityMovement(), 5, this._e_space.getRandomPoint());
+        let commando = new Commando(3, this._scene, this._e_space, new BABYLON.Vector3(20, -15, 5), new GravityMovement(), 5, this._e_space.getRandomPoint());
         this._e_space.addCommando(commando);
         // this._e_space.addEnnemy(ennemyGravity);
         // remove it when it's finished
