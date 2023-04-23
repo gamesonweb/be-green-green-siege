@@ -63,12 +63,22 @@ export default class SceneManager {
             task.loadedAnimationGroups.forEach((animationGroup) => {
                 console.log(animationGroup.name);
                 
-                if (animationGroup.name == 'ShotAnimation') {
-                    animationGroup.loopAnimation = true;
-                    animationGroup.play();
-                    animations.ShotAnimation = animationGroup;
+                if (animationGroup.name == 'BarelShot') {
+                    animationGroup.loopAnimation = false;
+                    animationGroup.stop();
+                    animations.BarelShot = animationGroup;
                 }
-                else if (animationGroup.name == 'GunEnergyAction.001') {
+                else if (animationGroup.name == 'OverHeatBack') {
+                    animationGroup.loopAnimation = false;
+                    animationGroup.stop();
+                    animations.overHeatBack = animationGroup;
+                }
+                else if (animationGroup.name == 'OverHeatFront') {
+                    animationGroup.loopAnimation = false;
+                    animationGroup.stop();
+                    animations.overHeatFront = animationGroup;
+                }
+                else if (animationGroup.name == 'GunIdle') {
                     console.log("GunEnergyAction");
                     
                     animationGroup.loopAnimation = true;
