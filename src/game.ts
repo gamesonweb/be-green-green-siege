@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { animations } from './AnimationController';
 import HapticManager from './HapticManager';
 import { TimeControl } from './TimeControl';
 import DebugConsole from './debug/debugConsole';
@@ -8,8 +9,8 @@ import Inputs from './inputs/Inputs';
 import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
 import { InstanceLoader } from './instanceLoader';
+import { Player } from './player/player';
 import { StateManager, StatesEnum } from './states/stateManager';
-import { animations } from './AnimationController';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -29,7 +30,7 @@ export class Game {
     private _spawnPoint: BABYLON.AbstractMesh;
     private _stateManager: StateManager;
 
-    testRobot: BABYLON.AbstractMesh;
+    private static _player: Player;
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
@@ -92,6 +93,9 @@ export class Game {
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
         Game.debug3D = new Debug3D(this._scene);
 
+        // Player
+        Game._player = new Player(this._scene);
+
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
@@ -99,10 +103,9 @@ export class Game {
         let gunTask = this._assetManager.addMeshTask('fun', '', './assets/', 'gun.glb');
         let shieldTask = this._assetManager.addMeshTask('shield', '', './assets/', 'shield.glb');
 
-
         platformTask.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name.includes("HitBox")) {
+                if (mesh.name.includes('HitBox')) {
                     mesh.visibility = 0;
                 }
             });
@@ -128,8 +131,7 @@ export class Game {
             task.loadedMeshes.forEach((mesh) => {
                 if (mesh.name == 'Gun') {
                     mesh.parent = null;
-                }
-                else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
+                } else if (mesh.name == 'GunLaser' || mesh.name == 'GunBack') {
                     mesh.visibility = 0;
                 }
             });
@@ -174,7 +176,7 @@ export class Game {
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
             this._camera.rotation.y -= Math.PI;
-            
+
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs);
 
@@ -215,6 +217,7 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
+            Game._player.animate(deltaTime * TimeControl.getTimeScale());
             this._stateManager.getCurrentState().animate(deltaTime * TimeControl.getTimeScale());
         });
 
