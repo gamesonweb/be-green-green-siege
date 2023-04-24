@@ -20,7 +20,7 @@ export class Player extends Targetable {
     }
 
     private initHeadPlayer(scene: BABYLON.Scene): BABYLON.Mesh {
-        const head = BABYLON.MeshBuilder.CreateBox('player_head_HitBox', { width: 0.4, height: 0.4, depth: 0.05 }, scene);
+        const head = BABYLON.MeshBuilder.CreateBox('player_head_HitBox', { width: 0.4, height: 0.4, depth: 0.025 }, scene);
         head.metadata = { parentClass: this };
         head.isVisible = false;
         return head;
@@ -33,15 +33,15 @@ export class Player extends Targetable {
         return body;
     }
 
-    public get currentLife(): number {
+    public getCurrentLife(): number {
         return this._currentLife;
     }
 
-    public get getBodyPosition(): BABYLON.Vector3 {
+    public getBodyPosition(): BABYLON.Vector3 {
         return this._bodyMesh.position;
     }
 
-    public get getHeadPosition(): BABYLON.Vector3 {
+    public getHeadPosition(): BABYLON.Vector3 {
         return this._headMesh.position;
     }
 
@@ -61,8 +61,6 @@ export class Player extends Targetable {
         }
 
         this._headMesh.parent = camera;
-        this._headMesh.computeWorldMatrix(true);
-
         const headRotationQuaternion = BABYLON.Quaternion.FromRotationMatrix(this._headMesh.getWorldMatrix());
         const headYaw = headRotationQuaternion.toEulerAngles().y;
         const bodyRotation = BABYLON.Quaternion.FromEulerAngles(0, headYaw, 0);
