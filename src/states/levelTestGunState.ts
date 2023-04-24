@@ -98,25 +98,22 @@ class FakeEnemy extends Targetable {
     public animate(deltaTime: number): void {
         this._timeSinceLastFire += deltaTime;
 
-        const targetDirection = this._camera.position.subtract(this._mesh.position);
-        targetDirection.normalize();
+        // Calculate the target direction
+        const targetDirection = this._camera.position.subtract(this._mesh.position).normalize();
 
-        const currentDirection = this._mesh.forward;
+        // Calculate the horizontal rotation (left/right)
+        const horizontalAngle = Math.atan2(targetDirection.z, targetDirection.x) - Math.PI / 2;
+        const horizontalRotation = BABYLON.Quaternion.RotationAxis(BABYLON.Vector3.Down(), horizontalAngle);
 
-        const angle = Math.acos(BABYLON.Vector3.Dot(currentDirection, targetDirection));
+        // Calculate the vertical rotation (up/down)
+        const verticalAngle = Math.asin(targetDirection.y);
+        const verticalRotation = BABYLON.Quaternion.RotationAxis(BABYLON.Vector3.Left(), verticalAngle);
 
-        const rotationStep = this.HEAD_ROTATION_SPEED * deltaTime;
+        // combine horizontal and vertical rotation
+        const targetRotation = horizontalRotation.multiply(verticalRotation);
 
-        const lerpFactor = 0.1; // Ajoutez un facteur de lissage
-
-        if (Math.abs(angle) > rotationStep) {
-            const rotationSign = Math.sign(currentDirection.cross(targetDirection).y);
-            const targetQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, rotationStep * rotationSign).multiply(this._mesh.rotationQuaternion);
-            this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetQuaternion, lerpFactor); // Utilisez Slerp pour une interpolation fluide
-        } else {
-            const targetQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, Math.atan2(targetDirection.x, targetDirection.z));
-            this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetQuaternion, lerpFactor); // Utilisez Slerp pour une interpolation fluide
-        }
+        // Spherical interpolation between current and target rotation
+        this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetRotation, this.HEAD_ROTATION_SPEED * deltaTime);
 
         if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
             this._timeSinceLastFire = 0;
