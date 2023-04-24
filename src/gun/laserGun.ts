@@ -92,7 +92,9 @@ export class LaserGun implements Gun {
         this._pointeur = new Pointeur();
 
         this._gunModel.setParent(rightAnchor);
-        this._gunModel.position = rightAnchor.position;
+        this._gunModel.position = rightAnchor.position.clone();
+        this._gunModel.rotation = rightAnchor.rotation.clone();
+        this._gunModel.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
     }
 
     private updateGunEnergyColor(): void {

@@ -18,7 +18,7 @@ export default class KeyboardInputs {
 
     initInputs() {
         const createAnchor = (name: string): BABYLON.Mesh => {
-            const anchor = BABYLON.MeshBuilder.CreateBox(name, { size: 1 }, this._scene);
+            const anchor = BABYLON.MeshBuilder.CreateBox(name, { size: 0.1 }, this._scene);
             anchor.isVisible = false;
             return anchor;
         };

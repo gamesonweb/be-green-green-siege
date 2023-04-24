@@ -82,7 +82,9 @@ export class Shield extends Targetable {
         leftAnchor.rotation = new BABYLON.Vector3(0, 0, 0);
 
         this._shieldGrip.setParent(leftAnchor);
-        this._shieldGrip.position = leftAnchor.position;
+        this._shieldGrip.position = leftAnchor.position.clone();
+        this._shieldGrip.rotation = leftAnchor.rotation.clone();
+        this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
         this._shieldGrip.rotate(BABYLON.Axis.Y, -Math.PI / 2, BABYLON.Space.LOCAL);
     }
 
