@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import { TimeControl } from '../TimeControl';
 import Logger from '../debug/logger';
 import { Game } from '../game';
 import { StateManager } from '../states/stateManager';
@@ -60,12 +59,6 @@ export default class Inputs {
     public leftSqueeze(pressed: boolean, force: number): void {
         Logger.log('Left Squeeze : ' + force);
         // Game.debug3D.log = 'Left Squeeze : ' + force;
-
-        if (pressed) {
-            TimeControl.setTimeScale(1.03 - force);
-        } else {
-            TimeControl.setTimeScale(1);
-        }
     }
 
     public rightSqueeze(pressed: boolean, force: number): void {

@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { TimeControl } from '../TimeControl';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 import { Projectile } from './projectile';
@@ -7,11 +8,21 @@ export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.Camera;
     private _laserModel: BABYLON.Mesh;
-    private _laserSpeed: number;
-    private _dispownDistance: number;
-    private _collisionDistance: number;
+    private _laserSpeed: number = 70;
+    private _dispownDistance: number = 80;
+    private _collisionDistance: number = 40;
+    private _slowTimeDistance: number = 6;
+    private _slowTimeFactor: number = 0.1;
 
-    public constructor(scene: BABYLON.Scene, speed: number = 70, dispowerDistance: number = 80, collisionDistance: number = 40) {
+    public constructor(scene: BABYLON.Scene, options?: { speed?: number; dispowerDistance?: number; collisionDistance?: number; slowTimeDistance?: number; slowTimeFactor?: number }) {
+        const {
+            speed = this._laserSpeed,
+            dispowerDistance = this._dispownDistance,
+            collisionDistance = this._collisionDistance,
+            slowTimeDistance = this._slowTimeDistance,
+            slowTimeFactor = this._slowTimeFactor,
+        } = options || {};
+
         this._scene = scene;
         if (Game.vrSupported) {
             this._camera = this._scene.activeCamera;
@@ -21,6 +32,8 @@ export class Laser implements Projectile {
         this._laserSpeed = speed;
         this._dispownDistance = dispowerDistance;
         this._collisionDistance = collisionDistance;
+        this._slowTimeDistance = slowTimeDistance;
+        this._slowTimeFactor = slowTimeFactor;
         this._laserModel = this.initLaserModel();
         this._laserModel.metadata = { parentClass: this };
     }
@@ -99,7 +112,28 @@ export class Laser implements Projectile {
         }
     }
 
+    private predictDetectCollisionWithPlayer(laser: BABYLON.InstancedMesh): Boolean {
+        const ray = new BABYLON.Ray(laser.absolutePosition, laser.up, this._slowTimeDistance);
+        const predicate = (mesh) => {
+            return mesh.name === 'player_head_HitBox' || mesh.name === 'player_body_HitBox' || mesh.name === 'ShieldHitBox';
+        };
+
+        const hitInfo = this._scene.pickWithRay(ray, predicate);
+
+        if (hitInfo.hit) {
+            if (hitInfo.pickedMesh.name === 'ShieldHitBox') {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public animate(deltaTime: number): void {
+        let minDistance = Infinity;
+
         this.getAllLaserInstances().forEach((laser) => {
             const nextPosition = laser.position.addInPlace(laser.up.scale(this._laserSpeed * deltaTime));
             const distancePlayer = BABYLON.Vector3.Distance(nextPosition, this._camera.position);
@@ -113,7 +147,19 @@ export class Laser implements Projectile {
             if (distancePlayer < this._collisionDistance) {
                 this.checkCollision(laser, nextPosition);
             }
+
+            // Update the minimum distance between the player and the lasers
+            if (distancePlayer < this._slowTimeDistance && this.predictDetectCollisionWithPlayer(laser)) {
+                minDistance = Math.min(minDistance, distancePlayer);
+            }
         }, this);
+
+        // Apply time control only for the laser closest to the player
+        if (minDistance < this._slowTimeDistance) {
+            TimeControl.setTimeScale(this._slowTimeFactor);
+        } else {
+            TimeControl.setTimeScale(1);
+        }
     }
 
     public dispose(): void {

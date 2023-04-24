@@ -69,7 +69,7 @@ class FakeEnemy extends Targetable {
     private _camera: BABYLON.Camera;
 
     private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 5;
+    private readonly FIRE_INTERVAL: number = 3;
     private readonly HEAD_ROTATION_SPEED: number = 8;
 
     constructor(scene: BABYLON.Scene, position: BABYLON.Vector3) {
@@ -85,14 +85,13 @@ class FakeEnemy extends Targetable {
             this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
         }
 
-        this._laser = new Laser(this._scene, 20, 40, 10);
+        this._laser = new Laser(this._scene, { speed: 20, dispowerDistance: 40, collisionDistance: 10 });
     }
 
     public fire(): void {
-        const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
-
-        const laserDirection = this._camera.position.subtract(result.absolutePosition);
-        this._laser.fire(result, laserDirection);
+        const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
+        const laserDirection = this._camera.position.subtract(rightLaserPoint.absolutePosition);
+        this._laser.fire(rightLaserPoint, laserDirection);
     }
 
     public animate(deltaTime: number): void {
