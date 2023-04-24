@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 
@@ -71,7 +72,7 @@ export class Shield extends Targetable {
 
         // Rotate 20° around z axis to align the shield with the hand
         this._shieldGrip.rotate(BABYLON.Axis.Z, Math.PI / 8, BABYLON.Space.LOCAL);
-        
+
         this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
     }
 
@@ -117,7 +118,7 @@ export class Shield extends Targetable {
      */
     public touch(): void {
         this._isTouched = true;
-        Game.hapticManager.vibrateController('left', 0.2, 300);
+        xrHandler.vibrateController('left', 0.2, 300);
     }
 
     /**

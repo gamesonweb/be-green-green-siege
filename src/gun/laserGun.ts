@@ -136,7 +136,7 @@ export class LaserGun implements Gun {
             animations.playAnimation(animations.BarelShot, false);
 
             this._timeSinceLastShot = 0;
-            Game.hapticManager.vibrateController('right', 1, 60);
+            xrHandler.vibrateController('right', 1, 60);
 
             this._heat += this._heatPerShot;
             if (this._heat >= this._maxHeat) {

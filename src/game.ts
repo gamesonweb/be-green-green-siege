@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import HapticManager from './HapticManager';
 import SceneManager from './SceneManager';
 import { TimeControl } from './TimeControl';
 import xrHandler from './XRHandler';
@@ -21,7 +20,6 @@ export class Game {
     private _camera: BABYLON.FreeCamera;
     private _inputs: Inputs;
 
-    public static hapticManager: HapticManager;
     public static debug: DebugConsole;
     public static debug3D: Debug3D;
     public static vrSupported: Boolean;
@@ -72,14 +70,12 @@ export class Game {
             // Load input
             await xrHandler.initXR(scene);
 
-            new XRInputs(scene, camera, cavnas, xrHandler.xr, inputs);
-            Game.hapticManager = new HapticManager(xrHandler.xr);
+            new XRInputs(scene, camera, cavnas, xrHandler.getXR(), inputs);
         } else {
             Logger.log('VR not supported');
 
             // Load input
             new KeyboardInputs(scene, camera, cavnas, inputs);
-            Game.hapticManager = new HapticManager(null);
         }
     }
 

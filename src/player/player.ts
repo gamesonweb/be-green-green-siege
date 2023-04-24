@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import xrHandler from '../XRHandler';
 import Logger from '../debug/logger';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
@@ -46,8 +47,8 @@ export class Player extends Targetable {
 
     public touch(): void {
         this._currentLife -= 10;
-        Game.hapticManager.vibrateController('all', 0.8, 60);
-        Game.hapticManager.vibrateController('all', 0.8, 60, 200);
+        xrHandler.vibrateController('all', 0.8, 60);
+        xrHandler.vibrateController('all', 0.8, 60, 200);
         Logger.log('Player touched');
     }
 
