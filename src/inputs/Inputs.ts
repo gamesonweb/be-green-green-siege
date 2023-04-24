@@ -18,7 +18,7 @@ export default class Inputs {
     }
 
     public leftTrigger(pressed: boolean, force: number): void {
-        Logger.log('Left Trigger : ' + force);
+        // Logger.log('Left Trigger : ' + force);
         // Game.debug3D.log = 'Left Trigger : ' + force;
 
         const currentstate = this._stateManager.getCurrentState();

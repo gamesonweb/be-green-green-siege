@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import Logger from '../debug/logger';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 
@@ -20,14 +21,14 @@ export class Player extends Targetable {
     private initHeadPlayer(scene: BABYLON.Scene): BABYLON.Mesh {
         const head = BABYLON.MeshBuilder.CreateBox('player_head_HitBox', { width: 0.4, height: 0.4, depth: 0.05 }, scene);
         head.metadata = { parentClass: this };
-        // head.isVisible = false;
+        head.isVisible = false;
         return head;
     }
 
     private initBodyPlayerModel(scene: BABYLON.Scene): BABYLON.Mesh {
         const body = BABYLON.MeshBuilder.CreateBox('player_body_HitBox', { width: 0.55, height: 0.6, depth: 0.3 }, scene);
         body.metadata = { parentClass: this };
-        // body.isVisible = false;
+        body.isVisible = false;
         return body;
     }
 
@@ -47,6 +48,7 @@ export class Player extends Targetable {
         this._currentLife -= 10;
         Game.hapticManager.vibrateController('all', 0.8, 60);
         Game.hapticManager.vibrateController('all', 0.8, 60, 200);
+        Logger.log('Player touched');
     }
 
     private updatePlayerModelPosition = () => {
