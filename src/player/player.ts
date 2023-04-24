@@ -75,7 +75,7 @@ export class Player extends Targetable {
         this._bodyMesh.absolutePosition.y -= 10.42;
     };
 
-    public animate(deltaTime: number) {
+    public animate() {
         this.updatePlayerModelPosition();
     }
 }

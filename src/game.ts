@@ -154,7 +154,7 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
-            Game._player.animate(deltaTime * TimeControl.getTimeScale());
+            Game._player.animate();
             this._stateManager.getCurrentState().animate(deltaTime * TimeControl.getTimeScale());
         });
 
