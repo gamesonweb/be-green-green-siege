@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import { TimeControl } from '../TimeControl';
+import timeControl from '../TimeControl';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 import { Projectile } from './projectile';
@@ -156,9 +156,9 @@ export class Laser implements Projectile {
 
         // Apply time control only for the laser closest to the player
         if (minDistance < this._slowTimeDistance) {
-            TimeControl.setTimeScale(this._slowTimeFactor);
+            timeControl.setTimeScale(this._slowTimeFactor);
         } else {
-            TimeControl.setTimeScale(1);
+            timeControl.setTimeScale(1);
         }
     }
 

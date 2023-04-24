@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { animations } from '../AnimationController';
+import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Projectile } from '../projectile/projectile';
@@ -134,7 +135,7 @@ export class LaserGun implements Gun {
         }
 
         // Calculate direction vector from back to laser
-        if (this._timeSinceLastShot * force >= this._coolDown && !this._overheated) {
+        if (this._timeSinceLastShot * force >= this._coolDown && !this._overheated && !timeControl.isPaused()) {
             const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
 
             this._laser.fire(this._laserPoint, laserDirection);

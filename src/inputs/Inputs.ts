@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import timeControl from '../TimeControl';
 import Logger from '../debug/logger';
 import { Game } from '../game';
 import { StateManager } from '../states/stateManager';
@@ -69,6 +70,9 @@ export default class Inputs {
     public leftPrimary(pressed: boolean): void {
         Logger.log('Left Primary');
         // Game.debug3D.log = 'Left Primary';
+        if (pressed) {
+            timeControl.togglePause();
+        }
     }
 
     public rightPrimary(pressed: boolean): void {
