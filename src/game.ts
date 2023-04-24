@@ -55,9 +55,8 @@ export class Game {
      * Creates the debug camera.
      */
     createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
-        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(0, 0, -10), scene);
-        debugCamera.position = new BABYLON.Vector3(5, 10);
-        debugCamera.setTarget(BABYLON.Vector3.Zero());
+        const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(17, 5, -25), scene);
+        debugCamera.setTarget(Game._player.getHeadPosition());
         debugCamera.attachControl(cavnas, true);
         debugCamera.speed = 10;
         debugCamera.inertia = 0;
