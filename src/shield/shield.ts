@@ -70,10 +70,9 @@ export class Shield extends Targetable {
         this._shieldGrip.rotate(BABYLON.Axis.Y, Math.PI / 2, BABYLON.Space.LOCAL);
 
         // Rotate 20° around z axis to align the shield with the hand
-
         this._shieldGrip.rotate(BABYLON.Axis.Z, Math.PI / 8, BABYLON.Space.LOCAL);
-
-        // this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI / 3, BABYLON.Space.LOCAL);
+        
+        this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
     }
 
     private attachToCamera(leftAnchor: BABYLON.AbstractMesh): void {
