@@ -57,7 +57,6 @@ export class Enemy extends Targetable {
 
     public createMesh(pos: BABYLON.Vector3) {
         this.mesh = Game.instanceLoader.getBot('enemy_' + pos, { parentClass: this });
-        this.mesh.metadata = { parentClass: this };
         this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
         this.mesh.position = pos;
         this._eyes = Game.instanceLoader.findInstanceSubMeshByName(this.mesh, "Eyes");
@@ -172,7 +171,7 @@ export class Enemy extends Targetable {
         // this._vibration += 0.4;
         // the enemy look at player ... for ever !
         this.lookAtMe(Math.sin(this._vibration));
-        // this._checkHealth();
+        this._checkHealth();
         // moove
         // if (Math.abs(this.movement.moove(this, destination.position, this.speed, deltaTime)) < 10) {
         // this._destination.dispose();
