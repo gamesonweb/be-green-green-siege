@@ -5,8 +5,8 @@ class XRHandler {
     public _xr: BABYLON.WebXRDefaultExperience;
 
     // Controllers
-    private _leftController: BABYLON.WebXRAbstractMotionController | null = null;
-    private _rightController: BABYLON.WebXRAbstractMotionController | null = null;
+    private _leftController: BABYLON.WebXRAbstractMotionController;
+    private _rightController: BABYLON.WebXRAbstractMotionController;
 
     /**
      * Initialize XR.

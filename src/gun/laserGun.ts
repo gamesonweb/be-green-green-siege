@@ -33,7 +33,12 @@ export class LaserGun implements Gun {
 
     public constructor(scene: BABYLON.Scene, laser: Projectile, coolDown: number = 0.1) {
         this._scene = scene;
-        this._camera = this._scene.activeCamera;
+        if (Game.vrSupported) {
+            this._camera = this._scene.activeCamera;
+        } else {
+            this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
+        }
+
         this._timeSinceLastShot = 0;
         this._coolDown = coolDown;
 

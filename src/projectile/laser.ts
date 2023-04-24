@@ -1,9 +1,11 @@
 import * as BABYLON from 'babylonjs';
+import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 import { Projectile } from './projectile';
 
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
+    private _camera: BABYLON.Camera;
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number;
     private _dispownDistance: number;
@@ -11,6 +13,11 @@ export class Laser implements Projectile {
 
     public constructor(scene: BABYLON.Scene, speed: number = 70, dispowerDistance: number = 80, collisionDistance: number = 40) {
         this._scene = scene;
+        if (Game.vrSupported) {
+            this._camera = this._scene.activeCamera;
+        } else {
+            this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
+        }
         this._laserSpeed = speed;
         this._dispownDistance = dispowerDistance;
         this._collisionDistance = collisionDistance;
@@ -53,7 +60,7 @@ export class Laser implements Projectile {
         if (direction) {
             const targetPosition = origin.getAbsolutePosition().add(direction);
             laserInstance.lookAt(targetPosition);
-            
+
             // Rotate the laser instance to make its forward direction become its up direction
             laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
         } else {
@@ -95,7 +102,7 @@ export class Laser implements Projectile {
     public animate(deltaTime: number): void {
         this.getAllLaserInstances().forEach((laser) => {
             const nextPosition = laser.position.addInPlace(laser.up.scale(this._laserSpeed * deltaTime));
-            const distancePlayer = BABYLON.Vector3.Distance(nextPosition, this._scene.activeCamera.position);
+            const distancePlayer = BABYLON.Vector3.Distance(nextPosition, this._camera.position);
 
             // Dispose if the laser is too far away from the player
             if (distancePlayer > this._dispownDistance) {

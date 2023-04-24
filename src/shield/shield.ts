@@ -27,7 +27,11 @@ export class Shield extends Targetable {
         super();
         this._scene = scene;
         this._initShield();
-        this._camera = this._scene.activeCamera;
+        if (Game.vrSupported) {
+            this._camera = this._scene.activeCamera;
+        } else {
+            this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
+        }
         this._attach();
     }
 

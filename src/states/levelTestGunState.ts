@@ -66,6 +66,7 @@ class fakeEnnemy extends Targetable {
     private _scene: BABYLON.Scene;
     private _mesh: BABYLON.Mesh;
     private _laser: Laser;
+    private _camera: BABYLON.Camera;
 
     private _timeSinceLastFire: number = 0;
     private readonly FIRE_INTERVAL: number = 5;
@@ -77,6 +78,12 @@ class fakeEnnemy extends Targetable {
         this._mesh = Game.instanceLoader.getBot('ennemy', metadata);
         this._mesh.position = position;
 
+        if (Game.vrSupported) {
+            this._camera = this._scene.activeCamera;
+        } else {
+            this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
+        }
+
         this._laser = new Laser(this._scene, 20, 40, 10);
     }
 
@@ -85,7 +92,7 @@ class fakeEnnemy extends Targetable {
         const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
 
         // fire in camera direction
-        const laserDirection = this._scene.activeCamera.position.subtract(result.absolutePosition);
+        const laserDirection = this._camera.position.subtract(result.absolutePosition);
         // fire in camera direction
         this._laser.fire(result, laserDirection);
     }
@@ -93,7 +100,7 @@ class fakeEnnemy extends Targetable {
     public animate(deltaTime: number): void {
         this._timeSinceLastFire += deltaTime;
 
-        this._mesh.lookAt(this._scene.activeCamera.position);
+        this._mesh.lookAt(this._camera.position);
 
         if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
             this._timeSinceLastFire = 0;
