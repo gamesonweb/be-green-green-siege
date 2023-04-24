@@ -91,6 +91,10 @@ export default class SceneManager {
                 if (mesh.name == 'Robot') {
                     mesh.parent = null;
                 }
+                if (mesh.name == 'HitBox') {
+                    mesh.isVisible = false;
+                    mesh.visibility = 0;
+                }
             });
         };
     }
