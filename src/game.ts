@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import SceneManager from './SceneManager';
+import starManager from './StarManager';
 import { TimeControl } from './TimeControl';
 import xrHandler from './XRHandler';
 import DebugConsole from './debug/debugConsole';
@@ -88,6 +89,8 @@ export class Game {
         this._assetManager = new BABYLON.AssetsManager(this._scene);
         this._stateManager = new StateManager(this._scene);
         this._inputs = new Inputs(this, this._stateManager, this._scene, this._camera, this._canvas);
+
+        starManager.init(this._scene);
 
         Game.vrSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync('immersive-ar');
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);

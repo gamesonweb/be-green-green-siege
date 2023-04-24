@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import { StarManager } from '../StarManager';
 import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
 
@@ -31,14 +30,6 @@ export class MainMenuState implements State {
         this._levelTestBotSelector = this.createLevel(new BABYLON.Vector3(15, 2, -25), StatesEnum.LEVELTESTBOT);
         this._levelTestGunSelector = this.createLevel(new BABYLON.Vector3(17, 2, -25), StatesEnum.LEVELTESTGUN);
         this._levelEmptySelector = this.createLevel(new BABYLON.Vector3(19, 2, -25), StatesEnum.EMPTY);
-
-        // stars
-        const starManager = new StarManager(this._scene, 400, {
-            Y: 266,
-            W: 1066,
-            B: 66,
-            R: 66,
-        });
     }
 
     public dispose(): void {
