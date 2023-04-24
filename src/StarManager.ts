@@ -80,7 +80,7 @@ export class StarManager {
         const y = this._radius * Math.sin(phi) * Math.sin(theta);
         const z = this._radius * Math.cos(phi);
 
-        // Modification ici pour limiter les étoiles aux deux tiers supérieurs de la sphère
+        // Limit the space where the stars can be created to avoid them being hidden by the ground and the tree
         if (y < -this._radius / 4 || z > this._radius - 10) {
             return this.randomSpherePoint();
         }
