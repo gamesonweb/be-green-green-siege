@@ -1,11 +1,10 @@
 import * as BABYLON from 'babylonjs';
+import { animations } from '../AnimationController';
+import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Projectile } from '../projectile/projectile';
 import { Gun } from './gun';
 import { Pointeur } from './pointeur';
-import { animations } from '../AnimationController';
-import Logger from '../debug/logger';
-import xrHandler from '../XRHandler';
 
 export class LaserGun implements Gun {
     private _scene: BABYLON.Scene;
@@ -32,7 +31,6 @@ export class LaserGun implements Gun {
     private _overheatCooldown: number;
     private _overheated: boolean;
 
-
     public constructor(scene: BABYLON.Scene, laser: Projectile, coolDown: number = 0.1) {
         this._scene = scene;
         this._camera = this._scene.activeCamera;
@@ -53,7 +51,7 @@ export class LaserGun implements Gun {
 
     private initGunModel(): void {
         this._gunModel = this._scene.getMeshByName('GunParent') as BABYLON.Mesh;
-        this._laserPoint = this._scene.getMeshByName('GunLaser') as BABYLON.Mesh;     
+        this._laserPoint = this._scene.getMeshByName('GunLaser') as BABYLON.Mesh;
         this._gunBack = this._scene.getMeshByName('GunBack') as BABYLON.Mesh;
         this._gunEnergy = this._scene.getMeshByName('GunEnergy') as BABYLON.Mesh;
         this._gunEnergy.material = new BABYLON.StandardMaterial('gunEnergyMaterial', this._scene);
@@ -82,7 +80,7 @@ export class LaserGun implements Gun {
         this._gunModel.setParent(rightAnchor);
         this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
         this._gunModel.rotation = rightAnchor.rotation.clone();
-        this._gunModel.rotate(BABYLON.Axis.X, -2*Math.PI / 3, BABYLON.Space.LOCAL);
+        this._gunModel.rotate(BABYLON.Axis.X, (-2 * Math.PI) / 3, BABYLON.Space.LOCAL);
         this._gunModel.rotate(BABYLON.Axis.Z, -0.1745, BABYLON.Space.LOCAL);
     }
 
@@ -90,7 +88,6 @@ export class LaserGun implements Gun {
         rightAnchor.setParent(this._camera);
         rightAnchor.position = new BABYLON.Vector3(0.3, -0.3, 0.7);
         rightAnchor.rotation = new BABYLON.Vector3(0, 0, 0);
-        rightAnchor.isVisible = false;
 
         this._pointeur = new Pointeur();
 
@@ -100,12 +97,12 @@ export class LaserGun implements Gun {
 
     private updateGunEnergyColor(): void {
         const heatPercentage = this._heat / this._maxHeat;
-    
+
         const startColor = new BABYLON.Color3(0, 1, 0); // Green
         const endColor = new BABYLON.Color3(1, 0, 0); // Red
-    
+
         const currentColor = BABYLON.Color3.Lerp(startColor, endColor, heatPercentage);
-    
+
         if (this._gunEnergy.material instanceof BABYLON.StandardMaterial) {
             const material = this._gunEnergy.material as BABYLON.StandardMaterial;
             material.diffuseColor = currentColor;
@@ -117,8 +114,6 @@ export class LaserGun implements Gun {
         const currentScale = BABYLON.Scalar.Lerp(minScale, maxScale, heatPercentage);
         this._gunEnergy.scaling = new BABYLON.Vector3(currentScale, currentScale, currentScale);
     }
-    
-
 
     public fire(force: number): void {
         if (this._overheated) {
@@ -133,7 +128,6 @@ export class LaserGun implements Gun {
 
         // Calculate direction vector from back to laser
         if (this._timeSinceLastShot * force >= this._coolDown && !this._overheated) {
-
             const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
 
             this._laser.fire(this._laserPoint, laserDirection);
@@ -148,12 +142,11 @@ export class LaserGun implements Gun {
             }
             this.updateGunEnergyColor();
         }
-        
     }
 
     public animate(deltaTime: number): void {
         this._timeSinceLastShot += deltaTime;
-    
+
         // Reduce the heat based on the cooling rate
         this._heat -= this._coolingRate * deltaTime;
         if (this._heat < 0) {
@@ -165,7 +158,7 @@ export class LaserGun implements Gun {
             }
         }
         this.updateGunEnergyColor();
-    
+
         // Handle overheat cooldown
         if (this._overheatCooldown > 0) {
             this._overheatCooldown -= deltaTime;
@@ -173,7 +166,7 @@ export class LaserGun implements Gun {
                 this._overheatCooldown = 0;
             }
         }
-    
+
         this._laser.animate(deltaTime);
     }
 

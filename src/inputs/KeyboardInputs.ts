@@ -19,11 +19,11 @@ export default class KeyboardInputs {
     initInputs() {
         const createAnchor = (name: string): BABYLON.Mesh => {
             const anchor = BABYLON.MeshBuilder.CreateBox(name, { size: 1 }, this._scene);
-            anchor.isVisible = true;
+            anchor.isVisible = false;
             return anchor;
         };
-        const leftAnchor = createAnchor('leftAnchor');
-        const rightAnchor = createAnchor('rightAnchor');
+        createAnchor('leftAnchor');
+        createAnchor('rightAnchor');
         window.addEventListener('keydown', (evt) => {
             switch (evt.key) {
                 case ' ':

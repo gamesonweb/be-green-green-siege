@@ -35,7 +35,7 @@ export class Shield extends Targetable {
         this._shieldGrip = this._scene.getMeshByName('ShieldGrip') as BABYLON.Mesh;
         this._baseScale = this._shieldMesh.scaling;
         this._shieldMesh.metadata = { parentClass: this };
-        
+
         // const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
         // shieldMesh.position = new BABYLON.Vector3(2, 2, 2);
         // shieldMesh.scaling = new BABYLON.Vector3(0, 0, 0);
@@ -48,7 +48,7 @@ export class Shield extends Targetable {
         // return shieldMesh;
     }
 
-        /**
+    /**
      * Attaches the gun model to either the VR hand or the camera, depending on whether VR is supported.
      */
     private _attach(): void {
@@ -68,12 +68,11 @@ export class Shield extends Targetable {
         this._shieldGrip.position = new BABYLON.Vector3(0, 0, 0);
         this._shieldGrip.rotation = leftAnchor.rotation.clone();
         this._shieldGrip.rotate(BABYLON.Axis.Y, Math.PI / 2, BABYLON.Space.LOCAL);
-        
 
         // Rotate 20° around z axis to align the shield with the hand
 
         this._shieldGrip.rotate(BABYLON.Axis.Z, Math.PI / 8, BABYLON.Space.LOCAL);
-        
+
         // this._shieldGrip.rotate(BABYLON.Axis.X, Math.PI / 3, BABYLON.Space.LOCAL);
     }
 
@@ -81,13 +80,11 @@ export class Shield extends Targetable {
         leftAnchor.setParent(this._camera);
         leftAnchor.position = new BABYLON.Vector3(-0.3, -0.3, 0.7);
         leftAnchor.rotation = new BABYLON.Vector3(0, 0, 0);
-        leftAnchor.isVisible = false;
 
         this._shieldGrip.setParent(leftAnchor);
         this._shieldGrip.position = leftAnchor.position;
         this._shieldGrip.rotate(BABYLON.Axis.Y, -Math.PI / 2, BABYLON.Space.LOCAL);
     }
-
 
     public animate(deltaTime: number, shieldSize: number): void {
         this._updateScaling(shieldSize, deltaTime);
