@@ -122,7 +122,7 @@ export class Game {
 
             // Set the camera's position to the spawn point's position plus the up vector
             this._spawnPoint = this._scene.getMeshByName('SpawnPoint');
-            this._spawnPoint.visibility = 0;
+            this._spawnPoint.isVisible = false;
 
             const upVector = new BABYLON.Vector3(0, 1, 0);
             this._camera.position = this._spawnPoint.absolutePosition.clone().add(upVector);
