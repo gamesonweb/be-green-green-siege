@@ -43,7 +43,7 @@ export class LevelTestGunState implements State {
         this._shield = new Shield(this._scene);
 
         // fake enemy
-        this._fakeEnemy = new fakeEnnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
+        this._fakeEnemy = new FakeEnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
     }
 
     public dispose(): void {
@@ -62,7 +62,7 @@ export class LevelTestGunState implements State {
     }
 }
 
-class fakeEnnemy extends Targetable {
+class FakeEnemy extends Targetable {
     private _scene: BABYLON.Scene;
     private _mesh: BABYLON.Mesh;
     private _laser: Laser;
@@ -70,10 +70,11 @@ class fakeEnnemy extends Targetable {
 
     private _timeSinceLastFire: number = 0;
     private readonly FIRE_INTERVAL: number = 5;
+    private readonly HEAD_ROTATION_SPEED: number = 8;
 
-    constructor(Scene: BABYLON.Scene, position: BABYLON.Vector3) {
+    constructor(scene: BABYLON.Scene, position: BABYLON.Vector3) {
         super();
-        this._scene = Scene;
+        this._scene = scene;
         const metadata = { parentClass: this };
         this._mesh = Game.instanceLoader.getBot('ennemy', metadata);
         this._mesh.position = position;
@@ -88,24 +89,40 @@ class fakeEnnemy extends Targetable {
     }
 
     public fire(): void {
-        // get right laser childre name "RightLaser" from robot mesh
         const result = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
 
-        // fire in camera direction
         const laserDirection = this._camera.position.subtract(result.absolutePosition);
-        // fire in camera direction
         this._laser.fire(result, laserDirection);
     }
 
     public animate(deltaTime: number): void {
         this._timeSinceLastFire += deltaTime;
 
-        this._mesh.lookAt(this._camera.position);
+        const targetDirection = this._camera.position.subtract(this._mesh.position);
+        targetDirection.normalize();
+
+        const currentDirection = this._mesh.forward;
+
+        const angle = Math.acos(BABYLON.Vector3.Dot(currentDirection, targetDirection));
+
+        const rotationStep = this.HEAD_ROTATION_SPEED * deltaTime;
+
+        const lerpFactor = 0.1; // Ajoutez un facteur de lissage
+
+        if (Math.abs(angle) > rotationStep) {
+            const rotationSign = Math.sign(currentDirection.cross(targetDirection).y);
+            const targetQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, rotationStep * rotationSign).multiply(this._mesh.rotationQuaternion);
+            this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetQuaternion, lerpFactor); // Utilisez Slerp pour une interpolation fluide
+        } else {
+            const targetQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, Math.atan2(targetDirection.x, targetDirection.z));
+            this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetQuaternion, lerpFactor); // Utilisez Slerp pour une interpolation fluide
+        }
 
         if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
             this._timeSinceLastFire = 0;
             this.fire();
         }
+
         this._laser.animate(deltaTime);
     }
 
