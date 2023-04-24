@@ -8,9 +8,9 @@ export default class SceneManager {
         upperLight.intensity = 1;
         underLight.intensity = 1;
 
-        let lightTest = new BABYLON.HemisphericLight('lightTest', new BABYLON.Vector3(0, 1, 0), scene);
-        lightTest.direction = new BABYLON.Vector3(0, 1, 0);
-        lightTest.intensity = 0.5;
+        let hemisphericTreeIsland = new BABYLON.HemisphericLight('hemisphericTreeIsland', new BABYLON.Vector3(0, 1, 0), scene);
+        hemisphericTreeIsland.direction = new BABYLON.Vector3(0, 1, 0);
+        hemisphericTreeIsland.intensity = 0.5;
     }
 
     static configureMaterials(scene: BABYLON.Scene) {
