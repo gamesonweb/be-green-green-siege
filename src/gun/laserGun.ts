@@ -6,6 +6,8 @@ import { Game } from '../game';
 import { Projectile } from '../projectile/projectile';
 import { Gun } from './gun';
 import { Pointeur } from './pointeur';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 
 export class LaserGun implements Gun {
     private _scene: BABYLON.Scene;
@@ -32,6 +34,10 @@ export class LaserGun implements Gun {
     private _overheatCooldown: number;
     private _overheated: boolean;
 
+    // sound effect
+    private _shoot: SoundPlayer;
+    private _reloadGun: SoundPlayer;
+
     public constructor(scene: BABYLON.Scene, laser: Projectile, coolDown: number = 0.1) {
         this._scene = scene;
         if (Game.vrSupported) {
@@ -50,6 +56,8 @@ export class LaserGun implements Gun {
         this._overheatCooldown = 0;
 
         this.initGunModel();
+        this._shoot = new SoundPlayer(SoundsBank.GUN_SHOOT, 2, this._scene, this._gunModel);
+        this._reloadGun = new SoundPlayer(SoundsBank.GUN_RELOAD, 2, this._scene, this._gunModel);
 
         this._laser = laser;
         this.attach();
@@ -136,6 +144,7 @@ export class LaserGun implements Gun {
             const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
 
             this._laser.fire(this._laserPoint, laserDirection);
+            this._shoot.play();
             animations.playAnimation(animations.BarelShot, false);
 
             this._timeSinceLastShot = 0;
@@ -143,6 +152,7 @@ export class LaserGun implements Gun {
 
             this._heat += this._heatPerShot;
             if (this._heat >= this._maxHeat) {
+                this._reloadGun.play();
                 this._overheatCooldown = 2; // Set a cooldown period when overheated (in seconds).
             }
             this.updateGunEnergyColor();
