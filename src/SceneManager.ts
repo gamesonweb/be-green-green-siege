@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import { animations } from './AnimationController';
+import { AnimationName, animations } from './AnimationController';
 
 export default class SceneManager {
     static configureLights(scene: BABYLON.Scene) {
@@ -30,11 +30,9 @@ export default class SceneManager {
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {
-                console.log(animationGroup.name);
-                animationGroup.loopAnimation = true;
-                animationGroup.start();
-                animationGroup.speedRatio = 0.1;
+                animations.addAnimation(animationGroup);
             });
+            animations.playAnimation(AnimationName.ObservatoirRotation);
         };
     }
 
@@ -59,28 +57,9 @@ export default class SceneManager {
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {
-                console.log(animationGroup.name);
-
-                if (animationGroup.name == 'BarelShot') {
-                    animationGroup.loopAnimation = false;
-                    animationGroup.stop();
-                    animations.BarelShot = animationGroup;
-                } else if (animationGroup.name == 'OverHeatBack') {
-                    animationGroup.loopAnimation = false;
-                    animationGroup.stop();
-                    animations.overHeatBack = animationGroup;
-                } else if (animationGroup.name == 'OverHeatFront') {
-                    animationGroup.loopAnimation = false;
-                    animationGroup.stop();
-                    animations.overHeatFront = animationGroup;
-                } else if (animationGroup.name == 'GunIdle') {
-                    console.log('GunEnergyAction');
-
-                    animationGroup.loopAnimation = true;
-                    animationGroup.play(true);
-                    animations.gunIdle = animationGroup;
-                }
+                animations.addAnimation(animationGroup);
             });
+            animations.playAnimation(AnimationName.GunIdle);
         };
     }
 

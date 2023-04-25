@@ -26,7 +26,7 @@ class TimeControl {
     private updateTimeScale(timeScale: number): void {
         if (timeScale >= 0) {
             this._timeScale = timeScale;
-            animations.setSpeedRatio(timeScale);
+            animations.updateSpeedRatio(timeScale);
             starManager.setTimeSpeedFactor(timeScale);
         } else {
             console.error('The time scale factor cannot be negative.');
