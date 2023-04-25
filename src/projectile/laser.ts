@@ -13,6 +13,7 @@ export class Laser implements Projectile {
     private _collisionDistance: number = 40;
     private _slowTimeDistance: number = 6;
     private _slowTimeFactor: number = 0.1;
+    private _sparkParticles: BABYLON.ParticleSystem;
 
     public constructor(scene: BABYLON.Scene, options?: { speed?: number; dispowerDistance?: number; collisionDistance?: number; slowTimeDistance?: number; slowTimeFactor?: number }) {
         const {
@@ -36,6 +37,7 @@ export class Laser implements Projectile {
         this._slowTimeFactor = slowTimeFactor;
         this._laserModel = this.initLaserModel();
         this._laserModel.metadata = { parentClass: this };
+        this._sparkParticles = this.initSparkParticles();
     }
 
     private initLaserModel(): BABYLON.Mesh {
@@ -55,6 +57,34 @@ export class Laser implements Projectile {
         model.isVisible = false;
 
         return model;
+    }
+
+    private initSparkParticles(): BABYLON.ParticleSystem {
+        const particleSystem = new BABYLON.ParticleSystem('sparkParticles', 2000, this._scene);
+
+        particleSystem.particleTexture = new BABYLON.Texture('./assets/spark.png', this._scene);
+        particleSystem.emitter = new BABYLON.Vector3(0, 0, 0);
+        particleSystem.minEmitBox = new BABYLON.Vector3(-0.1, -0.1, -0.1);
+        particleSystem.maxEmitBox = new BABYLON.Vector3(0.1, 0.1, 0.1);
+        particleSystem.color1 = new BABYLON.Color4(1, 0, 0, 0.8);
+        particleSystem.color2 = new BABYLON.Color4(1, 0, 0, 0.8);
+        particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 0);
+        particleSystem.minSize = 0.01;
+        particleSystem.maxSize = 0.03;
+        particleSystem.minLifeTime = 0.05;
+        particleSystem.maxLifeTime = 0.1;
+        particleSystem.emitRate = 800;
+        particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+        particleSystem.gravity = new BABYLON.Vector3(0, 0, 0);
+        particleSystem.direction1 = new BABYLON.Vector3(-0.5, 0.5, -0.5);
+        particleSystem.direction2 = new BABYLON.Vector3(0.5, 0.5, 0.5);
+        particleSystem.minAngularSpeed = 0;
+        particleSystem.maxAngularSpeed = Math.PI;
+        particleSystem.minEmitPower = 0.5;
+        particleSystem.maxEmitPower = 1.5;
+        particleSystem.updateSpeed = 0.02;
+
+        return particleSystem;
     }
 
     public get laserModel(): BABYLON.Mesh {
@@ -108,6 +138,13 @@ export class Laser implements Projectile {
                 hitObject.metadata.parentClass.touch();
             }
 
+            // Create spark particles at the hit point
+            this._sparkParticles.emitter = hitInfo.pickedPoint;
+            this._sparkParticles.start();
+            setTimeout(() => {
+                this._sparkParticles.stop();
+            }, 90);
+
             laser.dispose();
         }
     }
@@ -132,6 +169,8 @@ export class Laser implements Projectile {
     }
 
     public animate(deltaTime: number): void {
+        this._sparkParticles.updateSpeed = 0.02 * timeControl.getTimeScale();
+
         let minDistance = Infinity;
 
         this.getAllLaserInstances().forEach((laser) => {
