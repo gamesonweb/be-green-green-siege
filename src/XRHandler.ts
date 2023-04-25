@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import timeControl from './TimeControl';
 
 class XRHandler {
     // XR
@@ -14,7 +15,7 @@ class XRHandler {
      */
     public async initXR(scene: BABYLON.Scene): Promise<void> {
         // Get platform
-        let platform = scene.getMeshByName('n1b14');
+        const platform = scene.getMeshByName('n1b14');
         this._xr = await scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
 
         this._xr.input.onControllerAddedObservable.add((controller) => {
@@ -26,6 +27,27 @@ class XRHandler {
                     this._rightController = motionController;
                 }
             });
+        });
+
+        // Disable teleportation
+        this._disableTeleportation();
+
+        // Handle session init
+        this._handleXRSessionInit();
+    }
+
+    private _disableTeleportation(): void {
+        this._xr.teleportation.dispose();
+    }
+
+    private _handleXRSessionInit(): void {
+        this._xr.baseExperience.sessionManager.onXRSessionInit.add(() => {});
+
+        this._xr.baseExperience.sessionManager.onXRSessionEnded.add(() => {
+            if (!timeControl.isPaused()) {
+                // FIXME : appeler la fonction pause du jeu et pas juste le temps
+                timeControl.togglePause();
+            }
         });
     }
 
@@ -41,12 +63,15 @@ class XRHandler {
      * Hide or show the controllers.
      * @param visible True to show the controllers, false to hide them.
      */
-    public isControllerVisible(visible: boolean): void {
+    public setControllerVisibility(visible: boolean): void {
         this._xr.input.controllers.forEach((controller) => {
             controller.motionController!.rootMesh.getChildMeshes().forEach((mesh) => {
                 mesh.isVisible = visible;
             });
         });
+
+        // Hide the laser pointer
+        this._xr.pointerSelection.displayLaserPointer = visible;
     }
 
     /**

@@ -1,11 +1,9 @@
 import * as BABYLON from 'babylonjs';
+import xrHandler from '../XRHandler';
 import { Commando } from '../enemy/commando';
 import { EnemiesSpace } from '../enemy/enemiesSpace';
-import { Enemy } from '../enemy/enemy';
 import { LaserGun } from '../gun/laserGun';
 import { GravityMovement } from '../movement/type/gravityMovement';
-import { SinusoidaleMovement } from '../movement/type/sinusoidaleMovement';
-import { AroundPlatform } from '../movement/type/aroundPlatform';
 import { Laser } from '../projectile/laser';
 import { State } from './state';
 
@@ -38,6 +36,9 @@ export class LevelTestBotState implements State {
     }
 
     public load(): void {
+        // Set the controller visibility to false
+        xrHandler.setControllerVisibility(false);
+
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
         this.createDebugElement(this._scene);
@@ -59,6 +60,8 @@ export class LevelTestBotState implements State {
     }
 
     public dispose(): void {
+        // Set the controller visibility to true
+        xrHandler.setControllerVisibility(true);
         // dispose the light
         // this._light.dispose();
         // this._ennemies.forEach(function(ennemy) {

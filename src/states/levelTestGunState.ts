@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
@@ -31,6 +32,9 @@ export class LevelTestGunState implements State {
     }
 
     public load(): void {
+        // Set the controller visibility to false
+        xrHandler.setControllerVisibility(false);
+
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         this._light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 200, 0), this._scene);
         this._light.intensity = 0.3;
@@ -123,6 +127,9 @@ class FakeEnemy extends Targetable {
     }
 
     public dispose(): void {
+        // Set the controller visibility to true
+        xrHandler.setControllerVisibility(true);
+
         this._mesh.dispose();
     }
 }

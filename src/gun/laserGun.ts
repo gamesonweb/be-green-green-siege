@@ -80,9 +80,6 @@ export class LaserGun implements Gun {
     }
 
     private attachToVRHand(rightAnchor: BABYLON.AbstractMesh): void {
-        // Set the controller visibility to false
-        xrHandler.isControllerVisible(false);
-
         this._gunModel.setParent(rightAnchor);
         this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
         this._gunModel.rotation = rightAnchor.rotation.clone();
