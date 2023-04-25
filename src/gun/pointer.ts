@@ -1,6 +1,6 @@
 import * as GUI from 'babylonjs-gui';
 
-export class Pointeur {
+export class Pointer {
     private _gui: GUI.AdvancedDynamicTexture;
 
     private _width = 2;
