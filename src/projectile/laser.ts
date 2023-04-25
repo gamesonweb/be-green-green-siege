@@ -91,25 +91,20 @@ export class Laser implements Projectile {
         return this._laserModel;
     }
 
-    public fire(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): void {
+    public fire(origin: BABYLON.Mesh, direction: BABYLON.Vector3): void {
         const laserInstance = this.createLaserInstance(origin, direction);
         laserInstance.isVisible = true;
     }
 
-    private createLaserInstance(origin: BABYLON.Mesh, direction?: BABYLON.Vector3): BABYLON.InstancedMesh {
+    private createLaserInstance(origin: BABYLON.Mesh, direction: BABYLON.Vector3): BABYLON.InstancedMesh {
         const laserInstance = this._laserModel.createInstance('laserInstance');
         laserInstance.position = origin.getAbsolutePosition().clone();
 
-        if (direction) {
-            const targetPosition = origin.getAbsolutePosition().add(direction);
-            laserInstance.lookAt(targetPosition);
+        const targetPosition = origin.getAbsolutePosition().add(direction);
+        laserInstance.lookAt(targetPosition);
 
-            // Rotate the laser instance to make its forward direction become its up direction
-            laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
-        } else {
-            laserInstance.rotationQuaternion = origin.absoluteRotationQuaternion.clone();
-            laserInstance.rotationQuaternion = laserInstance.rotationQuaternion.multiply(BABYLON.Quaternion.RotationAxis(BABYLON.Axis.X, -Math.PI / 2));
-        }
+        // Rotate the laser instance to make its forward direction become its up direction
+        laserInstance.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
 
         return laserInstance;
     }
