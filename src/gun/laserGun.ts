@@ -4,6 +4,8 @@ import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Projectile } from '../projectile/projectile';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 import { Gun } from './gun';
 import { Pointer } from './pointer';
 
@@ -30,6 +32,10 @@ export class LaserGun implements Gun {
     private readonly _heatPerShot: number;
     private readonly _coolingRate: number;
 
+    // sound effect
+    private _shoot: SoundPlayer;
+    private _reloadGun: SoundPlayer;
+
     /**
      * Creates an instance of LaserGun.
      * @param scene scene to add the gun to
@@ -42,6 +48,8 @@ export class LaserGun implements Gun {
         this.initializeGunModel();
         this.attach();
 
+        this.initSound();
+
         this._laser = laser;
 
         this._fireRate = 0.1;
@@ -52,6 +60,11 @@ export class LaserGun implements Gun {
         this._maxHeat = 30;
         this._heatPerShot = 5;
         this._coolingRate = 20;
+    }
+
+    private initSound() {
+        this._shoot = new SoundPlayer(SoundsBank.GUN_SHOOT, 2, this._scene, this._gunModel);
+        this._reloadGun = new SoundPlayer(SoundsBank.GUN_RELOAD, 2, this._scene, this._gunModel);
     }
 
     private initializeGunModel(): void {
@@ -113,6 +126,9 @@ export class LaserGun implements Gun {
         const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
         this._laser.fire(this._laserPoint, laserDirection);
 
+        // play sound
+        this._shoot.play();
+
         // play animation
         animations.playAnimation(AnimationName.BarelShot);
         xrHandler.vibrateController('right', 1, 60);
@@ -130,6 +146,7 @@ export class LaserGun implements Gun {
             this._isOverheated = true;
             animations.playAnimation(AnimationName.OverHeatFront);
             animations.playAnimation(AnimationName.OverHeatBack);
+            this._reloadGun.play();
         }
 
         // update heat

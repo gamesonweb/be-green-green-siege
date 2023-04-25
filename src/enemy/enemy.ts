@@ -37,6 +37,7 @@ export class Enemy extends Targetable {
     private _nBullets: number;
     // sounds effect
     private _bip_bip: SoundPlayer;
+    private _explosion: SoundPlayer;
 
 
     public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
@@ -51,8 +52,9 @@ export class Enemy extends Targetable {
         this.createMesh(pos);
         this._lifePoint = this._MAX_LIFE_POINT;
         // sounds
-        this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 200, scene, this.mesh);
-        this._bip_bip.playWithRepeater(10);
+        this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 5, scene, this.mesh);
+        this._bip_bip.playWithRepeater(3);
+        this._explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 0.5, this.scene);
     }
 
     public createMesh(pos: BABYLON.Vector3) {
@@ -125,13 +127,19 @@ export class Enemy extends Targetable {
             set.start(this.mesh);
         });
         // sound 
-        let sound = new BABYLON.Sound("explosion", "./assets/sound/explosion.mp3", this.scene, null, {
-            autoplay: true,
-            spatialSound: true,
-            volume: 1 / (1 + BABYLON.Vector3.Distance(this.mesh.position, this.scene.activeCamera.position))
-        });
-        sound.setPosition(this.mesh.position);
-        this.mesh.dispose();
+        // let sound = new BABYLON.Sound("explosion_"+this.mesh.toString(), "./assets/sound/explosion.mp3", this.scene, null, {
+        //     autoplay: true,
+        //     spatialSound: true,
+        //     volume: 1 / (1 + BABYLON.Vector3.Distance(this.mesh.position, this.scene.activeCamera.position))
+        // });
+        // sound.setPosition(this.mesh.position);
+        this._bip_bip.stopAndDispose();
+        this._explosion.setPosition(this.mesh.position);
+        this._explosion.play();
+        console.log(this._explosion.getName(), " is playing ? ", this._explosion.isPlaying());
+        setTimeout(() => {
+            this.mesh.dispose();
+        }, 500);
         this.isDeath = true;
     }
 
