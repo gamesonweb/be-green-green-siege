@@ -52,7 +52,7 @@ export class LaserGun implements Gun {
 
         this._laser = laser;
 
-        this._fireRate = 0.25;
+        this._fireRate = 0.15;
         this._timeSinceLastShot = 0;
 
         this._currentHeat = 0;

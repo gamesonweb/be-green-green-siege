@@ -61,7 +61,7 @@ class TimeControl {
      * @param {number} force - The time scale factor for the slow motion effect.
      */
     public activeSlowPower(force: number): void {
-        if (this.validInput(force) && !this._slowPower && this._slowPowerTime !== force) {
+        if (this.validInput(force) && this._slowPowerTime !== force) {
             this._slowPower = true;
             this._slowPowerTime = force;
             this.update();
@@ -73,7 +73,7 @@ class TimeControl {
      * @param {number} force - The time scale factor for the slow motion effect.
      */
     public activeSlowDanger(force: number): void {
-        if (this.validInput(force) && !this._slowDanger && this._slowDangerTime !== force) {
+        if (this.validInput(force) && this._slowDangerTime !== force) {
             this._slowDanger = true;
             this._slowDangerTime = force;
             this.update();

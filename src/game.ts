@@ -154,11 +154,9 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
-            if (!timeControl.isPaused()) {
-                Game._player.animate();
-                this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
-                TimeControlledProjectileAnimation.animate();
-            }
+            Game._player.animate();
+            this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
+            TimeControlledProjectileAnimation.animate();
         });
 
         // run the render loop

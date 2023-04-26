@@ -62,7 +62,7 @@ export default class Inputs {
         // Game.debug3D.log = 'Left Squeeze : ' + force;
 
         const newTimeScale = 1.1 - force;
-        if (pressed && newTimeScale < 1) {
+        if (newTimeScale < 1) {
             timeControl.activeSlowPower(newTimeScale);
         } else {
             timeControl.disableSlowPower();

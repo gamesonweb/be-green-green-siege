@@ -17,7 +17,7 @@ export enum AnimationName {
 
 class AnimationController {
     private readonly ANIMATION_CONFIGS: AnimationConfig[] = [
-        { name: AnimationName.BarelShot, loop: false, speedRatio: 1 },
+        { name: AnimationName.BarelShot, loop: false, speedRatio: 2.3 },
         { name: AnimationName.OverHeatBack, loop: false, speedRatio: 1.8 },
         { name: AnimationName.OverHeatFront, loop: false, speedRatio: 1.8 },
         { name: AnimationName.GunIdle, loop: true, speedRatio: 1 },
@@ -41,7 +41,15 @@ class AnimationController {
         const animation = this._animations.get(name);
         const config = this.ANIMATION_CONFIGS.find((cfg) => cfg.name === name);
         if (animation && config) {
-            const speedRatio = (playInReverse ? -config.speedRatio : config.speedRatio) * timeControl.getTimeScale();
+            let speedRatio = (playInReverse ? -config.speedRatio : config.speedRatio) * timeControl.getTimeScale();
+
+            // There is a bug in BabylonJS that causes an issue with the animation when the speed ratio is exactly 0.
+            // To work around this bug, we set the speed ratio to a very low value.
+            // This allows us to bypass the problem without significantly affecting the animation speed.
+            if (speedRatio === 0) {
+                speedRatio = playInReverse ? 1e-100 : -1e-100;
+            }
+
             animation.start(animation.loopAnimation, speedRatio);
         } else {
             console.warn(`Animation "${name}" not found or configuration not found for "${name}."`);
@@ -59,7 +67,7 @@ class AnimationController {
                 // To work around this bug, we set the speed ratio to a very low value.
                 // This allows us to bypass the problem without significantly affecting the animation speed.
                 if (updatedSpeed === 0) {
-                    updatedSpeed = 1e-100;
+                    updatedSpeed = currentSpeed > 0 ? 1e-100 : -1e-100;
                 }
 
                 animation.speedRatio = updatedSpeed;
