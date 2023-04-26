@@ -142,7 +142,7 @@ export class LaserGun implements Gun {
 
     private updateHeat(deltaTime: number): void {
         // check if gun is overheated
-        if (this._currentHeat >= this._maxHeat) {
+        if (this._currentHeat >= this._maxHeat && !this._isOverheated) {
             this._isOverheated = true;
             animations.playAnimation(AnimationName.OverHeatFront);
             animations.playAnimation(AnimationName.OverHeatBack);

@@ -44,10 +44,8 @@ class XRHandler {
         this._xr.baseExperience.sessionManager.onXRSessionInit.add(() => {});
 
         this._xr.baseExperience.sessionManager.onXRSessionEnded.add(() => {
-            if (!timeControl.isPaused()) {
-                // FIXME : appeler la fonction pause du jeu et pas juste le temps
-                timeControl.togglePause();
-            }
+            // FIXME : appeler la fonction pause du jeu et pas juste le temps
+            timeControl.pause();
         });
     }
 

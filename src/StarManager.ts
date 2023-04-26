@@ -148,7 +148,7 @@ class StarManager {
      * Sets the time speed factor.
      * @param factor time speed factor
      */
-    public setTimeSpeedFactor(factor: number): void {
+    public updateSpeedRatio(factor: number): void {
         this._timeSpeedFactor = factor;
         const starSystemsArray = Array.from(this._starSystems.values());
         for (const starSystem of starSystemsArray) {

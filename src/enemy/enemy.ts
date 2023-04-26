@@ -1,15 +1,14 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import { Movement } from '../movement/movement';
-import { Targetable } from '../target/targetable';
-import { EnemiesSpace } from './enemiesSpace';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
+import { Targetable } from '../target/targetable';
+import { EnemiesSpace } from './enemiesSpace';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
 export class Enemy extends Targetable {
-
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
     public enemiesSpace: EnemiesSpace;
@@ -39,7 +38,6 @@ export class Enemy extends Targetable {
     private _bip_bip: SoundPlayer;
     private _explosion: SoundPlayer;
 
-
     public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
         super();
         this.scene = scene;
@@ -61,8 +59,8 @@ export class Enemy extends Targetable {
         this.mesh = Game.instanceLoader.getBot('enemy_' + pos, { parentClass: this });
         this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
         this.mesh.position = pos;
-        this._eyes = Game.instanceLoader.findInstanceSubMeshByName(this.mesh, "Eyes");
-        // eyes effect 
+        this._eyes = Game.instanceLoader.findInstanceSubMeshByName(this.mesh, 'Eyes');
+        // eyes effect
         this._vibration = 0;
     }
 
@@ -91,8 +89,8 @@ export class Enemy extends Targetable {
     }
 
     private _checkHealth() {
-        if(this._lifePoint != 0) {
-            this._eyes.material.alpha = (1 + Math.cos(this._t)) / 2;// * (this._MAX_LIFE_POINT - this._lifePoint);
+        if (this._lifePoint != 0) {
+            this._eyes.material.alpha = (1 + Math.cos(this._t)) / 2; // * (this._MAX_LIFE_POINT - this._lifePoint);
             this._t += this._eyesFreq * (this._MAX_LIFE_POINT - this._lifePoint);
             // console.log("t= ", this._eyes.material.alpha);
         }
@@ -126,7 +124,7 @@ export class Enemy extends Targetable {
             set.systems[3].emitRate = 25;
             set.start(this.mesh);
         });
-        // sound 
+        // sound
         // let sound = new BABYLON.Sound("explosion_"+this.mesh.toString(), "./assets/sound/explosion.mp3", this.scene, null, {
         //     autoplay: true,
         //     spatialSound: true,
@@ -136,7 +134,7 @@ export class Enemy extends Targetable {
         this._bip_bip.stopAndDispose();
         this._explosion.setPosition(this.mesh.position);
         this._explosion.play();
-        console.log(this._explosion.getName(), " is playing ? ", this._explosion.isPlaying());
+        // console.log(this._explosion.getName(), " is playing ? ", this._explosion.isPlaying());
         setTimeout(() => {
             this.mesh.dispose();
         }, 500);
@@ -210,5 +208,4 @@ export class Enemy extends Targetable {
     public getNBullets(): number {
         return this._nBullets;
     }
-    
 }

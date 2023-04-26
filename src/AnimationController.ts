@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import timeControl from './TimeControl';
 
 interface AnimationConfig {
     name: AnimationName;
@@ -17,8 +18,8 @@ export enum AnimationName {
 class AnimationController {
     private readonly ANIMATION_CONFIGS: AnimationConfig[] = [
         { name: AnimationName.BarelShot, loop: false, speedRatio: 1 },
-        { name: AnimationName.OverHeatBack, loop: false, speedRatio: 2 },
-        { name: AnimationName.OverHeatFront, loop: false, speedRatio: 2 },
+        { name: AnimationName.OverHeatBack, loop: false, speedRatio: 1.8 },
+        { name: AnimationName.OverHeatFront, loop: false, speedRatio: 1.8 },
         { name: AnimationName.GunIdle, loop: true, speedRatio: 1 },
         { name: AnimationName.ObservatoirRotation, loop: true, speedRatio: 0.1 },
     ];
@@ -40,10 +41,10 @@ class AnimationController {
         const animation = this._animations.get(name);
         const config = this.ANIMATION_CONFIGS.find((cfg) => cfg.name === name);
         if (animation && config) {
-            const speedRatio = playInReverse ? -config.speedRatio : config.speedRatio;
+            const speedRatio = (playInReverse ? -config.speedRatio : config.speedRatio) * timeControl.getTimeScale();
             animation.start(animation.loopAnimation, speedRatio);
         } else {
-            console.warn(`Animation "${name}" not found or configuration not found for "${name}"`);
+            console.warn(`Animation "${name}" not found or configuration not found for "${name}."`);
         }
     }
 
@@ -52,13 +53,16 @@ class AnimationController {
             const config = this.ANIMATION_CONFIGS.find((cfg) => cfg.name === animation.name);
             if (config) {
                 const currentSpeed = animation.speedRatio;
-                const updatedSpeed = (currentSpeed > 0 ? config.speedRatio : -config.speedRatio) * timeScale;
-                if (animation.isStarted && !animation.pause) {
-                    animation.stop();
-                    animation.start(animation.loopAnimation, updatedSpeed);
-                } else {
-                    animation.speedRatio = updatedSpeed;
+                let updatedSpeed = (currentSpeed > 0 ? config.speedRatio : -config.speedRatio) * timeScale;
+
+                // There is a bug in BabylonJS that causes an issue with the animation when the speed ratio is exactly 0.
+                // To work around this bug, we set the speed ratio to a very low value.
+                // This allows us to bypass the problem without significantly affecting the animation speed.
+                if (updatedSpeed === 0) {
+                    updatedSpeed = 1e-100;
                 }
+
+                animation.speedRatio = updatedSpeed;
             } else {
                 console.warn(`Animation configuration not found for "${animation.name}"`);
             }

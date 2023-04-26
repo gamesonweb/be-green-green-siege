@@ -60,6 +60,13 @@ export default class Inputs {
     public leftSqueeze(pressed: boolean, force: number): void {
         Logger.log('Left Squeeze : ' + force);
         // Game.debug3D.log = 'Left Squeeze : ' + force;
+
+        const newTimeScale = 1.1 - force;
+        if (pressed && newTimeScale < 1) {
+            timeControl.activeSlowPower(newTimeScale);
+        } else {
+            timeControl.disableSlowPower();
+        }
     }
 
     public rightSqueeze(pressed: boolean, force: number): void {
@@ -71,7 +78,11 @@ export default class Inputs {
         Logger.log('Left Primary');
         // Game.debug3D.log = 'Left Primary';
         if (pressed) {
-            timeControl.togglePause();
+            if (timeControl.isPaused()) {
+                timeControl.resume();
+            } else {
+                timeControl.pause();
+            }
         }
     }
 

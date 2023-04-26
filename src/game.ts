@@ -11,6 +11,7 @@ import KeyboardInputs from './inputs/KeyboardInputs';
 import XRInputs from './inputs/XRInputs';
 import { InstanceLoader } from './instanceLoader';
 import { Player } from './player/player';
+import TimeControlledProjectileAnimation from './projectile/TimeControlledProjectileAnimation';
 import { StateManager, StatesEnum } from './states/stateManager';
 
 export class Game {
@@ -153,8 +154,11 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
-            Game._player.animate();
-            this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
+            if (!timeControl.isPaused()) {
+                Game._player.animate();
+                this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
+                TimeControlledProjectileAnimation.animate();
+            }
         });
 
         // run the render loop
