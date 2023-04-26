@@ -68,8 +68,9 @@ class XRHandler {
             });
         });
 
-        // Hide the laser pointer
+        // Hide the laser and pointer
         this._xr.pointerSelection.displayLaserPointer = visible;
+        this._xr.pointerSelection.displaySelectionMesh = visible;
     }
 
     /**
