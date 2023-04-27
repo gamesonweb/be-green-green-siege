@@ -15,7 +15,7 @@ export class Commando {
         for(let i=0; i<nb; i++) {
             let enemy = new Enemy(scene, spawnPoint, caracteristics);
             enemy.setDestination(this._destination);
-            this._enemies.push(new Enemy(scene, spawnPoint, caracteristics));
+            this._enemies.push(enemy);
         }
     }
 
