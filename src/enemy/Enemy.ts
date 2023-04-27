@@ -25,7 +25,17 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly _REPUSIONFORCE: number = 1;
     private readonly _DISTANCECHECKCOLISION: number = 1;
 
-    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3) {
+    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
+        // Objet
+        // shotFreq
+        // bulletFreq
+        // nbBullet
+        // speed
+        // life
+        // score
+        // bulletSpeed
+        // bulletDmg
+
         super();
         this._scene = scene;
 
@@ -48,6 +58,10 @@ export class Enemy extends Targetable implements IEnemy {
 
     public getPosition(): BABYLON.Vector3 {
         return this._mesh.position;
+    }
+
+    public setDestination(destination: BABYLON.Vector3) {
+        this._destination = destination;
     }
 
     private rotation(deltaTime: number) {
@@ -92,10 +106,10 @@ export class Enemy extends Targetable implements IEnemy {
         // Avoid collision with other enemies
         for (let i = 0; i < enemiesPositions.length; i++) {
             const distance = BABYLON.Vector3.Distance(this._mesh.position, enemiesPositions[i]);
-            
+
             // Define a minimum distance for the repulsion force to take effect
             const minDistance = 10;
-            
+
             // Calculate the repulsion force based on distance
             if (distance < minDistance) {
                 const direction = this._mesh.position.subtract(enemiesPositions[i]).normalize();
