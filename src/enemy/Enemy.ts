@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
-import { IEnemy } from './IEnemy';
 import { Targetable } from '../target/targetable';
+import { IEnemy } from './IEnemy';
 
 export class Enemy extends Targetable implements IEnemy {
     private _scene: BABYLON.Scene;
@@ -13,20 +13,20 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly HEAD_ROTATION_SPEED: number = 8;
 
     // Health
-    private isDead: boolean = false;
+    private dead: boolean = false;
     private readonly _INITIAL_LIFE_POINT: number = 3;
     private _lifePoint: number;
 
     // Movement
-    private readonly _SPEED: number = 0.5;
+    private readonly _SPEED: number = 5;
     private speedVector: BABYLON.Vector3 = BABYLON.Vector3.Zero();
     private _destination: BABYLON.Vector3;
 
     // Colision
-    private readonly _REPUSIONFORCE: number = 1;
-    private readonly _DISTANCECHECKCOLISION: number = 1;
+    private readonly _minTargetDistanceTarget: number = 5;
+    private readonly _MINDISTANCEENEMY: number = 3;
 
-    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
+    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, destiantion: BABYLON.Vector3, caracteristics: any) {
         // Objet
         // shotFreq
         // bulletFreq
@@ -50,6 +50,7 @@ export class Enemy extends Targetable implements IEnemy {
         // Mesh
         this._mesh = Game.instanceLoader.getBot('robot', { parentClass: this });
         this._mesh.position = spawnPosition;
+        this._destination = destiantion;
 
         // Life
         this._lifePoint = this._INITIAL_LIFE_POINT;
@@ -58,15 +59,15 @@ export class Enemy extends Targetable implements IEnemy {
     public fire() {}
 
     public getPosition(): BABYLON.Vector3 {
-        return this._mesh.position;
+        return this._mesh.getAbsolutePosition();
     }
 
     public setDestination(destination: BABYLON.Vector3) {
         this._destination = destination;
     }
 
-    public isDeath() : boolean {
-        return this.isDead;
+    public isDeath(): boolean {
+        return this.dead;
     }
 
     private rotation(deltaTime: number) {
@@ -90,7 +91,7 @@ export class Enemy extends Targetable implements IEnemy {
 
     private checkHealth() {
         if (this._lifePoint <= 0) {
-            this.isDead = true;
+            this.dead = true;
             this.die();
         }
     }
@@ -100,26 +101,39 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
-        let nextSpeed = BABYLON.Vector3.Zero();
+        let nextSpeed = this.speedVector.clone();
 
-        // add the speed vector to the current position
-        nextSpeed.addInPlace(this.speedVector);
+        const currentPosition = this.getPosition();
 
-        // Calculate the target direction
-        const targetDirection = this._camera.position.subtract(this._mesh.position).normalize();
-        nextSpeed.addInPlace(targetDirection);
+        ////////////////////////////////////
+        // Calculate the target direction //
+        ////////////////////////////////////
+        const destinationDirection = this._destination.subtract(currentPosition).normalize();
 
-        // Avoid collision with other enemies
+        // Check if the robot is close to the destination
+        const destinationDistance = BABYLON.Vector3.Distance(currentPosition, this._destination);
+
+        // Apply a slight repulsion effect if the robot is close to the destination
+        if (destinationDistance < this._minTargetDistanceTarget) {
+            const repulsionForce = (this._minTargetDistanceTarget - destinationDistance) / this._minTargetDistanceTarget;
+            const repulsionVector = destinationDirection.scale(-repulsionForce);
+            nextSpeed.addInPlace(repulsionVector);
+        } else {
+            nextSpeed.addInPlace(destinationDirection);
+        }
+
+        ////////////////////////////////////////
+        // Avoid collision with other enemies //
+        ////////////////////////////////////////
         for (let i = 0; i < enemiesPositions.length; i++) {
-            const distance = BABYLON.Vector3.Distance(this._mesh.position, enemiesPositions[i]);
+            const distance = BABYLON.Vector3.Distance(currentPosition, enemiesPositions[i]);
+            const direction = currentPosition.subtract(enemiesPositions[i]).normalize();
 
             // Define a minimum distance for the repulsion force to take effect
-            const minDistance = 10;
 
             // Calculate the repulsion force based on distance
-            if (distance < minDistance) {
-                const direction = this._mesh.position.subtract(enemiesPositions[i]).normalize();
-                const repulsionForce = (minDistance - distance) / minDistance; // Inverse proportionality
+            if (distance < this._MINDISTANCEENEMY) {
+                const repulsionForce = (this._MINDISTANCEENEMY - distance) / this._MINDISTANCEENEMY; // Inverse proportionality
                 const repulsionVector = direction.scale(repulsionForce);
 
                 // Add the repulsion vector to the next speed
@@ -127,19 +141,22 @@ export class Enemy extends Targetable implements IEnemy {
             }
         }
 
+        ////////////////////////////////
+        // Avoid collision with walls //
+        ////////////////////////////////
+
         // Update the position
-        this._mesh.position.addInPlace(nextSpeed.scale(deltaTime));
+        this._mesh.position.addInPlace(nextSpeed.scale(this._SPEED * deltaTime));
     }
 
     public animate(deltaTime: number, enemiesPositions: BABYLON.Vector3[]): void {
         this.rotation(deltaTime);
         this.checkHealth();
+        this.move(deltaTime, enemiesPositions);
     }
 
     public touch(): void {
         this._lifePoint -= 1;
-        console.log('Enemy touched');
-        console.log('Enemy life: ' + this._lifePoint);
     }
 
     public getDistanceFromDestination(): number {
