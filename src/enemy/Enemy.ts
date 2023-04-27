@@ -26,7 +26,7 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly _minTargetDistanceTarget: number = 5;
     private readonly _MINDISTANCEENEMY: number = 3;
 
-    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, destiantion: BABYLON.Vector3, caracteristics: any) {
+    constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         // Objet
         // shotFreq
         // bulletFreq
@@ -50,7 +50,6 @@ export class Enemy extends Targetable implements IEnemy {
         // Mesh
         this._mesh = Game.instanceLoader.getBot('robot', { parentClass: this });
         this._mesh.position = spawnPosition;
-        this._destination = destiantion;
 
         // Life
         this._lifePoint = this._INITIAL_LIFE_POINT;
@@ -101,6 +100,11 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
+        if (!this._destination) {
+            return;
+        }
+
+    
         let nextSpeed = this.speedVector.clone();
 
         const currentPosition = this.getPosition();

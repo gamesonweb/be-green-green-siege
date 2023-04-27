@@ -42,6 +42,7 @@ export class MainMenuState implements State {
         this._levelTestBotSelector.dispose();
         this._levelTestGunSelector.dispose();
         this._levelEmptySelector.dispose();
+        this._level.dispose();
     }
 
     private createLevel(position: BABYLON.Vector3, levelenum: StatesEnum, levelNumber: number = undefined): BABYLON.Mesh {

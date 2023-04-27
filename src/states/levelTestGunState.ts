@@ -54,8 +54,12 @@ export class LevelTestGunState implements State {
 
         // fake enemy
         // this._fakeEnemy = new FakeEnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
-        this._enemy1 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -25), new BABYLON.Vector3(0, 0, -35), undefined);
-        this._enemy2 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -35), new BABYLON.Vector3(0, 0, -35), undefined);
+        const destination = new BABYLON.Vector3(0, 0, -35);
+        this._enemy1 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -25), undefined);
+        this._enemy2 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -35), undefined);
+
+        this._enemy1.setDestination(destination);
+        this._enemy2.setDestination(destination);
     }
 
     public dispose(): void {
