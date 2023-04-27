@@ -5,24 +5,24 @@ import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
 import { Targetable } from '../target/targetable';
 import { Zone } from './zone';
+import { GravityMovement } from '../movement/type/gravityMovement';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
-export class Enemy extends Targetable {
+export class EnemyOLD extends Targetable {
+
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
     public zone: Zone;
     private _vibration: number;
+    private _spawnPoint: BABYLON.Vector3;
     // movement
     public movement: Movement;
-    private _destination: BABYLON.Mesh;
-    private _speed: number;
+    private _destination: BABYLON.Vector3;
     public force: BABYLON.Vector3;
     public velocity: BABYLON.Vector3;
     // health
-    private readonly _MAX_LIFE_POINT: number = 3;
     private readonly _MAX_PARTICLES: number = 30;
-    private _lifePoint: number;
     public isDeath: boolean = false;
     // particles
     private _smokeParticles: BABYLON.ParticleSystem;
@@ -31,34 +31,52 @@ export class Enemy extends Targetable {
     private _eyes: BABYLON.AbstractMesh;
     private _t: number = 0;
     private _eyesFreq: number = 0.2;
-    // fire !
-    private _fireFreq: number;
-    private _nBullets: number;
+    // caracteristics
+    private _shotFreq: number;
+    private _bulletFreq: number;
+    private _nbBullets: number;
+    private _speed: number;
+    private _life: number;
+    private _score: number;
+    private _bulletSpeed: number;
+    private _bulletDmg: number;
     // sounds effect
     private _bip_bip: SoundPlayer;
     private _explosion: SoundPlayer;
 
-    public constructor(scene: BABYLON.Scene, zone: Zone, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
+    public constructor(caracteristics: any, scene: BABYLON.Scene, zone: Zone, spawnPoint: BABYLON.Vector3, destination: BABYLON.Vector3) {
         super();
         this.scene = scene;
-        this._destination = destination;
+        // this._destination = destination;
         this.zone = zone;
-        this.movement = movement;
-        this._speed = speed;
+        this._destination = destination;
+        // caracteristics
+        const json = JSON.parse(caracteristics);
+        this._shotFreq = json.shotFred;
+        this._bulletFreq = json.bulletFreq;
+        this._nbBullets = json.nbBullets;
+        this._speed = json.speed;
+        this._life = json.life;
+        this._score = json.score;
+        this._bulletSpeed = json.bulletSpeed;
+        this._bulletDmg = json.bulletDmg;
+        // spawnPoint
+        this._spawnPoint = spawnPoint;
+        // this._speed = speed;
         this.force = BABYLON.Vector3.Zero();
         this.velocity = BABYLON.Vector3.Zero();
-        this.createMesh(pos);
-        this._lifePoint = this._MAX_LIFE_POINT;
+        this.createMesh();
+        // this._lifePoint = this._MAX_LIFE_POINT;
         // sounds
         this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 5, scene, this.mesh);
         this._bip_bip.playWithRepeater(3);
         this._explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 0.5, this.scene);
     }
 
-    public createMesh(pos: BABYLON.Vector3) {
-        this.mesh = Game.instanceLoader.getBot('enemy_' + pos, { parentClass: this });
+    public createMesh() {
+        this.mesh = Game.instanceLoader.getBot("enemy", { parentClass: this });
         this.mesh.scaling = new BABYLON.Vector3(2, 2, 2);
-        this.mesh.position = pos;
+        this.mesh.position = this._spawnPoint;
         this._eyes = Game.instanceLoader.findInstanceSubMeshByName(this.mesh, 'Eyes');
         // eyes effect
         this._vibration = 0;
@@ -68,15 +86,19 @@ export class Enemy extends Targetable {
         let origin: BABYLON.Vector3 = this.scene.activeCamera.position;
         this.mesh.lookAt(new BABYLON.Vector3(origin.x + biais, origin.y, origin.z));
         // animate face
-        this._vibration += 0.2 + 2 * (this._MAX_LIFE_POINT - this._lifePoint);
+        this._vibration += 0.2 //+ 2 * (this._MAX_LIFE_POINT - this._lifePoint);
     }
 
-    public setDestination(destination: BABYLON.Mesh): void {
+    public setDestination(destination: BABYLON.Vector3): void {
         this._destination = destination;
     }
 
+    public getDistanceFromDestination() {
+
+    }
+
     public takeDamage(val: number): void {
-        this._lifePoint -= val;
+        this._life -= val;
     }
 
     private _launchSmokeParticles() {
@@ -89,23 +111,23 @@ export class Enemy extends Targetable {
     }
 
     private _checkHealth() {
-        if (this._lifePoint != 0) {
-            this._eyes.material.alpha = (1 + Math.cos(this._t)) / 2; // * (this._MAX_LIFE_POINT - this._lifePoint);
-            this._t += this._eyesFreq * (this._MAX_LIFE_POINT - this._lifePoint);
-            // console.log("t= ", this._eyes.material.alpha);
-        }
-        if (this._lifePoint != this._MAX_LIFE_POINT) {
-            // console.log("Point: ", this._lifePoint);
-            if (!this._created) {
-                this._launchSmokeParticles();
-                this._created = true;
-            }
-            this._smokeParticles.emitRate = this._MAX_PARTICLES / this._lifePoint;
-            if (this._lifePoint == 0) {
-                this._smokeParticles.stop();
-                this.die();
-            }
-        }
+        // if (this._lifePoint != 0) {
+        //     this._eyes.material.alpha = (1 + Math.cos(this._t)) / 2; // * (this._MAX_LIFE_POINT - this._lifePoint);
+        //     this._t += this._eyesFreq * (this._MAX_LIFE_POINT - this._lifePoint);
+        //     // console.log("t= ", this._eyes.material.alpha);
+        // }
+        // if (this._lifePoint != this._life) {
+        //     // console.log("Point: ", this._lifePoint);
+        //     if (!this._created) {
+        //         this._launchSmokeParticles();
+        //         this._created = true;
+        //     }
+        //     this._smokeParticles.emitRate = this._MAX_PARTICLES / this._lifePoint;
+        //     if (this._lifePoint == 0) {
+        //         this._smokeParticles.stop();
+        //         this._die();
+        //     }
+        // }
     }
 
     public die(): void {
@@ -158,19 +180,20 @@ export class Enemy extends Targetable {
         return offset;
     }
 
-    public animate(deltaTime: number, positions: BABYLON.Vector3[]): void {
-        // console.log('pos: ', this.mesh.position);
-        // the enemy look at player ... for ever !
-        this.lookAtMe(Math.sin(this._vibration));
-        // moove
-        if (Math.abs(this.movement.moove(this, positions, this._destination.position, this._speed, deltaTime)) < 10) {
-            // tmp
-            // this._takeDamage(1);
-            this._destination.dispose();
-            this._destination = this.zone.getRandomPoint();
-        }
-        this._checkHealth();
-    }
+    // public animate(deltaTime: number, positions: BABYLON.Vector3[]): void {
+    //     // console.log('pos: ', this.mesh.position);
+    //     // the enemy look at player ... for ever !
+    //     this.lookAtMe(Math.sin(this._vibration));
+    //     // moove
+    //     if (Math.abs(this.movement.moove(this, positions, this._destination.position, this._speed, deltaTime)) < 10) {
+    //         // tmp
+    //         // this._takeDamage(1);
+    //         this._destination.dispose();
+    //         this._destination = this.zone.getRandomPoint();
+    //     }
+    //     this._checkHealth();
+    // }
+
 
     public animateWithoutMoove(): void {
         // animate face
@@ -193,19 +216,19 @@ export class Enemy extends Targetable {
         return this._speed;
     }
 
-    public setFireFreq(fireFreq: number): void {
-        this._fireFreq = fireFreq;
-    }
+    // public setFireFreq(fireFreq: number): void {
+    //     this._fireFreq = fireFreq;
+    // }
 
-    public getFireFreq(): number {
-        return this._fireFreq;
-    }
+    // public getFireFreq(): number {
+    //     return this._fireFreq;
+    // }
 
-    public setNBullets(nBullets: number): void {
-        this._nBullets = nBullets;
-    }
+    // public setNBullets(nBullets: number): void {
+    //     this._nBullets = nBullets;
+    // }
 
-    public getNBullets(): number {
-        return this._nBullets;
-    }
+    // public getNBullets(): number {
+    //     return this._nBullets;
+    // }
 }

@@ -1,6 +1,6 @@
 // import { Color4, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, VertexBuffer, int } from "babylonjs";
 import * as BABYLON from 'babylonjs';
-import { Enemy } from './enemy'
+import { Enemy } from './enemyOld'
 
 export class EnemiesPower {
 
