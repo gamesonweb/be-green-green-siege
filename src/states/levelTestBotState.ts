@@ -55,8 +55,8 @@ export class LevelTestBotState implements State {
         // let ennemySinusoidale = new Ennemy(this._scene, this._e_space, new BABYLON.Vector3(20, 10, 5), new SinusoidaleMovement(0.0005), 0.01);
         // this._e_space.addEnnemy(ennemySinusoidale);
         // let ennemyGravity = new Enemy(this._scene, this._e_space, new BABYLON.Vector3(0, 50, 0), new GravityMovement(), 5, this._e_space.getRandomPoint());
-        let commando = new Commando(3, this._scene, this._zone, new BABYLON.Vector3(20, -15, 5), new GravityMovement(), 5, this._zone.getRandomPoint());
-        this._zone.addCommando(commando);
+        // let commando = new Commando(3, this._scene, this._zone, new BABYLON.Vector3(20, -15, 5), new GravityMovement(), 5, this._zone.getRandomPoint());
+        // this._zone.addCommando(commando);
         // this._e_space.addEnnemy(ennemyGravity);
         // remove it when it's finished
     }

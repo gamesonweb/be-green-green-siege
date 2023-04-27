@@ -1,31 +1,23 @@
 import * as BABYLON from 'babylonjs';
 import { Movement } from '../movement/movement';
 import { Zone } from './zone';
-import { Enemy } from './enemy';
+import { Enemy } from './Enemy';
 
 export class Commando {
 
     private _enemies: Enemy[];
-    private _destination: BABYLON.Mesh;
-    private _movement: Movement;
+    private _destination: BABYLON.Vector3;
+    private _zone: Zone;
 
-    constructor(size: number, scene: BABYLON.Scene, zone: Zone, pos: BABYLON.Vector3, movement: Movement, speed: number, destination: BABYLON.Mesh) {
+    constructor(nb: number, caracteristics: any, scene: BABYLON.Scene, zone: Zone, spawnPoint: BABYLON.Vector3) {
         this._enemies = [];
-        this._destination = destination;
-        this._movement = movement;
-        // this._enemies.push(leader);
-        // setup each ennemies
-        let space = 15;
-        let lastPos: BABYLON.Vector3 = pos;
-        for (let i = 0; i < size; i++) {
-            let newPos = new BABYLON.Vector3(lastPos.x + space, lastPos.y + space, lastPos.z + space); //.addInPlace(enemy.mesh.position);
-            this._enemies.push(new Enemy(scene, zone, newPos, movement, speed, destination));
-            lastPos = newPos;
+        this._zone = zone;
+        this._destination = this._zone.getRandomPoint();
+        for(let i=0; i<nb; i++) {
+            let enemy = new Enemy(scene, spawnPoint, caracteristics);
+            enemy.setDestination(this._destination);
+            this._enemies.push(new Enemy(scene, spawnPoint, caracteristics));
         }
-    }
-
-    public spawnEnemies(thresholdEnemy: number) {
-
     }
 
     public getEnemies(): Enemy[] {
@@ -38,14 +30,17 @@ export class Commando {
 
     public animate(deltaTime: number, positions: BABYLON.Vector3[]) {
         this._enemies.forEach((enemy) => {
-            enemy.animateWithoutMoove();
+            enemy.animate(deltaTime, positions);
             // moove and share the same destination
-            if (Math.abs(this._movement.moove(enemy, positions, this._destination.position, enemy.getSpeed(), deltaTime)) < 10) {
+            if (enemy.getDistanceFromDestination() < 10) {
                 // Just for a test ... @todo: remove
-                enemy.takeDamage(1);
+                // enemy.takeDamage(1);
                 // console.log("touch !");
-                this._destination.dispose();
-                this._destination = enemy.zone.getRandomPoint();
+                // this._destination.dispose();
+                this._destination = this._zone.getRandomPoint();
+                this._enemies.forEach((enemy) => {
+                    enemy.setDestination(this._destination);
+                });
             }
         });
     }
