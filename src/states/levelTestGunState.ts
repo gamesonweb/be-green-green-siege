@@ -7,6 +7,7 @@ import { Shield } from '../shield/shield';
 import { Targetable } from '../target/targetable';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
+import { Enemy } from '../enemy/Enemy';
 
 export class LevelTestGunState implements State {
     private _scene: BABYLON.Scene;
@@ -16,6 +17,9 @@ export class LevelTestGunState implements State {
     private _target: TestTarget;
     private _shield: Shield;
     private _fakeEnemy: any;
+
+    private _enemy1: Enemy
+    private _enemy2: Enemy
 
     public shieldSize: number = 0;
 
@@ -49,7 +53,9 @@ export class LevelTestGunState implements State {
         this._shield = new Shield(this._scene);
 
         // fake enemy
-        this._fakeEnemy = new FakeEnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
+        // this._fakeEnemy = new FakeEnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
+        this._enemy1 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -25), new BABYLON.Vector3(0, 0, -35), undefined);
+        this._enemy2 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -35), new BABYLON.Vector3(0, 0, -35), undefined);
     }
 
     public dispose(): void {
@@ -64,7 +70,9 @@ export class LevelTestGunState implements State {
         this._shield.animate(deltaTime, this.shieldSize);
         this._target.animate(deltaTime);
 
-        this._fakeEnemy.animate(deltaTime);
+        // this._fakeEnemy.animate(deltaTime);
+        this._enemy1.animate(deltaTime, [this._enemy2.getPosition()]);
+        this._enemy2.animate(deltaTime, [this._enemy1.getPosition()]);
     }
 }
 
