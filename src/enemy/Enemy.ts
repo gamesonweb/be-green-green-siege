@@ -96,7 +96,7 @@ export class Enemy extends Targetable implements IEnemy {
         }
     }
 
-    private die() {
+    public die() {
         this._mesh.dispose();
     }
 

@@ -10,6 +10,7 @@ export class MainMenuState implements State {
     private _levelTestBotSelector: BABYLON.Mesh;
     private _levelTestGunSelector: BABYLON.Mesh;
     private _levelEmptySelector: BABYLON.Mesh;
+    private _level: BABYLON.Mesh;
 
     constructor(scene: BABYLON.Scene, stateManager: StateManager) {
         this._scene = scene;
@@ -30,6 +31,7 @@ export class MainMenuState implements State {
         this._levelTestBotSelector = this.createLevel(new BABYLON.Vector3(15, 2, -25), StatesEnum.LEVELTESTBOT);
         this._levelTestGunSelector = this.createLevel(new BABYLON.Vector3(17, 2, -25), StatesEnum.LEVELTESTGUN);
         this._levelEmptySelector = this.createLevel(new BABYLON.Vector3(19, 2, -25), StatesEnum.EMPTY);
+        this._level = this.createLevel(new BABYLON.Vector3(21, 2, -25), StatesEnum.LEVEL, 1);
     }
 
     public dispose(): void {
@@ -42,7 +44,7 @@ export class MainMenuState implements State {
         this._levelEmptySelector.dispose();
     }
 
-    private createLevel(position: BABYLON.Vector3, levelenum: StatesEnum): BABYLON.Mesh {
+    private createLevel(position: BABYLON.Vector3, levelenum: StatesEnum, levelNumber: number = undefined): BABYLON.Mesh {
         const box = BABYLON.MeshBuilder.CreateBox('box', {}, this._scene);
         box.position = position;
 
@@ -50,7 +52,7 @@ export class MainMenuState implements State {
         box.actionManager = new BABYLON.ActionManager(this._scene);
         box.actionManager.registerAction(
             new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
-                this._stateManager.switchState(levelenum);
+                this._stateManager.switchState(levelenum, levelNumber);
             })
         );
 
