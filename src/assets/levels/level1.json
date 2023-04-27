@@ -1,0 +1,91 @@
+{
+    "name": "Level 1",
+    "waves" : [
+        {
+            "zones": [
+                {
+                    "nbRobots": 5,
+                    "spawnPoints": ["Spawn4", "Spawn5"],
+                    "tresholdEnnemy": 2,
+                    "cooldown": 10,
+                    "min": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "max": {
+                        "x": 1,
+                        "y": 1,
+                        "z": 1
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 10,
+                        "bulletFreq": 1,
+                        "nbBullet": 2,
+                        "bulletSpeed": 5,
+                        "bulletDamage": 10,
+                        "speed": 5,
+                        "life": 100,
+                        "score": 10
+                    } 
+                }
+            ]
+        },
+        {
+            "zones": [
+                {
+                    "nbRobots": 5,
+                    "spawnPoints": ["Spawn1", "Spawn4", "Spawn5"],
+                    "tresholdEnnemy": 2,
+                    "cooldown": 10,
+                    "min": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "max": {
+                        "x": 1,
+                        "y": 1,
+                        "z": 1
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 10,
+                        "bulletFreq": 1,
+                        "nbBullet": 2,
+                        "bulletSpeed": 5,
+                        "bulletDamage": 10,
+                        "speed": 5,
+                        "life": 100,
+                        "score": 10
+                    } 
+                },
+                {
+                    "nbRobots": 3,
+                    "spawnPoints": ["Spawn1", "Spawn2", "Spawn3", "Spawn5"],
+                    "tresholdEnnemy": 2,
+                    "cooldown": 10,
+                    "min": {
+                        "x": 2,
+                        "y": 2,
+                        "z": 2
+                    },
+                    "max": {
+                        "x": 3,
+                        "y": 3,
+                        "z": 3
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 10,
+                        "bulletFreq": 1,
+                        "nbBullet": 2,
+                        "bulletSpeed": 5,
+                        "bulletDamage": 10,
+                        "speed": 5,
+                        "life": 100,
+                        "score": 10
+                    } 
+                }
+            ]
+        }
+    ]
+}

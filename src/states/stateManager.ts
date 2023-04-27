@@ -5,12 +5,15 @@ import { LevelTestGunState } from './levelTestGunState';
 import { LevelTestEmpty } from './levelTestempty';
 import { MainMenuState } from './mainMenuState';
 import { State } from './state';
+import Level from './level';
+
 
 export enum StatesEnum {
     MAINMENU = 0,
     LEVELTESTBOT = 1,
     LEVELTESTGUN = 2,
     EMPTY = 3,
+    LEVEL = 4
 }
 
 export class StateManager {
@@ -25,7 +28,7 @@ export class StateManager {
      * Switch the current state
      * @param state The state to switch to
      */
-    public switchState(state: StatesEnum): void {
+    public switchState(state: StatesEnum, levelNumber: number = undefined): void {
         // Dispose the current state
         if (this._currentState) {
             this._currentState.dispose();
@@ -44,6 +47,10 @@ export class StateManager {
                 break;
             case StatesEnum.EMPTY:
                 this._currentState = new LevelTestEmpty(this._scene);
+                break;
+            case StatesEnum.LEVEL:
+                this._currentState = new Level(this._scene, levelNumber);
+                break;
         }
 
         // Update the debug panel

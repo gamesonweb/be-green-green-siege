@@ -10,8 +10,6 @@ export class Zone {
     private _min: BABYLON.Vector3;
     private _max: BABYLON.Vector3;
 
-    private _spawnPoints: BABYLON.Vector3[];
-
     private _minDistance: number;
 
     // private _width: number;
@@ -22,7 +20,15 @@ export class Zone {
     private _commandos: Commando[];
     private _positions: BABYLON.Vector3[];
 
-    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, spawnPoint: BABYLON.Vector3[], scene: BABYLON.Scene) {
+    private _spawnPoints: BABYLON.Vector3[];
+    private robotCaracteristics: any;
+    
+    public currentCoolDown: number;
+    public nbRobots: number;
+    public trehsholdEnnemy: number;
+    public cooldown: number;
+
+    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, spawnPoint: BABYLON.Vector3[], scene: BABYLON.Scene, nbRobots: number, caracteristics: any, cooldown: number, trehsholdEnnemy: number) {
         this._min = min;
         this._max = max;
         this._scene = scene;
@@ -31,7 +37,26 @@ export class Zone {
         this._positions = [];
         this._minDistance = 15;
         this._zone = this.setupZone();
+
+        this.nbRobots = nbRobots;
+        this._spawnPoints = spawnPoint;
+        this.trehsholdEnnemy = trehsholdEnnemy;
+        this.cooldown = cooldown;
+        this.robotCaracteristics = caracteristics;
+
+        this.currentCoolDown = 0;
     }
+    
+    public getNbEnemies(): number {
+        let nb = 0;
+        for (let commando of this._commandos) {
+            nb += commando.getEnemies().length;
+        }
+        return nb;
+    }
+
+
+    public instantite(nb: number) {}
 
     public getRandomPoint(): BABYLON.Mesh {
         let pos: BABYLON.Vector3 = new BABYLON.Vector3(
@@ -98,5 +123,14 @@ export class Zone {
             commando.animate(deltaTime, this._positions);
         });
         this._positions = [];
+    }
+
+    public dispose() {
+        this._zone.dispose();
+        this._commandos.forEach((commando) => {
+            commando.getEnemies().forEach((enemy) => {
+                enemy.die();
+            });
+        });
     }
 }

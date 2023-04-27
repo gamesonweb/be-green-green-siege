@@ -103,12 +103,12 @@ export class Enemy extends Targetable {
             this._smokeParticles.emitRate = this._MAX_PARTICLES / this._lifePoint;
             if (this._lifePoint == 0) {
                 this._smokeParticles.stop();
-                this._die();
+                this.die();
             }
         }
     }
 
-    private _die(): void {
+    public die(): void {
         BABYLON.ParticleHelper.CreateAsync('explosion', this.scene).then((set) => {
             // console.log(set.systems.length); == 4
             set.systems.forEach((s) => {
