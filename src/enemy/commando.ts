@@ -13,7 +13,7 @@ export class Commando {
         this._zone = zone;
         this._destination = this._zone.getRandomPoint();
         for(let i=0; i<nb; i++) {
-            let enemy = new Enemy(scene, spawnPoint, caracteristics);
+            let enemy = new Enemy(scene, spawnPoint, this._destination, caracteristics);
             enemy.setDestination(this._destination);
             this._enemies.push(enemy);
         }
