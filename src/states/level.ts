@@ -43,20 +43,27 @@ export default class Level implements State {
     }
 
     private updateLevel(deltaTime: number): void {
+        
         if (this._player.getCurrentLife() <= 0) {
             this._lose = true;
             return;
         }
         let finishedZones = [];
         for (let zone of this._zones) {
-            if (zone.currentCoolDown + deltaTime >= zone.cooldown 
+            zone.currentCoolDown += deltaTime;
+            console.log(zone.tresholdEnemy);
+            
+            if (zone.currentCoolDown >= zone.cooldown 
                 && zone.nbRobots > 0
-                && zone.getNbEnemies() < zone.trehsholdEnnemy) {
+                && zone.getNbEnemies() < zone.tresholdEnemy) {
+                
+                console.log("NEW ENEMY");
+
                 
                 zone.currentCoolDown = 0;
-                let nbRobots = Math.min(zone.nbRobots, zone.trehsholdEnnemy - zone.getNbEnemies());
+                let nbRobots = Math.min(zone.nbRobots, zone.tresholdEnemy - zone.getNbEnemies());
                 zone.nbRobots -= nbRobots;
-                zone.instantite(nbRobots);
+                zone.instantiate(nbRobots);
             }
             else if (zone.nbRobots <= 0 && zone.getNbEnemies() <= 0) {
                 finishedZones.push(zone);
@@ -81,7 +88,7 @@ export default class Level implements State {
             let maxVec = new BABYLON.Vector3(zone.max.x, zone.max.y, zone.max.z);
 
             let spawnPoints = zone.spawnPoints.map(name => this._scene.getMeshByName(name).position);
-
+            
             this._zones.push(new Zone(
                 minVec,
                 maxVec,
@@ -90,7 +97,7 @@ export default class Level implements State {
                 zone.nbRobots,
                 zone.robotCaracteristics,
                 zone.cooldown,
-                zone.thresholdEnemy
+                zone.tresholdEnemy
             ));
         }
     }

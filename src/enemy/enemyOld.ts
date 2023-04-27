@@ -1,11 +1,9 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
-import { Movement } from '../movement/movement';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
 import { Targetable } from '../target/targetable';
 import { Zone } from './zone';
-import { GravityMovement } from '../movement/type/gravityMovement';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
@@ -17,7 +15,6 @@ export class EnemyOLD extends Targetable {
     private _vibration: number;
     private _spawnPoint: BABYLON.Vector3;
     // movement
-    public movement: Movement;
     private _destination: BABYLON.Vector3;
     public force: BABYLON.Vector3;
     public velocity: BABYLON.Vector3;

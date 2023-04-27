@@ -5,8 +5,10 @@ import { Commando } from './commando';
 
 export class Zone {
 
+
     // private _zone: BABYLON.Mesh;
 
+    private _minDistance: number;
     private _min: BABYLON.Vector3;
     private _max: BABYLON.Vector3;
 
@@ -20,22 +22,22 @@ export class Zone {
 
     public currentCoolDown: number;
     public nbRobots: number;
-    public trehsholdEnnemy: number;
+    public tresholdEnemy: number;
     public cooldown: number;
 
-    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, spawnPoint: BABYLON.Vector3[], scene: BABYLON.Scene, nbRobots: number, caracteristics: any, cooldown: number, trehsholdEnnemy: number) {
+    constructor(min: BABYLON.Vector3, max: BABYLON.Vector3, spawnPoint: BABYLON.Vector3[], scene: BABYLON.Scene, nbRobots: number, caracteristics: any, cooldown: number, tresholdEnemy: number) {
         this._min = min;
         this._max = max;
         this._scene = scene;
-        // this._classicEnemies = [];
+
         this._commandos = [];
+        this._enemies = [];
         this._positions = [];
         this._minDistance = 15;
-        this._zone = this.setupZone();
 
         this.nbRobots = nbRobots;
         this._spawnPoints = spawnPoint;
-        this.trehsholdEnnemy = trehsholdEnnemy;
+        this.tresholdEnemy = tresholdEnemy;
         this.cooldown = cooldown;
         this._caracteristics = caracteristics;
 
@@ -122,7 +124,6 @@ export class Zone {
     }
 
     public dispose() {
-        this._zone.dispose();
         this._commandos.forEach((commando) => {
             commando.getEnemies().forEach((enemy) => {
                 enemy.die();

@@ -6,8 +6,8 @@
                 {
                     "nbRobots": 5,
                     "spawnPoints": ["Spawn4", "Spawn5"],
-                    "tresholdEnnemy": 2,
-                    "cooldown": 10,
+                    "tresholdEnemy": 2,
+                    "cooldown": 2,
                     "min": {
                         "x": 0,
                         "y": 0,
@@ -36,7 +36,7 @@
                 {
                     "nbRobots": 5,
                     "spawnPoints": ["Spawn1", "Spawn4", "Spawn5"],
-                    "tresholdEnnemy": 2,
+                    "tresholdEnemy": 2,
                     "cooldown": 10,
                     "min": {
                         "x": 0,
@@ -62,7 +62,7 @@
                 {
                     "nbRobots": 3,
                     "spawnPoints": ["Spawn1", "Spawn2", "Spawn3", "Spawn5"],
-                    "tresholdEnnemy": 2,
+                    "tresholdEnemy": 2,
                     "cooldown": 10,
                     "min": {
                         "x": 2,

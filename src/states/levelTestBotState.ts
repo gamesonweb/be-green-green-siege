@@ -4,7 +4,6 @@ import { Commando } from '../enemy/commando';
 import { Zone } from '../enemy/zone';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
-import { GravityMovement } from '../movement/type/gravityMovement';
 import { Laser } from '../projectile/laser';
 import { State } from './state';
 
@@ -49,7 +48,7 @@ export class LevelTestBotState implements State {
         this._light.intensity = 0.3;
         // this._light.diffuse = new BABYLON.Color3(1, 0, 0);
         // set enemies area
-        this._zone = new Zone(new BABYLON.Vector3(40, 30, -100), new BABYLON.Vector3(60, 60, -150), null, this._scene);
+        // this._zone = new Zone(new BABYLON.Vector3(40, 30, -100), new BABYLON.Vector3(60, 60, -150), null, this._scene);
         // this._e_space.logDim();
         // create a new ennemy
         // let ennemySinusoidale = new Ennemy(this._scene, this._e_space, new BABYLON.Vector3(20, 10, 5), new SinusoidaleMovement(0.0005), 0.01);

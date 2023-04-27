@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import { Movement } from '../movement/movement';
 import { Zone } from './zone';
 import { Enemy } from './Enemy';
 
