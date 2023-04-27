@@ -1,14 +1,15 @@
 import * as BABYLON from 'babylonjs';
 import { Movement } from '../movement/movement';
-import { EnemiesSpace } from './enemiesSpace';
+import { Zone } from './zone';
 import { Enemy } from './enemy';
 
 export class Commando {
+
     private _enemies: Enemy[];
     private _destination: BABYLON.Mesh;
     private _movement: Movement;
 
-    constructor(size: number, scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination: BABYLON.Mesh) {
+    constructor(size: number, scene: BABYLON.Scene, zone: Zone, pos: BABYLON.Vector3, movement: Movement, speed: number, destination: BABYLON.Mesh) {
         this._enemies = [];
         this._destination = destination;
         this._movement = movement;
@@ -18,9 +19,13 @@ export class Commando {
         let lastPos: BABYLON.Vector3 = pos;
         for (let i = 0; i < size; i++) {
             let newPos = new BABYLON.Vector3(lastPos.x + space, lastPos.y + space, lastPos.z + space); //.addInPlace(enemy.mesh.position);
-            this._enemies.push(new Enemy(scene, enemiesSpace, newPos, movement, speed, destination));
+            this._enemies.push(new Enemy(scene, zone, newPos, movement, speed, destination));
             lastPos = newPos;
         }
+    }
+
+    public spawnEnemies(thresholdEnemy: number) {
+
     }
 
     public getEnemies(): Enemy[] {
@@ -40,7 +45,7 @@ export class Commando {
                 enemy.takeDamage(1);
                 // console.log("touch !");
                 this._destination.dispose();
-                this._destination = enemy.enemiesSpace.getRandomPoint();
+                this._destination = enemy.zone.getRandomPoint();
             }
         });
     }

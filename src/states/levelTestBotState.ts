@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import xrHandler from '../XRHandler';
 import { Commando } from '../enemy/commando';
-import { EnemiesSpace } from '../enemy/enemiesSpace';
+import { EnemiesSpace } from '../enemy/zone';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { GravityMovement } from '../movement/type/gravityMovement';
