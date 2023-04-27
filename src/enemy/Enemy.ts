@@ -13,6 +13,7 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly HEAD_ROTATION_SPEED: number = 8;
 
     // Health
+    private isDead: boolean = false;
     private readonly _INITIAL_LIFE_POINT: number = 3;
     private _lifePoint: number;
 
@@ -64,6 +65,10 @@ export class Enemy extends Targetable implements IEnemy {
         this._destination = destination;
     }
 
+    public isDeath() : boolean {
+        return this.isDead;
+    }
+
     private rotation(deltaTime: number) {
         // Calculate the target direction
         const targetDirection = this._camera.position.subtract(this._mesh.position).normalize();
@@ -85,6 +90,7 @@ export class Enemy extends Targetable implements IEnemy {
 
     private checkHealth() {
         if (this._lifePoint <= 0) {
+            this.isDead = true;
             this.die();
         }
     }
