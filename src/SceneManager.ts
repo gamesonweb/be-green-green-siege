@@ -24,9 +24,12 @@ export default class SceneManager {
     static initPlatform(tasks: BABYLON.MeshAssetTask): void {
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
-                if (mesh.name.includes('HitBox')) {
+                if (mesh.name.includes('HitBox') || mesh.name.includes('Spawn') || mesh.name.includes('Avoid') || mesh.name.includes('Zone')) {
                     mesh.visibility = 0;
-                }
+                    mesh.isVisible = false;
+                    console.log("visibility 0 ", mesh.name);
+                    
+                } 
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {

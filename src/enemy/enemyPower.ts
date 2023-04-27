@@ -6,6 +6,9 @@ export class EnemiesPower {
 
     private _fireFreq: number;
     private _nBullets: number;
+    //bulletfreq
+    //life
+    //score
     private _speed: number;
 
     constructor(fireFrequence: number, numberBullets: number, speed: number) {

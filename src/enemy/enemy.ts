@@ -4,14 +4,14 @@ import { Movement } from '../movement/movement';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
 import { Targetable } from '../target/targetable';
-import { EnemiesSpace } from './enemiesSpace';
+import { Zone } from './zone';
 // import Recast from 'recast-detour';
 // npm install recast-detour
 
 export class Enemy extends Targetable {
     public mesh: BABYLON.Mesh;
     public scene: BABYLON.Scene;
-    public enemiesSpace: EnemiesSpace;
+    public zone: Zone;
     private _vibration: number;
     // movement
     public movement: Movement;
@@ -38,11 +38,11 @@ export class Enemy extends Targetable {
     private _bip_bip: SoundPlayer;
     private _explosion: SoundPlayer;
 
-    public constructor(scene: BABYLON.Scene, enemiesSpace: EnemiesSpace, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
+    public constructor(scene: BABYLON.Scene, zone: Zone, pos: BABYLON.Vector3, movement: Movement, speed: number, destination) {
         super();
         this.scene = scene;
         this._destination = destination;
-        this.enemiesSpace = enemiesSpace;
+        this.zone = zone;
         this.movement = movement;
         this._speed = speed;
         this.force = BABYLON.Vector3.Zero();
@@ -167,7 +167,7 @@ export class Enemy extends Targetable {
             // tmp
             // this._takeDamage(1);
             this._destination.dispose();
-            this._destination = this.enemiesSpace.getRandomPoint();
+            this._destination = this.zone.getRandomPoint();
         }
         this._checkHealth();
     }

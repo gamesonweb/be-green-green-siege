@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { Enemy } from '../enemy/enemy';
+import { Boss } from '../enemy/boss';
 
 export interface Movement {
     
