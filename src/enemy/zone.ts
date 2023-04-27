@@ -105,7 +105,7 @@ export class Zone {
     private getPositions() {
         this._commandos.forEach((commando) => {
             commando.getEnemies().forEach((enemy) => {
-                if(!enemy.isDeath) {
+                if(!enemy.isDeath()) {
                     this._positions.push(enemy.getPosition());
                 } else {
                     commando.removeEnemy(enemy);
