@@ -164,8 +164,14 @@ export class Enemy extends Targetable implements IEnemy {
             }
         });
 
+        //////////////////////////////////////////////////////////////////
+        // Increase the speed vector if enemy if far of the destination //
+        //////////////////////////////////////////////////////////////////
+        const speedMultiplier = destinationDistance / 10;
+
         // Update the position
-        this._mesh.position.addInPlace(nextSpeed.scale(this._SPEED * deltaTime));
+        const finalSpeed = this._SPEED * deltaTime * speedMultiplier;
+        this._mesh.position.addInPlace(nextSpeed.scale(finalSpeed));
     }
 
     public animate(deltaTime: number, enemiesPositions: BABYLON.Vector3[]): void {
