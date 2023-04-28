@@ -79,7 +79,7 @@ export class Enemy extends Targetable implements IEnemy {
     private fire(deltaTime: number): void {
         // animate laser
         this._laser.animate(deltaTime);
-        
+
         if (this.isDeath()) {
             return;
         }
@@ -235,7 +235,7 @@ export class Enemy extends Targetable implements IEnemy {
         const newAcceleration = BABYLON.Vector3.Zero();
         newAcceleration.addInPlace(destinationVector.scale(destinationDistance / 20));
         newAcceleration.addInPlace(collisionRobotVector);
-        newAcceleration.addInPlace(collisionWallVector.scale(6));
+        newAcceleration.addInPlace(collisionWallVector.scale(20 * (destinationDistance / 20)));
 
         // Add the friction force
         const frictionVector = this._speedVector.scale(-1).scale(this._FRICTIONCOEFFICIENT);
