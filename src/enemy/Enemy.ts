@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
+import { Laser } from '../projectile/laser';
 import { Targetable } from '../target/targetable';
 import { IEnemy } from './IEnemy';
 
@@ -7,6 +8,7 @@ export class Enemy extends Targetable implements IEnemy {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.Camera;
 
+    // Mesh
     private _mesh: BABYLON.Mesh;
 
     // Head Rotation
@@ -21,10 +23,22 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly _SPEED: number = 4;
     private _speedVector: BABYLON.Vector3 = BABYLON.Vector3.Zero();
     private _destination: BABYLON.Vector3;
+    private _FRICTIONCOEFFICIENT: number = 0.25;
 
     // Colision
-    private readonly _minTargetDistanceTarget: number = 5;
+    private readonly _MINTARGETDISTANCETARGET: number = 5;
     private readonly _MINDISTANCEENEMY: number = 3;
+
+    // Shooting
+    private _laser: Laser;
+    private _rightLaserSpawn: BABYLON.Vector3;
+    private _leftLaserSpawn: BABYLON.Vector3;
+    private _shotFreq: number = 10;
+    private _nbBullet: number = 3;
+    private _bulletFreq: number = 1;
+    private _lastShotLeft: boolean = false;
+    private _timeSinceLastFire: number = Infinity;
+    private _AIMBIAS: number = 0.02; // v'est le biais
 
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         // Objet
@@ -53,9 +67,60 @@ export class Enemy extends Targetable implements IEnemy {
 
         // Life
         this._lifePoint = this._INITIAL_LIFE_POINT;
+
+        // Shooting
+        this._laser = new Laser(this._scene, { speed: 20, dispowerDistance: 60, collisionDistance: 10 });
+        const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
+        const leftLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'LeftLaserPoint') as BABYLON.Mesh;
+        this._rightLaserSpawn = rightLaserPoint.getAbsolutePosition();
+        this._leftLaserSpawn = leftLaserPoint.getAbsolutePosition();
     }
 
-    public fire() {}
+    private fire(deltaTime: number): void {
+        // animate laser
+        this._laser.animate(deltaTime);
+        
+        if (this.isDeath()) {
+            return;
+        }
+
+        // fire
+        this._timeSinceLastFire += deltaTime;
+
+        if (this._timeSinceLastFire >= this._shotFreq) {
+            this._timeSinceLastFire = 0;
+
+            for (let i = 0; i < this._nbBullet; i++) {
+                setTimeout(() => {
+                    this._lastShotLeft = !this._lastShotLeft;
+                    if (this._lastShotLeft) {
+                        this.shoot(this._leftLaserSpawn);
+                    } else {
+                        this.shoot(this._rightLaserSpawn);
+                    }
+                }, i * this._bulletFreq * 1000);
+            }
+        }
+    }
+
+    private shoot(origin: BABYLON.Vector3) {
+        // choose target
+        let targetPos;
+        if (Math.random() < 0.5) {
+            targetPos = Game.player.getBodyPosition();
+        } else {
+            targetPos = Game.player.getHeadPosition();
+        }
+
+        // fire
+        const laserDirection = targetPos.subtract(origin).normalize();
+
+        // Add random bias to the laser direction
+        const randomBias = new BABYLON.Vector3((Math.random() - 0.5) * this._AIMBIAS, (Math.random() - 0.5) * this._AIMBIAS, (Math.random() - 0.5) * this._AIMBIAS);
+        const biasedLaserDirection = laserDirection.add(randomBias).normalize();
+
+        this._laser.fire(origin, biasedLaserDirection);
+    }
 
     public getPosition(): BABYLON.Vector3 {
         return this._mesh.getAbsolutePosition();
@@ -96,7 +161,7 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     public die() {
-        this._mesh.dispose();
+        this.dispose();
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
@@ -116,8 +181,8 @@ export class Enemy extends Targetable implements IEnemy {
         const destinationDistance = BABYLON.Vector3.Distance(currentPosition, this._destination);
 
         // Apply a slight repulsion effect if the robot is close to the destination
-        if (destinationDistance < this._minTargetDistanceTarget) {
-            const repulsionForce = (this._minTargetDistanceTarget - destinationDistance) / this._minTargetDistanceTarget;
+        if (destinationDistance < this._MINTARGETDISTANCETARGET) {
+            const repulsionForce = (this._MINTARGETDISTANCETARGET - destinationDistance) / this._MINTARGETDISTANCETARGET;
             const repulsionVector = destinationDirection.scale(-repulsionForce * 0.5);
             destinationVector.addInPlace(repulsionVector);
         } else {
@@ -156,9 +221,10 @@ export class Enemy extends Targetable implements IEnemy {
             const direction = currentPosition.subtract(sphere.position).normalize();
 
             // Calculate the repulsion force based on distance
-            if (distance < sphere.radius) {
-                const repulsionForce = (sphere.radius - distance) / sphere.radius; // Inverse proportionality
-                const repulsionVector = direction.scale(repulsionForce * 2);
+            const radius = sphere.radius + 1;
+            if (distance < radius) {
+                const repulsionForce = (radius - distance) / radius;
+                const repulsionVector = direction.scale(repulsionForce);
 
                 // Add the repulsion vector to the next speed
                 collisionWallVector.addInPlace(repulsionVector);
@@ -167,9 +233,13 @@ export class Enemy extends Targetable implements IEnemy {
 
         // Calculate the new acceleration vector
         const newAcceleration = BABYLON.Vector3.Zero();
-        newAcceleration.addInPlace(destinationVector.scale(4));
+        newAcceleration.addInPlace(destinationVector.scale(destinationDistance / 20));
         newAcceleration.addInPlace(collisionRobotVector);
-        newAcceleration.addInPlace(collisionWallVector);
+        newAcceleration.addInPlace(collisionWallVector.scale(6));
+
+        // Add the friction force
+        const frictionVector = this._speedVector.scale(-1).scale(this._FRICTIONCOEFFICIENT);
+        newAcceleration.addInPlace(frictionVector);
 
         // Update the speed vector with acceleration
         this._speedVector.addInPlace(newAcceleration.scale(deltaTime));
@@ -195,6 +265,7 @@ export class Enemy extends Targetable implements IEnemy {
         this.rotation(deltaTime);
         this.checkHealth();
         this.move(deltaTime, enemiesPositions);
+        this.fire(deltaTime);
     }
 
     public touch(): void {
@@ -207,5 +278,6 @@ export class Enemy extends Targetable implements IEnemy {
 
     public dispose() {
         this._mesh.dispose();
+        this._laser.dispose();
     }
 }

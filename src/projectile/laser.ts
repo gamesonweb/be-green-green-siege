@@ -92,16 +92,16 @@ export class Laser implements Projectile {
         return this._laserModel;
     }
 
-    public fire(origin: BABYLON.Mesh, direction: BABYLON.Vector3): void {
+    public fire(origin: BABYLON.Vector3, direction: BABYLON.Vector3): void {
         const laserInstance = this.createLaserInstance(origin, direction);
         laserInstance.isVisible = true;
     }
 
-    private createLaserInstance(origin: BABYLON.Mesh, direction: BABYLON.Vector3): BABYLON.InstancedMesh {
+    private createLaserInstance(origin: BABYLON.Vector3, direction: BABYLON.Vector3): BABYLON.InstancedMesh {
         const laserInstance = this._laserModel.createInstance('laserInstance');
-        laserInstance.position = origin.getAbsolutePosition().clone();
+        laserInstance.position = origin.clone();
 
-        const targetPosition = origin.getAbsolutePosition().add(direction);
+        const targetPosition = origin.clone().add(direction);
         laserInstance.lookAt(targetPosition);
 
         // Rotate the laser instance to make its forward direction become its up direction
@@ -195,10 +195,23 @@ export class Laser implements Projectile {
     }
 
     public dispose(): void {
-        this.getAllLaserInstances().forEach((laser) => {
-            laser.dispose();
-        }, this);
+        const checkInstancesAndDispose = () => {
+            // Check if all laser instances are disposed
+            if (this.getAllLaserInstances().length === 0) {
+                // Dispose the laser model
+                this._laserModel.dispose();
 
-        this._laserModel.dispose();
+                // Dispose the spark particles system
+                this._sparkParticles.dispose();
+                console.log('Laser instances disposed');
+            } else {
+                // Wait for 100ms and try again
+                setTimeout(checkInstancesAndDispose, 2000);
+                console.log('Waiting for laser instances to be disposed...');
+            }
+        };
+
+        // Start checking if all instances are disposed
+        checkInstancesAndDispose();
     }
 }

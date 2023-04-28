@@ -124,7 +124,7 @@ export class LaserGun implements Gun {
 
         // fire
         const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
-        this._laser.fire(this._laserPoint, laserDirection);
+        this._laser.fire(this._laserPoint.getAbsolutePosition(), laserDirection);
 
         // play sound
         this._shoot.play();

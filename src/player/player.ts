@@ -38,11 +38,11 @@ export class Player extends Targetable {
     }
 
     public getBodyPosition(): BABYLON.Vector3 {
-        return this._bodyMesh.position;
+        return this._bodyMesh.getAbsolutePosition();
     }
 
     public getHeadPosition(): BABYLON.Vector3 {
-        return this._headMesh.position;
+        return this._headMesh.getAbsolutePosition();
     }
 
     public touch(): void {
@@ -70,7 +70,6 @@ export class Player extends Targetable {
         const rotatedBodyOffset = bodyOffset.rotateByQuaternionAroundPointToRef(headRotationQuaternion, BABYLON.Vector3.Zero(), new BABYLON.Vector3());
 
         this._bodyMesh.setAbsolutePosition(this._headMesh.getAbsolutePosition().add(rotatedBodyOffset));
-        this._bodyMesh.absolutePosition.y -= 10.42;
     };
 
     public animate() {

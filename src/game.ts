@@ -32,7 +32,7 @@ export class Game {
     private _spawnPoint: BABYLON.AbstractMesh;
     private _stateManager: StateManager;
 
-    private static _player: Player;
+    public static player: Player;
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
@@ -49,6 +49,7 @@ export class Game {
         const camera = new BABYLON.FreeCamera('PlayerNoVRCamera', BABYLON.Vector3.Zero(), scene);
         camera.attachControl(cavnas, true);
         camera.inertia = 0;
+        camera.speed = 30;
         camera.angularSensibility = 1000;
         return camera;
     }
@@ -58,7 +59,7 @@ export class Game {
      */
     createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
         const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(17, 5, -25), scene);
-        debugCamera.setTarget(Game._player.getHeadPosition());
+        debugCamera.setTarget(Game.player.getHeadPosition());
         debugCamera.attachControl(cavnas, true);
         debugCamera.speed = 10;
         debugCamera.inertia = 0;
@@ -98,7 +99,7 @@ export class Game {
         Game.debug3D = new Debug3D(this._scene);
 
         // Player
-        Game._player = new Player(this._scene);
+        Game.player = new Player(this._scene);
 
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
@@ -155,7 +156,7 @@ export class Game {
             Game.debug.fps.innerHTML = fps;
             Game.debug3D.update(fps);
 
-            Game._player.animate();
+            Game.player.animate();
             this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
             TimeControlledProjectileAnimation.animate();
         });
