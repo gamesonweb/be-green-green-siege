@@ -1,18 +1,17 @@
 import * as BABYLON from 'babylonjs';
-import { State } from './state';
-import { Shield } from '../shield/shield';
 import { Zone } from '../enemy/zone';
 import { LaserGun } from '../gun/laserGun';
-import { Laser } from '../projectile/laser';
 import { Player } from '../player/player';
+import { Laser } from '../projectile/laser';
+import { Shield } from '../shield/shield';
+import { State } from './state';
 
 import level1 from '../assets/levels/level1.json';
 
 export default class Level implements State {
-    
     private _scene: BABYLON.Scene;
     private _level: any;
-    
+
     private _player: Player;
 
     private _gun: any;
@@ -38,12 +37,11 @@ export default class Level implements State {
             case 1:
                 return level1;
             default:
-                throw new Error("Level not found");
+                throw new Error('Level not found');
         }
     }
 
     private updateLevel(deltaTime: number): void {
-        
         if (this._player.getCurrentLife() <= 0) {
             this._lose = true;
             return;
@@ -51,26 +49,21 @@ export default class Level implements State {
         let finishedZones = [];
         for (let zone of this._zones) {
             zone.currentCoolDown += deltaTime;
-            console.log(zone.tresholdEnemy);
-            
-            if (zone.currentCoolDown >= zone.cooldown 
-                && zone.nbRobots > 0
-                && zone.getNbEnemies() < zone.tresholdEnemy) {
-                
-                console.log("NEW ENEMY");
+            // console.log(zone.tresholdEnemy);
 
-                
+            if (zone.currentCoolDown >= zone.cooldown && zone.nbRobots > 0 && zone.getNbEnemies() < zone.tresholdEnemy) {
+                // console.log("NEW ENEMY");
+
                 zone.currentCoolDown = 0;
                 let nbRobots = Math.min(zone.nbRobots, zone.tresholdEnemy - zone.getNbEnemies());
                 zone.nbRobots -= nbRobots;
                 zone.instantiate(nbRobots);
-            }
-            else if (zone.nbRobots <= 0 && zone.getNbEnemies() <= 0) {
+            } else if (zone.nbRobots <= 0 && zone.getNbEnemies() <= 0) {
                 finishedZones.push(zone);
             }
         }
 
-        this._zones = this._zones.filter(zone => !finishedZones.includes(zone));
+        this._zones = this._zones.filter((zone) => !finishedZones.includes(zone));
 
         if (this._zones.length === 0) {
             this.currentWave++;
@@ -87,18 +80,9 @@ export default class Level implements State {
             let minVec = new BABYLON.Vector3(zone.min.x, zone.min.y, zone.min.z);
             let maxVec = new BABYLON.Vector3(zone.max.x, zone.max.y, zone.max.z);
 
-            let spawnPoints = zone.spawnPoints.map(name => this._scene.getMeshByName(name).position);
-            
-            this._zones.push(new Zone(
-                minVec,
-                maxVec,
-                spawnPoints,
-                this._scene,
-                zone.nbRobots,
-                zone.robotCaracteristics,
-                zone.cooldown,
-                zone.tresholdEnemy
-            ));
+            let spawnPoints = zone.spawnPoints.map((name) => this._scene.getMeshByName(name).position);
+
+            this._zones.push(new Zone(minVec, maxVec, spawnPoints, this._scene, zone.nbRobots, zone.robotCaracteristics, zone.cooldown, zone.tresholdEnemy));
         }
     }
 
@@ -111,8 +95,8 @@ export default class Level implements State {
     }
 
     public load(): void {
-        if (this._level === undefined) throw new Error("Level data not loaded");
-        
+        if (this._level === undefined) throw new Error('Level data not loaded');
+
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
         this._shield = new Shield(this._scene);
         this._zones = [];
@@ -137,11 +121,11 @@ export default class Level implements State {
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
         if (this._lose) {
-            console.log("LOSE");
+            console.log('LOSE');
             return;
         }
         if (this._win) {
-            console.log("WIN");
+            console.log('WIN');
             return;
         }
         for (let zone of this._zones) {

@@ -104,7 +104,6 @@ export class Enemy extends Targetable implements IEnemy {
             return;
         }
 
-    
         let nextSpeed = this.speedVector.clone();
 
         const currentPosition = this.getPosition();
@@ -148,6 +147,22 @@ export class Enemy extends Targetable implements IEnemy {
         ////////////////////////////////
         // Avoid collision with walls //
         ////////////////////////////////
+
+        Game.avoidSpheres.forEach((sphere) => {
+            const distance = BABYLON.Vector3.Distance(currentPosition, sphere.position);
+            const direction = currentPosition.subtract(sphere.position).normalize();
+
+            // Define a minimum distance for the repulsion force to take effect
+
+            // Calculate the repulsion force based on distance
+            if (distance < sphere.radius) {
+                const repulsionForce = (sphere.radius - distance) / sphere.radius; // Inverse proportionality
+                const repulsionVector = direction.scale(repulsionForce * 2);
+
+                // Add the repulsion vector to the next speed
+                nextSpeed = nextSpeed.add(repulsionVector);
+            }
+        });
 
         // Update the position
         this._mesh.position.addInPlace(nextSpeed.scale(this._SPEED * deltaTime));

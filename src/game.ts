@@ -26,6 +26,7 @@ export class Game {
     public static debug3D: Debug3D;
     public static vrSupported: Boolean;
     public static instanceLoader: InstanceLoader;
+    public static avoidSpheres: { position: BABYLON.Vector3; radius: number }[];
 
     private _assetManager: BABYLON.AssetsManager;
     private _spawnPoint: BABYLON.AbstractMesh;
@@ -106,7 +107,7 @@ export class Game {
         let gunTask = this._assetManager.addMeshTask('fun', '', './assets/', 'gun.glb');
         let shieldTask = this._assetManager.addMeshTask('shield', '', './assets/', 'shield.glb');
 
-        SceneManager.initPlatform(platformTask);
+        Game.avoidSpheres = SceneManager.initPlatform(platformTask);
         SceneManager.initRobot(testTask);
         SceneManager.initGun(gunTask);
         SceneManager.initShield(shieldTask);

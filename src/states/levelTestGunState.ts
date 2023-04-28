@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import xrHandler from '../XRHandler';
+import { Enemy } from '../enemy/Enemy';
 import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
@@ -7,7 +8,6 @@ import { Shield } from '../shield/shield';
 import { Targetable } from '../target/targetable';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
-import { Enemy } from '../enemy/Enemy';
 
 export class LevelTestGunState implements State {
     private _scene: BABYLON.Scene;
@@ -18,8 +18,8 @@ export class LevelTestGunState implements State {
     private _shield: Shield;
     private _fakeEnemy: any;
 
-    private _enemy1: Enemy
-    private _enemy2: Enemy
+    private _enemy1: Enemy;
+    private _enemy2: Enemy;
 
     public shieldSize: number = 0;
 
@@ -77,6 +77,9 @@ export class LevelTestGunState implements State {
         // this._fakeEnemy.animate(deltaTime);
         this._enemy1.animate(deltaTime, [this._enemy2.getPosition()]);
         this._enemy2.animate(deltaTime, [this._enemy1.getPosition()]);
+
+        this._enemy1.setDestination(this._scene.activeCamera.position);
+        this._enemy2.setDestination(this._scene.activeCamera.position);
     }
 }
 

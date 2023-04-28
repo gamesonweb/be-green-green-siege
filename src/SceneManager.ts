@@ -21,15 +21,21 @@ export default class SceneManager {
         });
     }
 
-    static initPlatform(tasks: BABYLON.MeshAssetTask): void {
+    static initPlatform(tasks: BABYLON.MeshAssetTask): { position: BABYLON.Vector3; radius: number }[] {
+        const avoidSpheres = [];
+
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
                 if (mesh.name.includes('HitBox') || mesh.name.includes('Spawn') || mesh.name.includes('Avoid') || mesh.name.includes('Zone')) {
-                    mesh.visibility = 0;
                     mesh.isVisible = false;
-                    console.log("visibility 0 ", mesh.name);
-                    
-                } 
+                }
+
+                if (mesh.name.includes('AvoidSphere')) {
+                    const position = mesh.getAbsolutePosition().clone();
+                    const radius = mesh.getBoundingInfo().boundingSphere.radius * mesh.scaling.x;
+
+                    avoidSpheres.push({ position: position, radius: radius });
+                }
             });
 
             task.loadedAnimationGroups.forEach((animationGroup) => {
@@ -37,6 +43,7 @@ export default class SceneManager {
             });
             animations.playAnimation(AnimationName.ObservatoirRotation);
         };
+        return avoidSpheres;
     }
 
     static initShield(tasks: BABYLON.MeshAssetTask): void {
