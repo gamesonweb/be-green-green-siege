@@ -80,7 +80,7 @@ export default class Level implements State {
             let minVec = new BABYLON.Vector3(zone.min.x, zone.min.y, zone.min.z);
             let maxVec = new BABYLON.Vector3(zone.max.x, zone.max.y, zone.max.z);
 
-            let spawnPoints = zone.spawnPoints.map((name) => this._scene.getMeshByName(name).position);
+            let spawnPoints = zone.spawnPoints.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
 
             this._zones.push(new Zone(minVec, maxVec, spawnPoints, this._scene, zone.nbRobots, zone.robotCaracteristics, zone.cooldown, zone.tresholdEnemy));
         }
