@@ -18,8 +18,8 @@ export class Enemy extends Targetable implements IEnemy {
     private _lifePoint: number;
 
     // Movement
-    private readonly _SPEED: number = 2.5;
-    private speedVector: BABYLON.Vector3 = BABYLON.Vector3.Zero();
+    private readonly _SPEED: number = 4;
+    private _speedVector: BABYLON.Vector3 = BABYLON.Vector3.Zero();
     private _destination: BABYLON.Vector3;
 
     // Colision
@@ -104,13 +104,12 @@ export class Enemy extends Targetable implements IEnemy {
             return;
         }
 
-        let nextSpeed = this.speedVector.clone();
-
         const currentPosition = this.getPosition();
 
         ////////////////////////////////////
         // Calculate the target direction //
         ////////////////////////////////////
+        const destinationVector = BABYLON.Vector3.Zero();
         const destinationDirection = this._destination.subtract(currentPosition).normalize();
 
         // Check if the robot is close to the destination
@@ -120,14 +119,15 @@ export class Enemy extends Targetable implements IEnemy {
         if (destinationDistance < this._minTargetDistanceTarget) {
             const repulsionForce = (this._minTargetDistanceTarget - destinationDistance) / this._minTargetDistanceTarget;
             const repulsionVector = destinationDirection.scale(-repulsionForce * 0.5);
-            nextSpeed.addInPlace(repulsionVector);
+            destinationVector.addInPlace(repulsionVector);
         } else {
-            nextSpeed.addInPlace(destinationDirection);
+            destinationVector.addInPlace(destinationDirection);
         }
 
         ////////////////////////////////////////
         // Avoid collision with other enemies //
         ////////////////////////////////////////
+        const collisionRobotVector = BABYLON.Vector3.Zero();
         for (let i = 0; i < enemiesPositions.length; i++) {
             const distance = BABYLON.Vector3.Distance(currentPosition, enemiesPositions[i]);
 
@@ -142,19 +142,18 @@ export class Enemy extends Targetable implements IEnemy {
                 const repulsionVector = direction.scale(repulsionForce);
 
                 // Add the repulsion vector to the next speed
-                nextSpeed = nextSpeed.add(repulsionVector);
+                collisionRobotVector.addInPlace(repulsionVector);
             }
         }
 
         ////////////////////////////////
         // Avoid collision with walls //
         ////////////////////////////////
+        const collisionWallVector = BABYLON.Vector3.Zero();
 
         Game.avoidSpheres.forEach((sphere) => {
             const distance = BABYLON.Vector3.Distance(currentPosition, sphere.position);
             const direction = currentPosition.subtract(sphere.position).normalize();
-
-            // Define a minimum distance for the repulsion force to take effect
 
             // Calculate the repulsion force based on distance
             if (distance < sphere.radius) {
@@ -162,18 +161,34 @@ export class Enemy extends Targetable implements IEnemy {
                 const repulsionVector = direction.scale(repulsionForce * 2);
 
                 // Add the repulsion vector to the next speed
-                nextSpeed = nextSpeed.add(repulsionVector);
+                collisionWallVector.addInPlace(repulsionVector);
             }
         });
 
-        //////////////////////////////////////////////////////////////////
-        // Increase the speed vector if enemy if far of the destination //
-        //////////////////////////////////////////////////////////////////
-        let speedMultiplier = destinationDistance / 8;
+        // Calculate the new acceleration vector
+        const newAcceleration = BABYLON.Vector3.Zero();
+        newAcceleration.addInPlace(destinationVector.scale(4));
+        newAcceleration.addInPlace(collisionRobotVector);
+        newAcceleration.addInPlace(collisionWallVector);
+
+        // Update the speed vector with acceleration
+        this._speedVector.addInPlace(newAcceleration.scale(deltaTime));
+
+        /////////////////////////////////////////////////////////////////
+        // Adjust the speed based on the distance from the destination //
+        /////////////////////////////////////////////////////////////////
+        const speedMultiplier = destinationDistance / 10;
+        const targetSpeed = this._SPEED * speedMultiplier;
+
+        // Adjust the speed vector towards the target speed
+        if (this._speedVector.length() < targetSpeed) {
+            this._speedVector.addInPlace(newAcceleration.scale(deltaTime));
+        } else {
+            this._speedVector.scaleInPlace(targetSpeed / this._speedVector.length());
+        }
 
         // Update the position
-        const finalSpeed = this._SPEED * deltaTime * speedMultiplier;
-        this._mesh.position.addInPlace(nextSpeed.scale(finalSpeed));
+        this._mesh.position.addInPlace(this._speedVector.scale(deltaTime));
     }
 
     public animate(deltaTime: number, enemiesPositions: BABYLON.Vector3[]): void {
