@@ -7,6 +7,7 @@ import { Shield } from '../shield/shield';
 import { State } from './state';
 
 import level1 from '../assets/levels/level1.json';
+import { Game } from '../game';
 
 export default class Level implements State {
     private _scene: BABYLON.Scene;
@@ -122,10 +123,12 @@ export default class Level implements State {
         this._shield.animate(deltaTime, this.shieldSize);
         if (this._lose) {
             console.log('LOSE');
+            Game.debug3D.log = 'LOSE';
             return;
         }
         if (this._win) {
             console.log('WIN');
+            Game.debug3D.log = 'WIN';
             return;
         }
         for (let zone of this._zones) {

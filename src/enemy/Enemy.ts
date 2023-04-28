@@ -18,7 +18,7 @@ export class Enemy extends Targetable implements IEnemy {
     private _lifePoint: number;
 
     // Movement
-    private readonly _SPEED: number = 5;
+    private readonly _SPEED: number = 2.5;
     private speedVector: BABYLON.Vector3 = BABYLON.Vector3.Zero();
     private _destination: BABYLON.Vector3;
 
@@ -119,7 +119,7 @@ export class Enemy extends Targetable implements IEnemy {
         // Apply a slight repulsion effect if the robot is close to the destination
         if (destinationDistance < this._minTargetDistanceTarget) {
             const repulsionForce = (this._minTargetDistanceTarget - destinationDistance) / this._minTargetDistanceTarget;
-            const repulsionVector = destinationDirection.scale(-repulsionForce);
+            const repulsionVector = destinationDirection.scale(-repulsionForce * 0.5);
             nextSpeed.addInPlace(repulsionVector);
         } else {
             nextSpeed.addInPlace(destinationDirection);
@@ -130,12 +130,14 @@ export class Enemy extends Targetable implements IEnemy {
         ////////////////////////////////////////
         for (let i = 0; i < enemiesPositions.length; i++) {
             const distance = BABYLON.Vector3.Distance(currentPosition, enemiesPositions[i]);
-            const direction = currentPosition.subtract(enemiesPositions[i]).normalize();
 
-            // Define a minimum distance for the repulsion force to take effect
-
+            // Don't take into account the enemy itself
+            if (distance === 0) {
+                continue;
+            }
             // Calculate the repulsion force based on distance
-            if (distance < this._MINDISTANCEENEMY) {
+            else if (distance < this._MINDISTANCEENEMY) {
+                const direction = currentPosition.subtract(enemiesPositions[i]).normalize();
                 const repulsionForce = (this._MINDISTANCEENEMY - distance) / this._MINDISTANCEENEMY; // Inverse proportionality
                 const repulsionVector = direction.scale(repulsionForce);
 
@@ -167,7 +169,7 @@ export class Enemy extends Targetable implements IEnemy {
         //////////////////////////////////////////////////////////////////
         // Increase the speed vector if enemy if far of the destination //
         //////////////////////////////////////////////////////////////////
-        const speedMultiplier = destinationDistance / 10;
+        let speedMultiplier = destinationDistance / 8;
 
         // Update the position
         const finalSpeed = this._SPEED * deltaTime * speedMultiplier;
