@@ -2,7 +2,7 @@ import * as BABYLON from 'babylonjs';
 import timeControl from '../TimeControl';
 import Logger from '../debug/logger';
 import { Game } from '../game';
-import { StateManager } from '../states/stateManager';
+import { StateManager, StatesEnum } from '../states/stateManager';
 
 export default class Inputs {
     private _scene: BABYLON.Scene;
@@ -77,11 +77,16 @@ export default class Inputs {
     public leftPrimary(pressed: boolean): void {
         Logger.log('Left Primary');
         // Game.debug3D.log = 'Left Primary';
+        let currentstate = this._stateManager.getCurrentState();
+        if (currentstate.type !== StatesEnum.LEVEL) return;
+        
         if (pressed) {
             if (timeControl.isPaused()) {
                 timeControl.resume();
+                currentstate.resume();
             } else {
                 timeControl.pause();
+                currentstate.pause();
             }
         }
     }

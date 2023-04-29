@@ -8,6 +8,7 @@ import { Shield } from '../shield/shield';
 import { Targetable } from '../target/targetable';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
+import { StatesEnum } from './stateManager';
 
 export class LevelTestGunState implements State {
     private _scene: BABYLON.Scene;
@@ -22,9 +23,11 @@ export class LevelTestGunState implements State {
     private _enemy2: Enemy;
 
     public shieldSize: number = 0;
+    public type: StatesEnum;
 
-    constructor(scene: BABYLON.Scene) {
+    constructor(scene: BABYLON.Scene, type: StatesEnum) {
         this._scene = scene;
+        this.type = type;
     }
 
     fire(force: number): void {
@@ -80,6 +83,14 @@ export class LevelTestGunState implements State {
 
         this._enemy1.setDestination(this._scene.activeCamera.position);
         this._enemy2.setDestination(this._scene.activeCamera.position);
+    }
+
+    public pause() {
+        throw new Error("Method pause not implemented !");
+    }
+
+    public resume() {
+        throw new Error("Method pause not implemented !");
     }
 }
 

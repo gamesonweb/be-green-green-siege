@@ -37,19 +37,19 @@ export class StateManager {
         // Switch to the new state
         switch (state) {
             case StatesEnum.MAINMENU:
-                this._currentState = new MainMenuState(this._scene, this);
+                this._currentState = new MainMenuState(this._scene, this, StatesEnum.MAINMENU);
                 break;
             case StatesEnum.LEVELTESTBOT:
-                this._currentState = new LevelTestBotState(this._scene);
+                this._currentState = new LevelTestBotState(this._scene, StatesEnum.LEVELTESTBOT);
                 break;
             case StatesEnum.LEVELTESTGUN:
-                this._currentState = new LevelTestGunState(this._scene);
+                this._currentState = new LevelTestGunState(this._scene, StatesEnum.LEVELTESTGUN);
                 break;
             case StatesEnum.EMPTY:
-                this._currentState = new LevelTestEmpty(this._scene);
+                this._currentState = new LevelTestEmpty(this._scene, StatesEnum.EMPTY);
                 break;
             case StatesEnum.LEVEL:
-                this._currentState = new Level(this._scene, levelNumber);
+                this._currentState = new Level(this._scene, levelNumber, StatesEnum.LEVEL);
                 break;
         }
 

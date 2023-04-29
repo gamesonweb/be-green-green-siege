@@ -9,9 +9,12 @@ export class MainMenuState implements State {
 
     private _mainUI: MainGUI; 
 
-    constructor(scene: BABYLON.Scene, stateManager: StateManager) {
+    public type: StatesEnum;
+
+    constructor(scene: BABYLON.Scene, stateManager: StateManager, type: StatesEnum) {
         this._scene = scene;
         this._stateManager = stateManager;
+        this.type = type;
         this._mainUI = new MainGUI(this._scene, this._scene.activeCamera, this._stateManager);
     }
     shieldSize: number;
@@ -31,4 +34,12 @@ export class MainMenuState implements State {
     }
 
     public animate(deltaTime: number): void {}
+
+    public pause() {
+        throw new Error("Method pause not implemented !");
+    }
+
+    public resume() {
+        throw new Error("Method pause not implemented !");
+    }
 }

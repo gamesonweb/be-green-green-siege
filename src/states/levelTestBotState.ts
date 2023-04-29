@@ -6,6 +6,7 @@ import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
 import { State } from './state';
+import { StatesEnum } from './stateManager';
 
 export class LevelTestBotState implements State {
     private _scene: BABYLON.Scene;
@@ -13,10 +14,13 @@ export class LevelTestBotState implements State {
     private _zone: Zone;
     // private _ennemies: Enemy[];
     private _gun: LaserGun;
+
+    type: StatesEnum;
     shieldSize: number;
 
-    constructor(scene: BABYLON.Scene) {
+    constructor(scene: BABYLON.Scene, type: StatesEnum) {
         this._scene = scene;
+        this.type = type;
     }
 
     fire(force: number): void {
@@ -78,4 +82,13 @@ export class LevelTestBotState implements State {
         this._zone.animate(deltaTime);
         this._gun.animate(deltaTime);
     }
+
+    public pause() {
+        throw new Error("Method pause not implemented !");
+    }
+
+    public resume() {
+        throw new Error("Method pause not implemented !");
+    }
 }
+

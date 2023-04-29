@@ -4,6 +4,7 @@ import { Game } from '../game';
 import UI from './ui';
 import { StatesEnum } from '../states/stateManager';
 import { StateManager } from '../states/stateManager';
+import xrHandler from '../XRHandler';
 
 export default class MainGUI implements UI{
 
@@ -19,7 +20,6 @@ export default class MainGUI implements UI{
     constructor(scene: BABYLON.Scene, camera: BABYLON.Camera, _stateManager: StateManager) {
         this._scene = scene;
         this._camera = camera;
-        this._manager = new GUI.GUI3DManager(this._scene);
         this._stateManager = _stateManager;
     }
 
@@ -35,6 +35,11 @@ export default class MainGUI implements UI{
 
     load() {
         // this._scene.debugLayer.show();
+        this._manager = new GUI.GUI3DManager(this._scene);
+
+        if (Game.vrSupported) {
+            xrHandler.setControllerVisibility(false);
+        }
 
         this.anchor = new BABYLON.TransformNode("anchorPanel");
         this.anchor.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);

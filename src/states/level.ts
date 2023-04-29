@@ -8,6 +8,9 @@ import { State } from './state';
 
 import level1 from '../assets/levels/level1.json';
 import { Game } from '../game';
+import xrHandler from '../XRHandler';
+import { StatesEnum } from './stateManager';
+import PauseUI from '../ui/pauseUI';
 
 export default class Level implements State {
     private _scene: BABYLON.Scene;
@@ -25,11 +28,18 @@ export default class Level implements State {
     private _win: boolean;
     private _lose: boolean;
 
-    shieldSize: number;
+    private _paused: boolean
 
-    constructor(scene: BABYLON.Scene, levelNumber: number) {
+    private _pauseUI: PauseUI;
+
+    shieldSize: number;
+    type: StatesEnum;
+
+    constructor(scene: BABYLON.Scene, levelNumber: number, type: StatesEnum) {
         this._scene = scene;
         this._level = this.getLevelByNumber(levelNumber);
+        this.type = type;
+        this._pauseUI = new PauseUI(this._scene, this._scene.activeCamera, );
         this.shieldSize = 0;
     }
 
@@ -98,6 +108,11 @@ export default class Level implements State {
     public load(): void {
         if (this._level === undefined) throw new Error('Level data not loaded');
 
+        if (Game.vrSupported) {
+            xrHandler.setControllerVisibility(false);
+        }
+
+        this._paused = false;
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
         this._shield = new Shield(this._scene);
         this._zones = [];
@@ -119,8 +134,11 @@ export default class Level implements State {
     // This function is called at each image rendering
     // You must use this function to animate all the things in this level
     public animate(deltaTime: number): void {
+        if (this._paused) return;
+
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
+        
         if (this._lose) {
             console.log('LOSE');
             Game.debug3D.log = 'LOSE';
@@ -136,4 +154,15 @@ export default class Level implements State {
         }
         this.updateLevel(deltaTime);
     }
+
+    public pause() {
+        this._paused = true;
+        this._pauseUI.load();
+    }
+
+    public resume() {
+        this._paused = false;
+        this._pauseUI.dispose();
+    }
+
 }
