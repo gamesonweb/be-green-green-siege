@@ -137,8 +137,6 @@ class AnimationController {
                         updatedSpeed = currentSpeed > 0 ? 1e-100 : -1e-100;
                     }
                     animatable.speedRatio = updatedSpeed;
-                } else {
-                    console.warn(`Animation "${name}" not found or configuration not found for "${name}."`);
                 }
             }
         }
