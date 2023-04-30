@@ -5,7 +5,6 @@ import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
-import { Targetable } from '../target/targetable';
 import { TestTarget } from '../target/testTarget';
 import { State } from './state';
 import { StatesEnum } from './stateManager';
@@ -58,8 +57,18 @@ export class LevelTestGunState implements State {
         // fake enemy
         // this._fakeEnemy = new FakeEnemy(this._scene, new BABYLON.Vector3(30, 4, -25));
         const destination = new BABYLON.Vector3(0, 0, -35);
-        this._enemy1 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -25), undefined);
-        this._enemy2 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -35), undefined);
+        const caracteristics = {
+            shotFreq: 10,
+            bulletFreq: 1,
+            nbBullet: 3,
+            bulletSpeed: 20,
+            speed: 4,
+            life: 3,
+            score: 10,
+            bias: 0.02,
+        };
+        this._enemy1 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -25), caracteristics);
+        this._enemy2 = new Enemy(this._scene, new BABYLON.Vector3(30, 4, -35), caracteristics);
 
         this._enemy1.setDestination(destination);
         this._enemy2.setDestination(destination);
@@ -86,80 +95,10 @@ export class LevelTestGunState implements State {
     }
 
     public pause() {
-        throw new Error("Method pause not implemented !");
+        throw new Error('Method pause not implemented !');
     }
 
     public resume() {
-        throw new Error("Method pause not implemented !");
-    }
-}
-
-class FakeEnemy extends Targetable {
-    private _scene: BABYLON.Scene;
-    private _mesh: BABYLON.Mesh;
-    private _laser: Laser;
-    private _camera: BABYLON.Camera;
-
-    private _timeSinceLastFire: number = 0;
-    private readonly FIRE_INTERVAL: number = 3;
-    private readonly HEAD_ROTATION_SPEED: number = 8;
-
-    constructor(scene: BABYLON.Scene, position: BABYLON.Vector3) {
-        super();
-        this._scene = scene;
-        const metadata = { parentClass: this };
-        this._mesh = Game.instanceLoader.getBot('ennemy', metadata);
-        this._mesh.position = position;
-
-        if (Game.vrSupported) {
-            this._camera = this._scene.activeCamera;
-        } else {
-            this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
-        }
-
-        this._laser = new Laser(this._scene, { speed: 20, dispowerDistance: 40, collisionDistance: 10 });
-    }
-
-    public fire(): void {
-        const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
-        const laserDirection = this._camera.position.subtract(rightLaserPoint.absolutePosition);
-        this._laser.fire(rightLaserPoint.getAbsolutePosition(), laserDirection);
-    }
-
-    public animate(deltaTime: number): void {
-        this._timeSinceLastFire += deltaTime;
-
-        // Calculate the target direction
-        const targetDirection = this._camera.position.subtract(this._mesh.position).normalize();
-
-        // Calculate the horizontal rotation (left/right)
-        const horizontalAngle = Math.atan2(targetDirection.z, targetDirection.x) - Math.PI / 2;
-        const horizontalRotation = BABYLON.Quaternion.RotationAxis(BABYLON.Vector3.Down(), horizontalAngle);
-
-        // Calculate the vertical rotation (up/down)
-        const verticalAngle = Math.asin(targetDirection.y);
-        const verticalRotation = BABYLON.Quaternion.RotationAxis(BABYLON.Vector3.Left(), verticalAngle);
-
-        // combine horizontal and vertical rotation
-        const targetRotation = horizontalRotation.multiply(verticalRotation);
-
-        // Spherical interpolation between current and target rotation
-        this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetRotation, this.HEAD_ROTATION_SPEED * deltaTime);
-
-        if (this._timeSinceLastFire >= this.FIRE_INTERVAL) {
-            this._timeSinceLastFire = 0;
-            this.fire();
-        }
-
-        this._laser.animate(deltaTime);
-    }
-
-    public dispose(): void {
-        // Set the controller visibility to true
-        if (Game.vrSupported) {
-            xrHandler.setControllerVisibility(true);
-        }
-
-        this._mesh.dispose();
+        throw new Error('Method pause not implemented !');
     }
 }

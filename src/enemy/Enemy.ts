@@ -19,7 +19,6 @@ export class Enemy extends Targetable implements IEnemy {
 
     // Health
     private dead: boolean = false;
-    private readonly _INITIAL_LIFE_POINT: number = 3;
     private _lifePoint: number;
 
     // Movement
@@ -39,9 +38,12 @@ export class Enemy extends Targetable implements IEnemy {
     private _shotFreq: number = 10;
     private _nbBullet: number = 3;
     private _bulletFreq: number = 1;
+    private _AIMBIAS: number = 0.02;
     private _lastShotLeft: boolean = false;
     private _timeSinceLastFire: number = Infinity;
-    private _AIMBIAS: number = 0.02; // C'est le biais
+
+    // Score
+    private _score: number = 0;
 
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         // Objet
@@ -54,8 +56,20 @@ export class Enemy extends Targetable implements IEnemy {
         // bulletSpeed
         // bulletDmg
 
+        console.log(caracteristics);
+
         super();
         this._scene = scene;
+
+        // Read caracteristics
+        this._shotFreq = caracteristics.shotFreq;
+        this._bulletFreq = caracteristics.bulletFreq;
+        this._nbBullet = caracteristics.nbBullet;
+        const bulletSpeed = caracteristics.bulletSpeed;
+        this._SPEED = caracteristics.speed;
+        this._lifePoint = caracteristics.life;
+        this._score = caracteristics.score;
+        this._AIMBIAS = caracteristics.bias;
 
         // Camera
         if (Game.vrSupported) {
@@ -68,11 +82,8 @@ export class Enemy extends Targetable implements IEnemy {
         this._mesh = Game.instanceLoader.getBot('robot', { parentClass: this });
         this._mesh.position = spawnPosition;
 
-        // Life
-        this._lifePoint = this._INITIAL_LIFE_POINT;
-
         // Shooting
-        this._laser = new Laser(this._scene, { speed: 20, dispowerDistance: 60, collisionDistance: 10 });
+        this._laser = new Laser(this._scene, { speed: bulletSpeed, dispowerDistance: 60, collisionDistance: 10 });
         const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(
             this._mesh,
             'RightLaserPoint'
@@ -257,7 +268,7 @@ export class Enemy extends Targetable implements IEnemy {
 
         // Calculate the new acceleration vector
         const newAcceleration = BABYLON.Vector3.Zero();
-        newAcceleration.addInPlace(destinationVector.scale(destinationDistance / 20));
+        newAcceleration.addInPlace(destinationVector.scale(destinationDistance / 10));
         newAcceleration.addInPlace(collisionRobotVector);
         newAcceleration.addInPlace(collisionWallVector.scale(20 * (destinationDistance / 20)));
 

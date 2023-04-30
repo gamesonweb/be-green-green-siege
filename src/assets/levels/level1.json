@@ -21,12 +21,12 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 2,
-                        "bulletSpeed": 5,
-                        "bulletDamage": 10,
-                        "speed": 5,
-                        "life": 100,
-                        "score": 10
+                        "nbBullet": 3,
+                        "bulletSpeed": 20,
+                        "speed": 4,
+                        "life": 3,
+                        "score": 10,
+                        "bias": 0.02
                     }
                 }
             ]
