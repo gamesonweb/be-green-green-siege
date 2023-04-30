@@ -9,11 +9,13 @@ export class Enemy extends Targetable implements IEnemy {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.Camera;
 
+    private _canBeDisposed: boolean;
+
     // Mesh
     private _mesh: BABYLON.Mesh;
 
     // Head Rotation
-    private readonly HEAD_ROTATION_SPEED: number = 8;
+    private readonly HEAD_ROTATION_SPEED: number = 4;
 
     // Health
     private dead: boolean = false;
@@ -39,7 +41,7 @@ export class Enemy extends Targetable implements IEnemy {
     private _bulletFreq: number = 1;
     private _lastShotLeft: boolean = false;
     private _timeSinceLastFire: number = Infinity;
-    private _AIMBIAS: number = 0.02; // v'est le biais
+    private _AIMBIAS: number = 0.02; // C'est le biais
 
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         // Objet
@@ -71,8 +73,14 @@ export class Enemy extends Targetable implements IEnemy {
 
         // Shooting
         this._laser = new Laser(this._scene, { speed: 20, dispowerDistance: 60, collisionDistance: 10 });
-        const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'RightLaserPoint') as BABYLON.Mesh;
-        const leftLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(this._mesh, 'LeftLaserPoint') as BABYLON.Mesh;
+        const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(
+            this._mesh,
+            'RightLaserPoint'
+        ) as BABYLON.Mesh;
+        const leftLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(
+            this._mesh,
+            'LeftLaserPoint'
+        ) as BABYLON.Mesh;
         this._rightLaserSpawn = rightLaserPoint.getAbsolutePosition();
         this._leftLaserSpawn = leftLaserPoint.getAbsolutePosition();
     }
@@ -119,7 +127,11 @@ export class Enemy extends Targetable implements IEnemy {
         const laserDirection = targetPos.subtract(origin).normalize();
 
         // Add random bias to the laser direction
-        const randomBias = new BABYLON.Vector3((Math.random() - 0.5) * this._AIMBIAS, (Math.random() - 0.5) * this._AIMBIAS, (Math.random() - 0.5) * this._AIMBIAS);
+        const randomBias = new BABYLON.Vector3(
+            (Math.random() - 0.5) * this._AIMBIAS,
+            (Math.random() - 0.5) * this._AIMBIAS,
+            (Math.random() - 0.5) * this._AIMBIAS
+        );
         const biasedLaserDirection = laserDirection.add(randomBias).normalize();
 
         this._laser.fire(origin, biasedLaserDirection);
@@ -135,6 +147,10 @@ export class Enemy extends Targetable implements IEnemy {
 
     public isDeath(): boolean {
         return this.dead;
+    }
+
+    public canBeDisposed(): boolean {
+        return this._canBeDisposed;
     }
 
     private rotation(deltaTime: number) {
@@ -153,7 +169,11 @@ export class Enemy extends Targetable implements IEnemy {
         const targetRotation = horizontalRotation.multiply(verticalRotation);
 
         // Spherical interpolation between current and target rotation
-        this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(this._mesh.rotationQuaternion, targetRotation, this.HEAD_ROTATION_SPEED * deltaTime);
+        this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(
+            this._mesh.rotationQuaternion,
+            targetRotation,
+            this.HEAD_ROTATION_SPEED * deltaTime
+        );
     }
 
     private checkHealth() {
@@ -185,7 +205,8 @@ export class Enemy extends Targetable implements IEnemy {
 
         // Apply a slight repulsion effect if the robot is close to the destination
         if (destinationDistance < this._MINTARGETDISTANCETARGET) {
-            const repulsionForce = (this._MINTARGETDISTANCETARGET - destinationDistance) / this._MINTARGETDISTANCETARGET;
+            const repulsionForce =
+                (this._MINTARGETDISTANCETARGET - destinationDistance) / this._MINTARGETDISTANCETARGET;
             const repulsionVector = destinationDirection.scale(-repulsionForce * 0.5);
             destinationVector.addInPlace(repulsionVector);
         } else {
@@ -281,6 +302,6 @@ export class Enemy extends Targetable implements IEnemy {
 
     public dispose() {
         this._mesh.dispose();
-        this._laser.dispose();
+        this._laser.dispose(() => (this._canBeDisposed = true));
     }
 }

@@ -199,7 +199,7 @@ export class LaserGun implements Gun {
      */
     public dispose(): void {
         this._gunModel.dispose();
-        this._laser.dispose();
+        this._laser.dispose(() => {});
 
         if (this._pointer) {
             this._pointer.dispose();

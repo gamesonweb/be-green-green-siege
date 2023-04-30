@@ -1,27 +1,32 @@
-import * as BABYLON from 'babylonjs';
+import { Scalar, Scene, Vector3 } from 'babylonjs';
 import { Enemy } from './Enemy';
 import { Zone } from './zone';
 
 export class Commando {
-    private _enemies: Enemy[];
-    private _destination: BABYLON.Vector3;
-    private _zone: Zone;
+    private readonly _enemies: Enemy[];
+    private readonly _destination: Vector3;
+    private readonly _zone: Zone;
 
-    constructor(nb: number, caracteristics: any, scene: BABYLON.Scene, zone: Zone, spawnPoint: BABYLON.Vector3) {
-        this._enemies = [];
+    constructor(nb: number, characteristics: any, scene: Scene, zone: Zone, spawnPoint: Vector3) {
         this._zone = zone;
         this._destination = this._zone.getRandomPoint();
-        for (let i = 0; i < nb; i++) {
-            // add random on spawnPoint position to avoid all enemies to be at the same position (create bug on pathfinding)
-            const spanwPointRandom = new BABYLON.Vector3(
-                spawnPoint.x + BABYLON.Scalar.RandomRange(-1, 1),
-                spawnPoint.y + BABYLON.Scalar.RandomRange(-1, 1),
-                spawnPoint.z + BABYLON.Scalar.RandomRange(-1, 1)
-            );
-            let enemy = new Enemy(scene, spanwPointRandom, caracteristics);
-            enemy.setDestination(this._destination);
-            this._enemies.push(enemy);
-        }
+        this._enemies = Array(nb)
+            .fill(null)
+            .map(() => {
+                const spawnPointRandom = this._getRandomSpawnPoint(spawnPoint);
+                const enemy = new Enemy(scene, spawnPointRandom, characteristics);
+                enemy.setDestination(this._destination);
+                return enemy;
+            });
+    }
+
+    private _getRandomSpawnPoint(spawnPoint: Vector3): Vector3 {
+        const randomOffset = new Vector3(
+            Scalar.RandomRange(-1, 1),
+            Scalar.RandomRange(-1, 1),
+            Scalar.RandomRange(-1, 1)
+        );
+        return spawnPoint.add(randomOffset);
     }
 
     public getEnemies(): Enemy[] {
@@ -29,21 +34,21 @@ export class Commando {
     }
 
     public removeEnemy(enemy: Enemy) {
-        this._enemies.splice(this._enemies.indexOf(enemy), 1);
+        const index = this._enemies.indexOf(enemy);
+        if (index !== -1) {
+            this._enemies.splice(index, 1);
+        }
     }
 
-    public animate(deltaTime: number, positions: BABYLON.Vector3[]) {
+    public animate(deltaTime: number, positions: Vector3[]) {
         this._enemies.forEach((enemy) => {
             enemy.animate(deltaTime, positions);
-            // moove and share the same destination
+
+            // move and share the same destination
             if (enemy.getDistanceFromDestination() < 10) {
-                // Just for a test ... @todo: remove
-                // enemy.takeDamage(1);
-                // console.log("touch !");
-                // this._destination.dispose();
-                this._destination = this._zone.getRandomPoint();
-                this._enemies.forEach((enemy) => {
-                    enemy.setDestination(this._destination);
+                this._destination.copyFrom(this._zone.getRandomPoint());
+                this._enemies.forEach((otherEnemy) => {
+                    otherEnemy.setDestination(this._destination);
                 });
             }
         });

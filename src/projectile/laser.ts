@@ -16,7 +16,16 @@ export class Laser implements Projectile {
     private _slowTimeFactor: number = 0.1;
     private _sparkParticles: BABYLON.ParticleSystem;
 
-    public constructor(scene: BABYLON.Scene, options?: { speed?: number; dispowerDistance?: number; collisionDistance?: number; slowTimeDistance?: number; slowTimeFactor?: number }) {
+    public constructor(
+        scene: BABYLON.Scene,
+        options?: {
+            speed?: number;
+            dispowerDistance?: number;
+            collisionDistance?: number;
+            slowTimeDistance?: number;
+            slowTimeFactor?: number;
+        }
+    ) {
         const {
             speed = this._laserSpeed,
             dispowerDistance = this._dispownDistance,
@@ -148,7 +157,9 @@ export class Laser implements Projectile {
     private predictDetectCollisionWithPlayer(laser: BABYLON.InstancedMesh): Boolean {
         const ray = new BABYLON.Ray(laser.absolutePosition, laser.up, this._slowTimeDistance);
         const predicate = (mesh) => {
-            return mesh.name === 'player_head_HitBox' || mesh.name === 'player_body_HitBox' || mesh.name === 'ShieldHitBox';
+            return (
+                mesh.name === 'player_head_HitBox' || mesh.name === 'player_body_HitBox' || mesh.name === 'ShieldHitBox'
+            );
         };
 
         const hitInfo = this._scene.pickWithRay(ray, predicate);
@@ -194,7 +205,7 @@ export class Laser implements Projectile {
         }
     }
 
-    public dispose(): void {
+    public dispose(callback: () => void): void {
         const checkInstancesAndDispose = () => {
             // Check if all laser instances are disposed
             if (this.getAllLaserInstances().length === 0) {
@@ -203,11 +214,13 @@ export class Laser implements Projectile {
 
                 // Dispose the spark particles system
                 this._sparkParticles.dispose();
-                console.log('Laser instances disposed');
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
             } else {
                 // Wait for 100ms and try again
                 setTimeout(checkInstancesAndDispose, 2000);
-                console.log('Waiting for laser instances to be disposed...');
             }
         };
 
