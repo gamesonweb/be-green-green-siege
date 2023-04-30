@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { AnimationName, animations } from '../AnimationController';
 import { Game } from '../game';
 import { Laser } from '../projectile/laser';
 import { Targetable } from '../target/targetable';
@@ -95,8 +96,10 @@ export class Enemy extends Targetable implements IEnemy {
                     this._lastShotLeft = !this._lastShotLeft;
                     if (this._lastShotLeft) {
                         this.shoot(this._leftLaserSpawn);
+                        animations.playAnimation(this._mesh, AnimationName.LeftLaserBack);
                     } else {
                         this.shoot(this._rightLaserSpawn);
+                        animations.playAnimation(this._mesh, AnimationName.RightLaserBack);
                     }
                 }, i * this._bulletFreq * 1000);
             }

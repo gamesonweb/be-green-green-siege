@@ -130,7 +130,7 @@ export class LaserGun implements Gun {
         this._shoot.play();
 
         // play animation
-        animations.playAnimation(AnimationName.BarelShot);
+        animations.playAnimation(this._gunModel, AnimationName.BarrelShot);
         xrHandler.vibrateController('right', 1, 60);
 
         // reset time since last shot
@@ -144,8 +144,8 @@ export class LaserGun implements Gun {
         // check if gun is overheated
         if (this._currentHeat >= this._maxHeat && !this._isOverheated) {
             this._isOverheated = true;
-            animations.playAnimation(AnimationName.OverHeatFront);
-            animations.playAnimation(AnimationName.OverHeatBack);
+            animations.playAnimation(this._gunModel, AnimationName.OverHeatFront);
+            animations.playAnimation(this._gunModel, AnimationName.OverHeatBack);
             this._reloadGun.play();
         }
 
@@ -156,8 +156,8 @@ export class LaserGun implements Gun {
             this._currentHeat = 0;
             if (this._isOverheated) {
                 this._isOverheated = false;
-                animations.playAnimation(AnimationName.OverHeatFront, true);
-                animations.playAnimation(AnimationName.OverHeatBack, true);
+                animations.playAnimation(this._gunModel, AnimationName.OverHeatFront, true);
+                animations.playAnimation(this._gunModel, AnimationName.OverHeatBack, true);
             }
         }
     }

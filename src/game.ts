@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import { AnimationName, animations } from './AnimationController';
 import SceneManager from './SceneManager';
 import starManager from './StarManager';
 import timeControl from './TimeControl';
@@ -82,6 +83,13 @@ export class Game {
         }
     }
 
+    private initAnimations(scene: BABYLON.Scene) {
+        animations.init(this._scene);
+
+        animations.playAnimation(this._scene.getMeshByName('GunParent'), AnimationName.GunIdle);
+        animations.playAnimation(this._scene.getMeshByName('n2b2'), AnimationName.ObservatoryRotation);
+    }
+
     /**
      * Creates the BABYLONJS Scene
      */
@@ -105,7 +113,7 @@ export class Game {
         // FIXME : Changer pour chargé l'objet unique
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
-        let gunTask = this._assetManager.addMeshTask('fun', '', './assets/', 'gun.glb');
+        let gunTask = this._assetManager.addMeshTask('gun', '', './assets/', 'gun.glb');
         let shieldTask = this._assetManager.addMeshTask('shield', '', './assets/', 'shield.glb');
 
         Game.avoidSpheres = SceneManager.initPlatform(platformTask);
@@ -116,6 +124,8 @@ export class Game {
         this._assetManager.load();
 
         this._scene.executeWhenReady(async () => {
+            this.initAnimations(this._scene);
+
             Game.instanceLoader = new InstanceLoader(this._scene);
 
             SceneManager.configureMaterials(this._scene);

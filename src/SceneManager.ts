@@ -1,5 +1,4 @@
 import * as BABYLON from 'babylonjs';
-import { AnimationName, animations } from './AnimationController';
 
 export default class SceneManager {
     static configureLights(scene: BABYLON.Scene) {
@@ -37,11 +36,9 @@ export default class SceneManager {
                     avoidSpheres.push({ position: position, radius: radius });
                 }
             });
-
             task.loadedAnimationGroups.forEach((animationGroup) => {
-                animations.addAnimation(animationGroup);
+                animationGroup.stop();
             });
-            animations.playAnimation(AnimationName.ObservatoirRotation);
         };
         return avoidSpheres;
     }
@@ -65,18 +62,15 @@ export default class SceneManager {
                     mesh.visibility = 0;
                 }
             });
-
             task.loadedAnimationGroups.forEach((animationGroup) => {
-                animations.addAnimation(animationGroup);
+                animationGroup.stop();
             });
-            animations.playAnimation(AnimationName.GunIdle);
         };
     }
 
     static initRobot(tasks: BABYLON.MeshAssetTask): void {
         tasks.onSuccess = (task) => {
             task.loadedMeshes.forEach((mesh) => {
-                console.log(mesh.name);
                 if (mesh.name == 'Robot') {
                     mesh.parent = null;
                 }
@@ -84,6 +78,9 @@ export default class SceneManager {
                     mesh.isVisible = false;
                     mesh.visibility = 0;
                 }
+            });
+            task.loadedAnimationGroups.forEach((animationGroup) => {
+                animationGroup.stop();
             });
         };
     }
