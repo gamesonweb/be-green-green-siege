@@ -5,7 +5,6 @@ import { Game } from '../game';
 import { LaserGun } from '../gun/laserGun';
 import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
-import { TestTarget } from '../target/testTarget';
 import { State } from './state';
 import { StatesEnum } from './stateManager';
 
@@ -14,7 +13,6 @@ export class LevelTestGunState implements State {
     private _light: BABYLON.HemisphericLight;
 
     private _gun: LaserGun;
-    private _target: TestTarget;
     private _shield: Shield;
     private _fakeEnemy: any;
 
@@ -48,9 +46,6 @@ export class LevelTestGunState implements State {
         this._light.intensity = 0.3;
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
-        // target
-        this._target = new TestTarget(this._scene, new BABYLON.Vector3(0, 4, 10));
-
         // shield
         this._shield = new Shield(this._scene);
 
@@ -77,14 +72,12 @@ export class LevelTestGunState implements State {
     public dispose(): void {
         // this._light.dispose();
         this._gun.dispose();
-        this._target.dispose();
         this._shield.dispose();
     }
 
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
-        this._target.animate(deltaTime);
 
         // this._fakeEnemy.animate(deltaTime);
         this._enemy1.animate(deltaTime, [this._enemy2.getPosition()]);
