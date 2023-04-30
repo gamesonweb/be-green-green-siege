@@ -49,6 +49,9 @@ export class Enemy extends Targetable implements IEnemy {
     // Smoke effect
     private _smokeParticles: BABYLON.ParticleSystem;
 
+    // Vibraion effect
+    private _vibration: number = 0;
+
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         super();
         this._scene = scene;
@@ -129,7 +132,6 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     private shoot(origin: BABYLON.Vector3) {
-
         // if the enemy is dead, don't shoot
         if (this.isDeath()) {
             return;
@@ -188,10 +190,19 @@ export class Enemy extends Targetable implements IEnemy {
         // combine horizontal and vertical rotation
         const targetRotation = horizontalRotation.multiply(verticalRotation);
 
-        // Spherical interpolation between current and target rotation
+        // Add vibration effect
+        const vibrationRotation = BABYLON.Quaternion.RotationAxis(
+            BABYLON.Vector3.Down(),
+            Math.sin(Date.now() * this._vibration) * this._vibration
+        );
+
+        // combine target rotation and vibration rotation
+        const combinedRotation = targetRotation.multiply(vibrationRotation);
+
+        // Spherical interpolation between current and combined rotation
         this._mesh.rotationQuaternion = BABYLON.Quaternion.Slerp(
             this._mesh.rotationQuaternion,
-            targetRotation,
+            combinedRotation,
             this.HEAD_ROTATION_SPEED * deltaTime
         );
     }
@@ -316,12 +327,19 @@ export class Enemy extends Targetable implements IEnemy {
         }
     }
 
+    private updateVibration() {
+        if (this._lifePoint < this._INITIAL_LIFE_POINT) {
+            this._vibration = 1 - this._lifePoint / this._INITIAL_LIFE_POINT;
+        }
+    }
+
     public animate(deltaTime: number, enemiesPositions: BABYLON.Vector3[]): void {
         this.rotation(deltaTime);
         this.checkHealth();
         this.move(deltaTime, enemiesPositions);
         this.fire(deltaTime);
         this.smoke(deltaTime);
+        this.updateVibration();
     }
 
     public touch(): void {
