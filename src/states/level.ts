@@ -6,19 +6,17 @@ import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
 import { State } from './state';
 
+import timeControl from '../TimeControl';
+import xrHandler from '../XRHandler';
 import level1 from '../assets/levels/level1.json';
 import level2 from '../assets/levels/level2.json';
 import { Game } from '../game';
-import xrHandler from '../XRHandler';
-import { StateManager, StatesEnum } from './stateManager';
 import StateUI, { StateUIEnum } from '../ui/stateUI';
-import timeControl from '../TimeControl';
+import { StateManager, StatesEnum } from './stateManager';
 
 export default class Level implements State {
     private _scene: BABYLON.Scene;
     private _level: any;
-
-    private _player: Player;
 
     private _gun: LaserGun;
     private _shield: Shield;
@@ -30,7 +28,7 @@ export default class Level implements State {
     private _win: boolean;
     private _lose: boolean;
 
-    private _paused: boolean
+    private _paused: boolean;
 
     private _stateUI: StateUI;
 
@@ -38,7 +36,7 @@ export default class Level implements State {
 
     shieldSize: number;
     type: StatesEnum;
-    levelNumber: number
+    levelNumber: number;
 
     constructor(scene: BABYLON.Scene, levelNumber: number, type: StatesEnum, stateManager: StateManager) {
         this._scene = scene;
@@ -54,15 +52,15 @@ export default class Level implements State {
         switch (levelNumber) {
             case 1:
                 return level1;
-            case 2: 
-                return level2;    
+            case 2:
+                return level2;
             default:
-                throw new Error('Level ' + levelNumber +' not found');
+                throw new Error('Level ' + levelNumber + ' not found');
         }
     }
 
     private updateLevel(deltaTime: number): void {
-        if (this._player.getCurrentLife() <= 0) {
+        if (Game.player.getCurrentLife() <= 0) {
             this._lose = true;
             console.log('LOSE');
             Game.debug3D.log = 'LOSE';
@@ -74,8 +72,11 @@ export default class Level implements State {
         for (let zone of this._zones) {
             zone.currentCoolDown += deltaTime;
 
-            if (zone.currentCoolDown >= zone.cooldown && zone.nbRobots > 0 && zone.getNbEnemies() < zone.tresholdEnemy) {
-
+            if (
+                zone.currentCoolDown >= zone.cooldown &&
+                zone.nbRobots > 0 &&
+                zone.getNbEnemies() < zone.tresholdEnemy
+            ) {
                 zone.currentCoolDown = 0;
                 let nbRobots = Math.min(zone.nbRobots, zone.tresholdEnemy - zone.getNbEnemies());
                 zone.nbRobots -= nbRobots;
@@ -108,7 +109,18 @@ export default class Level implements State {
 
             let spawnPoints = zone.spawnPoints.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
 
-            this._zones.push(new Zone(minVec, maxVec, spawnPoints, this._scene, zone.nbRobots, zone.robotCaracteristics, zone.cooldown, zone.tresholdEnemy));
+            this._zones.push(
+                new Zone(
+                    minVec,
+                    maxVec,
+                    spawnPoints,
+                    this._scene,
+                    zone.nbRobots,
+                    zone.robotCaracteristics,
+                    zone.cooldown,
+                    zone.tresholdEnemy
+                )
+            );
         }
     }
 
@@ -131,7 +143,7 @@ export default class Level implements State {
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
         this._shield = new Shield(this._scene);
         this._zones = [];
-        this._player = new Player(this._scene);
+        Game.player = new Player(this._scene);
         this.currentScore = 0;
         this.currentWave = 0;
 
@@ -153,7 +165,7 @@ export default class Level implements State {
 
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
-        
+
         for (let zone of this._zones) {
             zone.animate(deltaTime);
         }
@@ -169,5 +181,4 @@ export default class Level implements State {
         this._paused = false;
         this._stateUI.dispose();
     }
-
 }

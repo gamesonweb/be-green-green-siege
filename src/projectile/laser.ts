@@ -205,7 +205,7 @@ export class Laser implements Projectile {
         }
     }
 
-    public dispose(callback: () => void): void {
+    public waitAndDispose(callback: () => void): void {
         const checkInstancesAndDispose = () => {
             // Check if all laser instances are disposed
             if (this.getAllLaserInstances().length === 0) {
@@ -219,12 +219,16 @@ export class Laser implements Projectile {
                     callback();
                 }
             } else {
-                // Wait for 100ms and try again
                 setTimeout(checkInstancesAndDispose, 2000);
             }
         };
 
         // Start checking if all instances are disposed
         checkInstancesAndDispose();
+    }
+
+    public dispose() {
+        this._laserModel.dispose();
+        this._sparkParticles.dispose();
     }
 }

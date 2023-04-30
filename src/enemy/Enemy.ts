@@ -215,7 +215,12 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     public die() {
-        this.dispose();
+        this._mesh.dispose();
+        this._smokeParticles.dispose();
+        this._laser.waitAndDispose(() => {
+            this._canBeDisposed = true;
+            this.dispose();
+        });
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
@@ -352,6 +357,7 @@ export class Enemy extends Targetable implements IEnemy {
 
     public dispose() {
         this._mesh.dispose();
-        this._laser.dispose(() => (this._canBeDisposed = true));
+        this._smokeParticles.dispose();
+        this._laser.dispose();
     }
 }

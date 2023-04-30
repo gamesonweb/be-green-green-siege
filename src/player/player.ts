@@ -18,6 +18,10 @@ export class Player extends Targetable {
         this._bodyMesh = this.initBodyPlayerModel(this._scene);
     }
 
+    public resetLife(): void {
+        this._currentLife = this._initialLife;
+    }
+
     private initHeadPlayer(scene: BABYLON.Scene): BABYLON.Mesh {
         const head = BABYLON.MeshBuilder.CreateBox(
             'player_head_HitBox',

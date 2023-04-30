@@ -6,7 +6,7 @@
                 {
                     "nbRobots": 4,
                     "spawnPoints": ["Spawn4", "Spawn5"],
-                    "tresholdEnemy": 2,
+                    "tresholdEnemy": 4,
                     "cooldown": 2,
                     "min": {
                         "x": 58,

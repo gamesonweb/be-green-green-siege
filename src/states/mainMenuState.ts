@@ -1,18 +1,17 @@
 import * as BABYLON from 'babylonjs';
+import MainGUI from '../ui/mainUI';
 import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
-import  MainGUI  from '../ui/mainUI';
 
 export class MainMenuState implements State {
     private _scene: BABYLON.Scene;
     private _stateManager: StateManager;
 
-    private _mainUI: MainGUI; 
+    private _mainUI: MainGUI;
 
     public type: StatesEnum;
     levelNumber: number;
     shieldSize: number;
-
 
     constructor(scene: BABYLON.Scene, stateManager: StateManager, type: StatesEnum) {
         this._scene = scene;
@@ -38,10 +37,10 @@ export class MainMenuState implements State {
     public animate(deltaTime: number): void {}
 
     public pause() {
-        throw new Error("Method pause not implemented !");
+        throw new Error('Method pause not implemented !');
     }
 
     public resume() {
-        throw new Error("Method pause not implemented !");
+        throw new Error('Method pause not implemented !');
     }
 }

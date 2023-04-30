@@ -107,7 +107,7 @@ export class Zone {
     public dispose() {
         this._commandos.forEach((commando) => {
             commando.getEnemies().forEach((enemy) => {
-                enemy.die();
+                enemy.dispose();
             });
         });
     }

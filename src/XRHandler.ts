@@ -2,6 +2,9 @@ import * as BABYLON from 'babylonjs';
 import timeControl from './TimeControl';
 
 class XRHandler {
+    // Scene
+    private _scene: BABYLON.Scene;
+
     // XR
     public _xr: BABYLON.WebXRDefaultExperience;
 
@@ -14,6 +17,8 @@ class XRHandler {
      * @param scene The scene.
      */
     public async initXR(scene: BABYLON.Scene): Promise<void> {
+        this._scene = scene;
+
         // Get platform
         const platform = scene.getMeshByName('n1b14');
         this._xr = await scene.createDefaultXRExperienceAsync({ floorMeshes: [platform] });
@@ -62,6 +67,7 @@ class XRHandler {
      * @param visible True to show the controllers, false to hide them.
      */
     public setControllerVisibility(visible: boolean): void {
+        if (!this._xr) return;
         this._xr.input.controllers.forEach((controller) => {
             controller.motionController!.rootMesh.getChildMeshes().forEach((mesh) => {
                 mesh.isVisible = visible;
@@ -71,6 +77,22 @@ class XRHandler {
         // Hide the laser and pointer
         this._xr.pointerSelection.displayLaserPointer = visible;
         this._xr.pointerSelection.displaySelectionMesh = visible;
+
+        // Hide gun and shield
+        this._scene.getMeshByName('GunParent').isVisible = !visible;
+        this._scene.getMeshByName('ShieldGrip').isVisible = !visible;
+
+        this._hideMeshWithChildren(this._scene.getMeshByName('GunParent'), !visible);
+        this._hideMeshWithChildren(this._scene.getMeshByName('ShieldGrip'), !visible);
+    }
+
+    private _hideMeshWithChildren(mesh: BABYLON.AbstractMesh, hide: boolean) {
+        mesh.isVisible = hide;
+        mesh.getChildren().forEach((child) => {
+            if (child instanceof BABYLON.AbstractMesh) {
+                this._hideMeshWithChildren(child, hide);
+            }
+        });
     }
 
     /**
@@ -80,7 +102,12 @@ class XRHandler {
      * @param duration duration of the vibration
      * @param timeout time before the vibration
      */
-    public vibrateController(handedness: 'left' | 'right' | 'all', intensity: number, duration: number, timeout: number = 0): void {
+    public vibrateController(
+        handedness: 'left' | 'right' | 'all',
+        intensity: number,
+        duration: number,
+        timeout: number = 0
+    ): void {
         const vibrate = (controller: BABYLON.WebXRAbstractMotionController) => {
             if (controller) {
                 setTimeout(() => {
