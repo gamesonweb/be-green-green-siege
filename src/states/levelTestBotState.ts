@@ -17,6 +17,7 @@ export class LevelTestBotState implements State {
 
     type: StatesEnum;
     shieldSize: number;
+    levelNumber: number;
 
     constructor(scene: BABYLON.Scene, type: StatesEnum) {
         this._scene = scene;

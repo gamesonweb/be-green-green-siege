@@ -74,11 +74,17 @@ export class LaserGun implements Gun {
         this._laserPoint = this._scene.getMeshByName('GunLaser') as BABYLON.Mesh;
         this._gunEnergy.material = new BABYLON.StandardMaterial('gunEnergyMaterial', this._scene);
         this._gunEnergyScale = this._gunEnergy.scaling.x;
+       
     }
 
     private attach(): void {
         const rightAnchor = this._scene.getMeshByName('rightAnchor');
         Game.vrSupported ? this.attachToVRHand(rightAnchor) : this.attachToCamera(rightAnchor);
+    }
+
+    private dettach(): void {
+        this._gunModel.parent = null;
+        this._gunModel.position = new BABYLON.Vector3(0,0,0)
     }
 
     private attachToVRHand(rightAnchor: BABYLON.AbstractMesh): void {
@@ -198,11 +204,11 @@ export class LaserGun implements Gun {
      * Dispose the gun
      */
     public dispose(): void {
-        this._gunModel.dispose();
         this._laser.dispose(() => {});
+        this.dettach();
 
         if (this._pointer) {
-            this._pointer.dispose();
+            this._pointer.dispose();    
         }
     }
 }

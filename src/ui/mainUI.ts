@@ -66,6 +66,9 @@ export default class MainGUI implements UI{
         panel.addControl(middlePanel);
         middlePanel.position.x = 0; // Position in the center
         
+        // Add controls to left panel
+        let button2 = this.createLevelButton("Level 2", StatesEnum.LEVEL, 2);
+        leftPanel.addControl(button2);
     
         // Add controls to left panel
         let button1 = this.createLevelButton("Level 1", StatesEnum.LEVEL, 1);

@@ -10,6 +10,9 @@ export class MainMenuState implements State {
     private _mainUI: MainGUI; 
 
     public type: StatesEnum;
+    levelNumber: number;
+    shieldSize: number;
+
 
     constructor(scene: BABYLON.Scene, stateManager: StateManager, type: StatesEnum) {
         this._scene = scene;
@@ -17,7 +20,6 @@ export class MainMenuState implements State {
         this.type = type;
         this._mainUI = new MainGUI(this._scene, this._scene.activeCamera, this._stateManager);
     }
-    shieldSize: number;
 
     fire(force: number): void {}
 

@@ -21,6 +21,7 @@ export class LevelTestGunState implements State {
 
     public shieldSize: number = 0;
     public type: StatesEnum;
+    levelNumber: number;
 
     constructor(scene: BABYLON.Scene, type: StatesEnum) {
         this._scene = scene;

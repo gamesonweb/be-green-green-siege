@@ -43,7 +43,7 @@ export class StateManager {
                 this._currentState = new LevelTestGunState(this._scene, StatesEnum.LEVELTESTGUN);
                 break;
             case StatesEnum.LEVEL:
-                this._currentState = new Level(this._scene, levelNumber, StatesEnum.LEVEL);
+                this._currentState = new Level(this._scene, levelNumber, StatesEnum.LEVEL, this);
                 break;
         }
 

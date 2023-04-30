@@ -129,6 +129,7 @@ export class Shield extends Targetable {
      * Disposes of the shield mesh.
      */
     public dispose(): void {
-        this._shieldGrip.dispose();
+        this._shieldGrip.parent = null;
+        this._shieldGrip.position = new BABYLON.Vector3(0,0,0)
     }
 }

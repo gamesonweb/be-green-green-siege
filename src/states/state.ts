@@ -3,6 +3,7 @@ import { StatesEnum } from "./stateManager";
 export interface State {
     shieldSize: number;
     type: StatesEnum;
+    levelNumber: number;
     load(): void;
     dispose(): void;
     getName(): String;
