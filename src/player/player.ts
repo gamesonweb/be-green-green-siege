@@ -1,13 +1,12 @@
 import * as BABYLON from 'babylonjs';
 import xrHandler from '../XRHandler';
-import Logger from '../debug/logger';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 
 export class Player extends Targetable {
     private _scene: BABYLON.Scene;
     private _currentLife: number;
-    private readonly _initialLife: number = 100;
+    private readonly _initialLife: number = 5;
     private _bodyMesh: BABYLON.Mesh;
     private _headMesh: BABYLON.Mesh;
 
@@ -20,14 +19,22 @@ export class Player extends Targetable {
     }
 
     private initHeadPlayer(scene: BABYLON.Scene): BABYLON.Mesh {
-        const head = BABYLON.MeshBuilder.CreateBox('player_head_HitBox', { width: 0.4, height: 0.4, depth: 0.025 }, scene);
+        const head = BABYLON.MeshBuilder.CreateBox(
+            'player_head_HitBox',
+            { width: 0.4, height: 0.4, depth: 0.025 },
+            scene
+        );
         head.metadata = { parentClass: this };
         head.isVisible = false;
         return head;
     }
 
     private initBodyPlayerModel(scene: BABYLON.Scene): BABYLON.Mesh {
-        const body = BABYLON.MeshBuilder.CreateBox('player_body_HitBox', { width: 0.55, height: 0.6, depth: 0.3 }, scene);
+        const body = BABYLON.MeshBuilder.CreateBox(
+            'player_body_HitBox',
+            { width: 0.55, height: 0.6, depth: 0.3 },
+            scene
+        );
         body.metadata = { parentClass: this };
         body.isVisible = false;
         return body;
@@ -46,10 +53,9 @@ export class Player extends Targetable {
     }
 
     public touch(): void {
-        this._currentLife -= 10;
+        this._currentLife--;
         xrHandler.vibrateController('all', 0.8, 60);
         xrHandler.vibrateController('all', 0.8, 60, 200);
-        Logger.log('Player touched');
     }
 
     private updatePlayerModelPosition = () => {
@@ -67,7 +73,11 @@ export class Player extends Targetable {
         this._bodyMesh.rotationQuaternion = bodyRotation;
 
         const bodyOffset = new BABYLON.Vector3(0, -0.42, -0.1);
-        const rotatedBodyOffset = bodyOffset.rotateByQuaternionAroundPointToRef(headRotationQuaternion, BABYLON.Vector3.Zero(), new BABYLON.Vector3());
+        const rotatedBodyOffset = bodyOffset.rotateByQuaternionAroundPointToRef(
+            headRotationQuaternion,
+            BABYLON.Vector3.Zero(),
+            new BABYLON.Vector3()
+        );
 
         this._bodyMesh.setAbsolutePosition(this._headMesh.getAbsolutePosition().add(rotatedBodyOffset));
     };
