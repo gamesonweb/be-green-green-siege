@@ -129,6 +129,12 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     private shoot(origin: BABYLON.Vector3) {
+
+        // if the enemy is dead, don't shoot
+        if (this.isDeath()) {
+            return;
+        }
+
         // choose target
         let targetPos;
         if (Math.random() < 0.5) {
