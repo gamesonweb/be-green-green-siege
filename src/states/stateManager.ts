@@ -1,16 +1,14 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import Level from './level';
-import { LevelTestBotState } from './levelTestBotState';
-import { LevelTestGunState } from './levelTestGunState';
+import { LevelTestGunState } from './levelTest';
 import { MainMenuState } from './mainMenuState';
 import { State } from './state';
 
 export enum StatesEnum {
-    MAINMENU = 0,
-    LEVELTESTBOT = 1,
-    LEVELTESTGUN = 2,
-    LEVEL = 3,
+    MAINMENU,
+    LEVELTEST,
+    LEVEL,
 }
 
 export class StateManager {
@@ -36,11 +34,8 @@ export class StateManager {
             case StatesEnum.MAINMENU:
                 this._currentState = new MainMenuState(this._scene, this, StatesEnum.MAINMENU);
                 break;
-            case StatesEnum.LEVELTESTBOT:
-                this._currentState = new LevelTestBotState(this._scene, StatesEnum.LEVELTESTBOT);
-                break;
-            case StatesEnum.LEVELTESTGUN:
-                this._currentState = new LevelTestGunState(this._scene, StatesEnum.LEVELTESTGUN);
+            case StatesEnum.LEVELTEST:
+                this._currentState = new LevelTestGunState(this._scene, StatesEnum.LEVELTEST);
                 break;
             case StatesEnum.LEVEL:
                 this._currentState = new Level(this._scene, levelNumber, StatesEnum.LEVEL, this);

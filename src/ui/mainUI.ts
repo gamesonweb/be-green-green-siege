@@ -66,11 +66,9 @@ export default class MainGUI implements UI {
         leftPanel.addControl(button1);
 
         // Add controls to right panel
-        let button3 = this.createLevelButton('Test Bot', StatesEnum.LEVELTESTBOT);
-        rightPanel.addControl(button3);
 
         // Add controls to middle panel
-        let button5 = this.createLevelButton('Test Gun', StatesEnum.LEVELTESTGUN);
+        let button5 = this.createLevelButton('Test', StatesEnum.LEVELTEST);
         middlePanel.addControl(button5);
     }
 

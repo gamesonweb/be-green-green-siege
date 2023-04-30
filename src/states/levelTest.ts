@@ -33,7 +33,7 @@ export class LevelTestGunState implements State {
     }
 
     public getName() {
-        return 'Test gun';
+        return 'Test';
     }
 
     public load(): void {
