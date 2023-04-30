@@ -18,6 +18,7 @@ export class Enemy extends Targetable implements IEnemy {
     private readonly HEAD_ROTATION_SPEED: number = 4;
 
     // Health
+    private readonly _INITIAL_LIFE_POINT: number;
     private dead: boolean = false;
     private _lifePoint: number;
 
@@ -45,19 +46,10 @@ export class Enemy extends Targetable implements IEnemy {
     // Score
     private _score: number = 0;
 
+    // Smoke effect
+    private _smokeParticles: BABYLON.ParticleSystem;
+
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
-        // Objet
-        // shotFreq
-        // bulletFreq
-        // nbBullet
-        // speed
-        // life
-        // score
-        // bulletSpeed
-        // bulletDmg
-
-        console.log(caracteristics);
-
         super();
         this._scene = scene;
 
@@ -67,7 +59,7 @@ export class Enemy extends Targetable implements IEnemy {
         this._nbBullet = caracteristics.nbBullet;
         const bulletSpeed = caracteristics.bulletSpeed;
         this._SPEED = caracteristics.speed;
-        this._lifePoint = caracteristics.life;
+        this._INITIAL_LIFE_POINT = caracteristics.life;
         this._score = caracteristics.score;
         this._AIMBIAS = caracteristics.bias;
 
@@ -82,6 +74,9 @@ export class Enemy extends Targetable implements IEnemy {
         this._mesh = Game.instanceLoader.getBot('robot', { parentClass: this });
         this._mesh.position = spawnPosition;
 
+        // Health
+        this._lifePoint = this._INITIAL_LIFE_POINT;
+
         // Shooting
         this._laser = new Laser(this._scene, { speed: bulletSpeed, dispowerDistance: 60, collisionDistance: 10 });
         const rightLaserPoint = Game.instanceLoader.findInstanceSubMeshByName(
@@ -94,6 +89,14 @@ export class Enemy extends Targetable implements IEnemy {
         ) as BABYLON.Mesh;
         this._rightLaserSpawn = rightLaserPoint.getAbsolutePosition();
         this._leftLaserSpawn = leftLaserPoint.getAbsolutePosition();
+
+        // Smoke effect
+        this._smokeParticles = new BABYLON.ParticleSystem('smoke', 30, this._scene);
+        this._smokeParticles.particleTexture = new BABYLON.Texture('./assets/cloud.png', this._scene);
+        this._smokeParticles.emitter = this._mesh;
+        this._smokeParticles.color1 = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
+        this._smokeParticles.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 0);
+        this._smokeParticles.minSize = 0.1;
     }
 
     private fire(deltaTime: number): void {
@@ -296,11 +299,23 @@ export class Enemy extends Targetable implements IEnemy {
         this._mesh.position.addInPlace(this._speedVector.scale(deltaTime));
     }
 
+    private smoke(deltaTime: number) {
+        if (this._lifePoint < this._INITIAL_LIFE_POINT) {
+            if (!this._smokeParticles.isStarted()) {
+                this._smokeParticles.start();
+            }
+
+            this._smokeParticles.maxSize = 2 * (1 - this._lifePoint / this._INITIAL_LIFE_POINT);
+            this._smokeParticles.updateSpeed = 1 * deltaTime;
+        }
+    }
+
     public animate(deltaTime: number, enemiesPositions: BABYLON.Vector3[]): void {
         this.rotation(deltaTime);
         this.checkHealth();
         this.move(deltaTime, enemiesPositions);
         this.fire(deltaTime);
+        this.smoke(deltaTime);
     }
 
     public touch(): void {
