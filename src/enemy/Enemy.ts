@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { AnimationName, animations } from '../AnimationController';
+import score from '../Score';
 import { Game } from '../game';
 import { Laser } from '../projectile/laser';
 import { Targetable } from '../target/targetable';
@@ -349,6 +350,10 @@ export class Enemy extends Targetable implements IEnemy {
 
     public touch(): void {
         this._lifePoint -= 1;
+
+        // Calculate distance whith player
+        const playerDistance = BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition());
+        score.playerHitRobot(playerDistance);
     }
 
     public getDistanceFromDestination(): number {

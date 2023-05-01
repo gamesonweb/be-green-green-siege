@@ -4,6 +4,7 @@ import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
+import scoreUI from './scoreUI';
 import UI from './ui';
 
 export enum StateUIEnum {
@@ -37,7 +38,10 @@ export default class StateUI implements UI {
         this._stateManager = stateManager;
     }
 
-    private loadPauseMenu() {
+    private loadPauseMenu(levelNumber: number) {
+        scoreUI.addScoreLabel(this._middlePanel, levelNumber);
+        scoreUI.displayTopScores(this._middlePanel, levelNumber);
+
         let textButton = this.createActionButton('Paused', () => {});
         this._middlePanel.addControl(textButton);
 
@@ -56,7 +60,10 @@ export default class StateUI implements UI {
         this._rightPanel.addControl(mainMenuButton);
     }
 
-    private loadWinMenu() {
+    private loadWinMenu(levelNumber: number) {
+        scoreUI.addScoreLabel(this._middlePanel, levelNumber);
+        scoreUI.displayTopScores(this._middlePanel, levelNumber);
+
         let textButton = this.createActionButton('You WIN !', () => {});
         this._middlePanel.addControl(textButton);
 
@@ -84,7 +91,10 @@ export default class StateUI implements UI {
         this._rightPanel.addControl(next);
     }
 
-    private loadLoseMenu() {
+    private loadLoseMenu(levelNumber: number) {
+        scoreUI.addScoreLabel(this._middlePanel, levelNumber);
+        scoreUI.displayTopScores(this._middlePanel, levelNumber);
+
         let textButton = this.createActionButton('You LOSE !', () => {});
         this._middlePanel.addControl(textButton);
 
@@ -113,7 +123,7 @@ export default class StateUI implements UI {
         return button;
     }
 
-    load(state: StateUIEnum): void {
+    load(state: StateUIEnum, levelNumber: number): void {
         this._manager = new GUI.GUI3DManager(this._scene);
         this._cylinder = BABYLON.CreateCylinder('test', { height: 10, diameter: 15 });
         this._cylinder.flipFaces(true);
@@ -166,13 +176,13 @@ export default class StateUI implements UI {
 
         switch (state) {
             case StateUIEnum.PAUSE:
-                this.loadPauseMenu();
+                this.loadPauseMenu(levelNumber);
                 break;
             case StateUIEnum.WIN:
-                this.loadWinMenu();
+                this.loadWinMenu(levelNumber);
                 break;
             case StateUIEnum.LOSE:
-                this.loadLoseMenu();
+                this.loadLoseMenu(levelNumber);
                 break;
         }
     }

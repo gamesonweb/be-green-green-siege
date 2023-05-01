@@ -6,6 +6,7 @@ import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
 import { State } from './state';
 
+import score from '../Score';
 import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import level1 from '../assets/levels/level1.json';
@@ -65,7 +66,7 @@ export default class Level implements State {
             console.log('LOSE');
             Game.debug3D.log = 'LOSE';
             timeControl.pause();
-            this._stateUI.load(StateUIEnum.LOSE);
+            this._stateUI.load(StateUIEnum.LOSE, this.levelNumber);
             return;
         }
         let finishedZones = [];
@@ -95,7 +96,8 @@ export default class Level implements State {
                 console.log('WIN');
                 Game.debug3D.log = 'WIN';
                 timeControl.pause();
-                this._stateUI.load(StateUIEnum.WIN);
+                this._stateUI.load(StateUIEnum.WIN, this.levelNumber);
+                score.saveTopScore(this.levelNumber);
                 return;
             }
             this.beginWave();
@@ -133,6 +135,7 @@ export default class Level implements State {
     }
 
     public load(): void {
+        score.reset();
         if (this._level === undefined) throw new Error('Level data not loaded');
 
         if (Game.vrSupported) {
@@ -174,7 +177,7 @@ export default class Level implements State {
 
     public pause() {
         this._paused = true;
-        this._stateUI.load(StateUIEnum.PAUSE);
+        this._stateUI.load(StateUIEnum.PAUSE, this.levelNumber);
     }
 
     public resume() {

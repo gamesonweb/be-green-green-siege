@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { AnimationName, animations } from '../AnimationController';
+import score from '../Score';
 import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
@@ -143,6 +144,9 @@ export class LaserGun implements Gun {
 
         // update heat
         this._currentHeat += this._heatPerShot;
+
+        // Update score
+        score.playerShoots();
     }
 
     private updateHeat(deltaTime: number): void {

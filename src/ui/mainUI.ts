@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import { StateManager, StatesEnum } from '../states/stateManager';
+import scoreUI from './scoreUI';
 import UI from './ui';
 
 export default class MainGUI implements UI {
@@ -28,7 +29,7 @@ export default class MainGUI implements UI {
         return button;
     }
 
-    load() {
+    async load() {
         // this._scene.debugLayer.show();
         this._manager = new GUI.GUI3DManager(this._scene);
 
@@ -65,7 +66,9 @@ export default class MainGUI implements UI {
         let button1 = this.createLevelButton('Level 1', StatesEnum.LEVEL, 1);
         leftPanel.addControl(button1);
 
-        // Add controls to right panel
+        // Add score to right panel
+        await scoreUI.displayTopScores(rightPanel, 1);
+        await scoreUI.displayTopScores(rightPanel, 2);
 
         // Add controls to middle panel
         let button5 = this.createLevelButton('Test', StatesEnum.LEVELTEST);

@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import score from '../Score';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
@@ -60,6 +61,9 @@ export class Player extends Targetable {
         this._currentLife--;
         xrHandler.vibrateController('all', 0.8, 60);
         xrHandler.vibrateController('all', 0.8, 60, 200);
+
+        // Update score
+        score.playerHit();
     }
 
     private updatePlayerModelPosition = () => {
