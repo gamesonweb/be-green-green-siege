@@ -19,6 +19,10 @@ export class Shield extends Targetable {
     private _shieldGrip: BABYLON.Mesh;
     private _baseScale: BABYLON.Vector3;
 
+    private _life: number = 100;
+    private readonly _maxLife: number = 100;
+    private _regenerating: boolean = false;
+
     /**
      * Shield constructor.
      * @param {BABYLON.Scene} scene - The Babylon.js scene.
@@ -38,7 +42,7 @@ export class Shield extends Targetable {
     private _initShield(): void {
         this._shieldMesh = this._scene.getMeshByName('ShieldHitBox') as BABYLON.Mesh;
         this._shieldGrip = this._scene.getMeshByName('ShieldGrip') as BABYLON.Mesh;
-        this._baseScale = this._shieldMesh.scaling;
+        this._baseScale = this._shieldMesh.scaling.clone();
         this._shieldMesh.metadata = { parentClass: this };
 
         // const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
@@ -95,13 +99,22 @@ export class Shield extends Targetable {
     public animate(deltaTime: number, shieldSize: number): void {
         this._updateScaling(shieldSize, deltaTime);
         this._updateAlpha(deltaTime);
+        this.updateColor();
+        if (this._regenerating) {
+            this._regenerateShield(deltaTime);
+        }
     }
 
     private _updateScaling(shieldSize: number, deltaTime: number): void {
-        const scalingLerpSpeed = 11 * deltaTime;
-        const currentScaling = this._shieldMesh.scaling;
-        const targetScaling = new BABYLON.Vector3(this._baseScale.x, this._baseScale.y + shieldSize, this._baseScale.z);
-        this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
+        if (this._regenerating) {
+            this._shieldMesh.scaling =this._baseScale.clone();
+        }
+        else {
+            const scalingLerpSpeed = 11 * deltaTime;
+            const currentScaling = this._shieldMesh.scaling;
+            const targetScaling = new BABYLON.Vector3(this._baseScale.x, this._baseScale.y + shieldSize, this._baseScale.z);
+            this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
+        }
     }
 
     private _updateAlpha(deltaTime: number): void {
@@ -117,12 +130,45 @@ export class Shield extends Targetable {
         }
     }
 
-    /**
-     * Triggers the touch event and vibrates the left controller.
-     */
+    // /**
+    //  * Triggers the touch event and vibrates the left controller.
+    //  */
+
     public touch(): void {
-        this._isTouched = true;
-        xrHandler.vibrateController('left', 0.2, 300);
+        if (this._life > 0) {
+            this._isTouched = true;
+            xrHandler.vibrateController('left', 0.2, 300);
+            this._life -= 10;
+            if (this._life <= 0) {
+                this.breakShield();
+            }
+        }
+    }
+    
+    private breakShield(): void {
+        this._regenerating = true;
+        this._shieldMesh.scaling = this._baseScale;
+        // TODO SOUND: Play shield break sound
+    }
+    
+    private _regenerateShield(deltaTime: number): void {
+
+        const regenerationSpeed = 0.5 * deltaTime;
+        this._life = BABYLON.Scalar.Lerp(this._life, this._maxLife+20, regenerationSpeed);
+        
+        if (this._life >= this._maxLife) {
+            this._life = this._maxLife;
+            this._regenerating = false;
+        }
+    }
+    
+    private updateColor(): void {
+        let lifePercentage = this._life / this._maxLife;
+        let maxColor = new BABYLON.Color3(0.0471, 0.4078, 0.4706);
+        let minColor = new BABYLON.Color3(0.4706, 0.0471, 0.0471);
+        let currentColor = BABYLON.Color3.Lerp(minColor, maxColor, lifePercentage);
+        
+        (this._shieldMesh.material as BABYLON.StandardMaterial).diffuseColor = currentColor;
     }
 
     /**
