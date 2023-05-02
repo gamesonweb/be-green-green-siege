@@ -5,6 +5,8 @@ import { Game } from '../game';
 import { Laser } from '../projectile/laser';
 import { Targetable } from '../target/targetable';
 import { IEnemy } from './IEnemy';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 
 export class Enemy extends Targetable implements IEnemy {
     private _scene: BABYLON.Scene;
@@ -52,6 +54,16 @@ export class Enemy extends Targetable implements IEnemy {
 
     // Vibraion effect
     private _vibration: number = 0;
+
+    // sounds effect
+    private _sound_bip_bip: SoundPlayer;
+    private _sound_explosion: SoundPlayer;
+    private _sound_fuckin: SoundPlayer;
+    private _sound_touched: SoundPlayer;
+    private _sound_shoot: SoundPlayer;
+
+    // explosion
+    private _explosion: BABYLON.ParticleSystem;
 
     constructor(scene: BABYLON.Scene, spawnPosition: BABYLON.Vector3, caracteristics: any) {
         super();
@@ -101,6 +113,17 @@ export class Enemy extends Targetable implements IEnemy {
         this._smokeParticles.color1 = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
         this._smokeParticles.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 0);
         this._smokeParticles.minSize = 0.1;
+
+        // sounds 
+        this._sound_bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 25, scene, this._mesh);
+        this._sound_bip_bip.playWithRepeater(10 + 10 * Math.random());
+        this._sound_explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 8, this._scene, this._mesh);
+        this._sound_fuckin = new SoundPlayer(SoundsBank.ENEMY_FUCKIN, 100, this._scene, this._mesh);
+        this._sound_touched = new SoundPlayer(SoundsBank.ENEMY_TOUCHED, 80, this._scene, this._mesh);
+        this._sound_shoot = new SoundPlayer(SoundsBank.ENEMY_SHOOT, 8, this._scene, this._mesh);
+
+        // explosion init
+        this.createExplosion();
     }
 
     private fire(deltaTime: number): void {
@@ -158,6 +181,7 @@ export class Enemy extends Targetable implements IEnemy {
         const biasedLaserDirection = laserDirection.add(randomBias).normalize();
 
         this._laser.fire(origin, biasedLaserDirection);
+        this._sound_shoot.play();
     }
 
     public getPosition(): BABYLON.Vector3 {
@@ -216,12 +240,30 @@ export class Enemy extends Targetable implements IEnemy {
     }
 
     public die() {
-        this._mesh.dispose();
+        this._sound_bip_bip.stopAndDispose();
+        this._sound_fuckin.play();
         this._smokeParticles.dispose();
-        this._laser.waitAndDispose(() => {
-            this._canBeDisposed = true;
-            this.dispose();
-        });
+        setTimeout(() => {
+            this._explosion.start();
+            // this._sound_explosion.setPosition(this._mesh.position);
+            this._sound_explosion.play();
+            setTimeout(() => {
+                this._explosion.stop();
+            }, 2000);
+            //
+            setTimeout(() => {
+                this._explosion.dispose();
+                this._mesh.dispose();
+            }, 2000);
+            //
+            this._laser.waitAndDispose(() => {
+                this._canBeDisposed = true;
+                this.dispose();
+            });
+        }, 1000);
+        
+        //
+        
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
@@ -350,18 +392,46 @@ export class Enemy extends Targetable implements IEnemy {
 
     public touch(): void {
         this._lifePoint -= 1;
-
         // Calculate distance whith player
         const playerDistance = BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition());
         score.playerHitRobot(playerDistance);
+        this._sound_touched.play();
+        if(this._lifePoint == 1) {
+            this._sound_touched.stopAndDispose();
+        }
     }
 
     public getDistanceFromDestination(): number {
         return BABYLON.Vector3.Distance(this._destination, this._mesh.position);
     }
 
+    private createExplosion() {
+        // Create a particle system
+        this._explosion = new BABYLON.ParticleSystem("explosion", 200, this._scene);
+        // Load the texture for the particles
+        this._explosion.particleTexture = new BABYLON.Texture("assets/cloud.png", this._scene);
+        // Set the position of the particles
+        this._explosion.emitter = this._mesh.position;
+        this._explosion.minEmitBox = new BABYLON.Vector3(-2.5, -2.5, -2.5);
+        this._explosion.maxEmitBox = new BABYLON.Vector3(2.5, 2.5, 2.5);
+        // Set the size of the particles
+        this._explosion.minSize = 0.5;
+        this._explosion.maxSize = 2;
+        // Set the speed of the particles
+        this._explosion.minLifeTime = 0.01;
+        this._explosion.maxLifeTime = 0.15;
+        this._explosion.emitRate = 200;
+        // Set the direction of the particles
+        this._explosion.direction1 = new BABYLON.Vector3(-1, 1, -1);
+        this._explosion.direction2 = new BABYLON.Vector3(1, 1, 1);
+        // Set the angular speed of the particles
+        this._explosion.minAngularSpeed = 0;
+        this._explosion.maxAngularSpeed = Math.PI;
+    }
+
     public dispose() {
         this._mesh.dispose();
+        this._sound_bip_bip.stopAndDispose();
         this._smokeParticles.dispose();
         this._laser.dispose();
     }

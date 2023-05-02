@@ -133,7 +133,7 @@ export class LaserGun implements Gun {
         this._laser.fire(this._laserPoint.getAbsolutePosition(), laserDirection);
 
         // play sound
-        this._shoot.play();
+        this._shoot.play(true);
 
         // play animation
         animations.playAnimation(this._gunModel, AnimationName.BarrelShot);

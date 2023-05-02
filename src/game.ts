@@ -14,6 +14,7 @@ import { InstanceLoader } from './instanceLoader';
 import { Player } from './player/player';
 import TimeControlledProjectileAnimation from './projectile/TimeControlledProjectileAnimation';
 import { StateManager, StatesEnum } from './states/stateManager';
+import { SoundPlayer } from './sounds/soundPlayer';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -34,6 +35,7 @@ export class Game {
     private _stateManager: StateManager;
 
     public static player: Player;
+    public static sounds: SoundPlayer[];
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
@@ -108,6 +110,9 @@ export class Game {
 
         // Player
         Game.player = new Player(this._scene);
+
+        // sounds
+        Game.sounds = [];
 
         // Load platform
         // FIXME : Changer pour chargé l'objet unique
