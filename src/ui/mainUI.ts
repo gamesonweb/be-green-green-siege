@@ -73,6 +73,9 @@ export default class MainGUI implements UI {
         // Add controls to middle panel
         let button5 = this.createLevelButton('Test', StatesEnum.LEVELTEST);
         middlePanel.addControl(button5);
+
+        let tutorials = this.createLevelButton('Tutorials', StatesEnum.TUTO1);
+        middlePanel.addControl(tutorials);
     }
 
     dispose() {

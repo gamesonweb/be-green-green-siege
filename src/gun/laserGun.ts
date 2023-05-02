@@ -30,7 +30,7 @@ export class LaserGun implements Gun {
     private _currentHeat: number;
     private _isOverheated: boolean;
     private readonly _maxHeat: number;
-    private readonly _heatPerShot: number;
+    public heatPerShot: number;
     private readonly _coolingRate: number;
 
     // sound effect
@@ -59,7 +59,7 @@ export class LaserGun implements Gun {
         this._currentHeat = 0;
         this._isOverheated = false;
         this._maxHeat = 30;
-        this._heatPerShot = 5;
+        this.heatPerShot = 5;
         this._coolingRate = 20;
     }
 
@@ -143,7 +143,7 @@ export class LaserGun implements Gun {
         this._timeSinceLastShot = 0;
 
         // update heat
-        this._currentHeat += this._heatPerShot;
+        this._currentHeat += this.heatPerShot;
 
         // Update score
         score.playerShoots();

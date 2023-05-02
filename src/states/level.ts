@@ -156,6 +156,7 @@ export default class Level implements State {
     public dispose(): void {
         this._gun.dispose();
         this._shield.dispose();
+        this._stateUI.dispose();
         for (let zone of this._zones) {
             zone.dispose();
         }
