@@ -36,13 +36,17 @@ export class SoundPlayer {
         this._sound.setPosition(position);
     }
 
-    public play(randomDelay?: number): void {
-        if (randomDelay !== undefined && typeof randomDelay === 'number') {
-            this._sound.play(Math.random() * randomDelay);
-            // console.log(this._id, "-> : tutu");
-        } else {
+    public setAutoplay(bool: boolean) {
+        this._sound.autoplay = bool;
+    }
+
+    public play(ignoreIsPlaying: boolean = false): void {
+        if(ignoreIsPlaying) {
+            // e.g. laser shot
             this._sound.play();
-            // console.log(this._id, "-> : tata");
+        } else if (!this._sound.isPlaying) {
+            this._sound.play();
+            // console.log(this._id, "-> : tutu");
         }
     }
 
