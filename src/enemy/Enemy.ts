@@ -115,12 +115,12 @@ export class Enemy extends Targetable implements IEnemy {
         this._smokeParticles.minSize = 0.1;
 
         // sounds 
-        this._sound_bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 50, scene, this._mesh);
+        this._sound_bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 25, scene, this._mesh);
         this._sound_bip_bip.playWithRepeater(10 + 10 * Math.random());
-        this._sound_explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 15, this._scene, this._mesh);
-        this._sound_fuckin = new SoundPlayer(SoundsBank.ENEMY_FUCKIN, 120, this._scene, this._mesh);
-        this._sound_touched = new SoundPlayer(SoundsBank.ENEMY_TOUCHED, 120, this._scene, this._mesh);
-        this._sound_shoot = new SoundPlayer(SoundsBank.ENEMY_SHOOT, 10, this._scene, this._mesh);
+        this._sound_explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 8, this._scene, this._mesh);
+        this._sound_fuckin = new SoundPlayer(SoundsBank.ENEMY_FUCKIN, 100, this._scene, this._mesh);
+        this._sound_touched = new SoundPlayer(SoundsBank.ENEMY_TOUCHED, 80, this._scene, this._mesh);
+        this._sound_shoot = new SoundPlayer(SoundsBank.ENEMY_SHOOT, 8, this._scene, this._mesh);
 
         // explosion init
         this.createExplosion();

@@ -52,7 +52,7 @@ export default class Level implements State {
         this._stateManager = stateManager;
         this._stateUI = new StateUI(this._scene, this._scene.activeCamera, this._stateManager);
         this.shieldSize = 0;
-        this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, 0.08, this._scene);
+        this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, 0.3, this._scene);
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
     }
@@ -178,7 +178,9 @@ export default class Level implements State {
 
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
-
+        Game.sounds.forEach((sound) => {
+            sound.setPitch(timeControl.getTimeScale());
+        });
         for (let zone of this._zones) {
             zone.animate(deltaTime);
         }

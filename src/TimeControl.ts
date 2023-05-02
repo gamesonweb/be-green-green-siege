@@ -1,5 +1,6 @@
 import { animations } from './AnimationController';
 import starManager from './StarManager';
+import { Game } from './game';
 
 /**
  * Class responsible for controlling the simulation time.
