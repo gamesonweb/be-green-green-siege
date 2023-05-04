@@ -101,7 +101,15 @@ export default class TutoUI {
         ////////////////////
 
         // Tutorial text
-        UtilsUI.createActionButton(tutorialText, this._topPanel, new BABYLON.Vector3(4, 0.4, 1), 24, () => {});
+        // UtilsUI.createActionButton(tutorialText, this._topPanel, new BABYLON.Vector3(4, 0.4, 1), 24, () => {});
+        UtilsUI.createTextZone(
+            'tutorialTexttutorialTexttutorialTexttutorialTexttutorialText\ntutorialText\ntutorialText',
+            this._topPanel,
+            4,
+            0.5,
+            26,
+            this._scene
+        );
 
         // Return to menu button
         UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 24, () => {
