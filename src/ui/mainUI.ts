@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
+import xrHandler from '../XRHandler';
 import { StateManager, StatesEnum } from '../states/stateManager';
 import scoreUI from './scoreUI';
 import UI from './ui';
@@ -30,6 +31,8 @@ export default class MainGUI implements UI {
     }
 
     async load() {
+        xrHandler.setControllerVisibility(true);
+
         // this._scene.debugLayer.show();
         this._manager = new GUI.GUI3DManager(this._scene);
 

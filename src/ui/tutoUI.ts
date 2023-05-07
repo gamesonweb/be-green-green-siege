@@ -130,14 +130,7 @@ export default class TutoUI {
 
         // Tutorial text
         // UtilsUI.createActionButton(tutorialText, this._topPanel, new BABYLON.Vector3(4, 0.4, 1), 24, () => {});
-        UtilsUI.createTextZone(
-            'tutorialTexttutorialTexttutorialTexttutorialTexttutorialText\ntutorialText\ntutorialText',
-            this._topPanel,
-            4,
-            0.5,
-            30,
-            this._scene
-        );
+        UtilsUI.createTextZone(tutorialText, this._topPanel, 4, 0.5, 30, this._scene);
 
         // Return to menu button
         UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
@@ -152,7 +145,7 @@ export default class TutoUI {
         });
 
         // Next tutorial button
-        if (tutorialNumber <= this.NUMBER_OF_TUTORIALS) {
+        if (tutorialNumber < this.NUMBER_OF_TUTORIALS) {
             this._nextButton = UtilsUI.createActionButton(
                 'Next Tutorial',
                 this._rightPanel,
@@ -167,8 +160,8 @@ export default class TutoUI {
             UtilsUI.createActionButton(
                 'Restart Tutorials',
                 this._rightPanel,
-                new BABYLON.Vector3(0.5, 0.5, 0.5),
-                24,
+                new BABYLON.Vector3(1, 0.25, 1),
+                20,
                 () => {
                     this.dispose();
                     this._stateManager.switchState(StatesEnum.TUTO1);

@@ -63,24 +63,34 @@ class XRHandler {
     }
 
     /**
-     * Hide or show the controllers.
-     * @param visible True to show the controllers, false to hide them.
+     * Hide or show the controllers and laser.
+     * @param visible True to show the controllers and laser, false to hide them.
+     * @param controllerSide The side of the controller to hide.
      */
-    public setControllerVisibility(visible: boolean): void {
+    public setControllerVisibility(visible: boolean, controllerSide: 'left' | 'right' | 'both' = 'both'): void {
         if (!this._xr) return;
-        this._xr.input.controllers.forEach((controller) => {
-            controller.motionController!.rootMesh.getChildMeshes().forEach((mesh) => {
-                mesh.isVisible = visible;
-            });
+        this._xr.input.controllers.forEach((controller, index) => {
+            if (
+                (controllerSide === 'right' && index === 0) ||
+                (controllerSide === 'left' && index === 1) ||
+                controllerSide === 'both'
+            ) {
+                controller.motionController!.rootMesh.getChildMeshes().forEach((mesh) => {
+                    mesh.isVisible = visible;
+                });
+            }
         });
 
         // Hide the laser and pointer
-        this._xr.pointerSelection.displayLaserPointer = visible;
-        this._xr.pointerSelection.displaySelectionMesh = visible;
-
-        // Hide gun and shield
-        this._scene.getMeshByName('GunParent').isVisible = !visible;
-        this._scene.getMeshByName('ShieldGrip').isVisible = !visible;
+        if (visible) {
+            this._xr.pointerSelection.displayLaserPointer = true;
+            this._xr.pointerSelection.displaySelectionMesh = true;
+        } else {
+            if (controllerSide === 'both') {
+                this._xr.pointerSelection.displayLaserPointer = false;
+                this._xr.pointerSelection.displaySelectionMesh = false;
+            }
+        }
 
         this._hideMeshWithChildren(this._scene.getMeshByName('GunParent'), !visible);
         this._hideMeshWithChildren(this._scene.getMeshByName('ShieldGrip'), !visible);
