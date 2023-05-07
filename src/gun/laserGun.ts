@@ -149,6 +149,10 @@ export class LaserGun implements Gun {
         score.playerShoots();
     }
 
+    public isOverheated(): boolean {
+        return this._isOverheated;
+    }
+
     private updateHeat(deltaTime: number): void {
         // check if gun is overheated
         if (this._currentHeat >= this._maxHeat && !this._isOverheated) {
