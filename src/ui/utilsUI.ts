@@ -1,9 +1,23 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 
+/**
+ * Utils for UI
+ */
 class UtilsUI {
     public static colorSaumon = new BABYLON.Color3(1, 0.512, 0.456);
 
+    /**
+     * Create a button
+     * @param text the text of the button
+     * @param panel the panel where the button will be added
+     * @param scale the scale of the button
+     * @param fontSize the font size of the button
+     * @param callback the callback when the button is clicked
+     * @param albedoColor albedo color of the button
+     * @param innerGlowColorIntensity intensity of the inner glow
+     * @returns
+     */
     public static createActionButton(
         text: string,
         panel: GUI.StackPanel3D,
@@ -13,6 +27,7 @@ class UtilsUI {
         albedoColor?: BABYLON.Color3,
         innerGlowColorIntensity?: number
     ): GUI.HolographicButton {
+        // Create a button
         const button = new GUI.HolographicButton(text);
         button.onPointerClickObservable.add(callback);
         panel.addControl(button);
@@ -21,20 +36,29 @@ class UtilsUI {
         button.backMaterial.innerGlowColorIntensity = innerGlowColorIntensity || 0.5;
         button.backMaterial.albedoColor = albedoColor || UtilsUI.colorSaumon;
 
+        // Create a text for the button
         const buttonText = new GUI.TextBlock();
         buttonText.text = text;
-        // buttonText.fontWeight = 'bold';
+        buttonText.fontWeight = 'bold';
         buttonText.color = 'white';
         buttonText.fontSize = fontSize;
         buttonText.scaleX = 1 / scale.x;
         buttonText.scaleY = 1 / scale.y;
-        // buttonText.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER; // Center the text horizontally
-        // buttonText.textVerticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Center the text vertically
         button.content = buttonText;
 
         return button;
     }
 
+    /**
+     * Create a text zone
+     * @param text the text of the text zone
+     * @param panel the panel where the text zone will be added
+     * @param width the width of the text zone
+     * @param height the height of the text zone
+     * @param fontSize the font size of the text zone
+     * @param scene the scene
+     * @returns
+     */
     public static createTextZone(
         text: string,
         panel: GUI.StackPanel3D,
@@ -43,7 +67,6 @@ class UtilsUI {
         fontSize: number,
         scene: BABYLON.Scene
     ): GUI.MeshButton3D {
-        
         // Create a plane mesh
         const planeMesh = BABYLON.MeshBuilder.CreatePlane(
             'textZonePlane',
@@ -104,7 +127,3 @@ class UtilsUI {
 }
 
 export default UtilsUI;
-
-function createImageDataURI(canvas: BABYLON.ICanvas, mime: string): string {
-    return canvas.toDataURL(mime);
-}

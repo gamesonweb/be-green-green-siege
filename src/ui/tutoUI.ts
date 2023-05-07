@@ -19,6 +19,8 @@ export default class TutoUI {
     private _middlePanel: GUI.StackPanel3D;
     private _rightPanel: GUI.StackPanel3D;
 
+    private _nextButton: GUI.HolographicButton;
+
     private readonly NUMBER_OF_TUTORIALS: number = 6;
 
     constructor(scene: BABYLON.Scene, camera: BABYLON.Camera, stateManager: StateManager) {
@@ -27,7 +29,12 @@ export default class TutoUI {
         this._stateManager = stateManager;
     }
 
-    getNextTutorial(tutorialNumber): StatesEnum {
+    /**
+     * Get the state enum from the tutorial number
+     * @param tutorialNumber The tutorial number
+     * @returns The next tutorial
+     */
+    public getNextTutorial(tutorialNumber): StatesEnum {
         switch (tutorialNumber) {
             case 1:
                 return StatesEnum.TUTO1;
@@ -82,6 +89,27 @@ export default class TutoUI {
         this._rightPanel.position.x = 1.5;
     }
 
+    /**
+     * start flashing the next button
+     */
+    public flashNextButton(): void {
+        if (this._nextButton) {
+            this._nextButton.content.color = 'green';
+            setTimeout(() => {
+                this._nextButton.content.color = 'white';
+            }, 1000);
+
+            setTimeout(() => {
+                this.flashNextButton();
+            }, 2000);
+        }
+    }
+
+    /**
+     * Load the UI of the tutorial
+     * @param tutorialText  The tutorial text
+     * @param tutorialNumber The tutorial number
+     */
     public load(tutorialText: string, tutorialNumber: number): void {
         // Create manager
         this._manager = new GUI.GUI3DManager(this._scene);
@@ -107,28 +135,34 @@ export default class TutoUI {
             this._topPanel,
             4,
             0.5,
-            26,
+            30,
             this._scene
         );
 
         // Return to menu button
-        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 24, () => {
+        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.MAINMENU);
         });
 
         // Restart button
-        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 24, () => {
+        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(this.getNextTutorial(tutorialNumber));
         });
 
         // Next tutorial button
         if (tutorialNumber <= this.NUMBER_OF_TUTORIALS) {
-            UtilsUI.createActionButton('Next Tutorial', this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 24, () => {
-                this.dispose();
-                this._stateManager.switchState(this.getNextTutorial(tutorialNumber + 1));
-            });
+            this._nextButton = UtilsUI.createActionButton(
+                'Next Tutorial',
+                this._rightPanel,
+                new BABYLON.Vector3(1, 0.25, 1),
+                20,
+                () => {
+                    this.dispose();
+                    this._stateManager.switchState(this.getNextTutorial(tutorialNumber + 1));
+                }
+            );
         } else {
             UtilsUI.createActionButton(
                 'Restart Tutorials',
@@ -143,7 +177,10 @@ export default class TutoUI {
         }
     }
 
-    dispose(): void {
+    /**
+     * Dispose the UI
+     */
+    public dispose(): void {
         this._manager.dispose();
         this._anchor.dispose();
     }
