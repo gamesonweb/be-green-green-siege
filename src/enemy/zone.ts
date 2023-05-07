@@ -65,6 +65,10 @@ export class Zone {
         this._commandos.push(commando);
     }
 
+    public getCommandos(): Commando[] {
+        return this._commandos;
+    }
+
     public getMin(): Vector3 {
         return this._min;
     }

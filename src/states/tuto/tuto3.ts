@@ -1,15 +1,17 @@
 import { Scene, Vector3 } from 'babylonjs';
 import xrHandler from '../../XRHandler';
+import { Enemy } from '../../enemy/Enemy';
+import { Commando } from '../../enemy/commando';
+import { Zone } from '../../enemy/zone';
 import { Game } from '../../game';
 import { LaserGun } from '../../gun/laserGun';
 import { Player } from '../../player/player';
 import { Laser } from '../../projectile/laser';
-import { TutoHotTarget } from '../../target/tutoHotTarget';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
 
-export default class Tutorial2 implements State {
+export default class Tutorial3 implements State {
     private _scene: Scene;
 
     // Level properties
@@ -27,8 +29,13 @@ export default class Tutorial2 implements State {
     // UI
     private _tutorialUI: TutoUI;
 
-    // Targets
-    private _target: TutoHotTarget;
+    // Timer
+    private _timer: number;
+    private _timerMax: number;
+
+    // Enemies
+    private _zone: Zone;
+    private _numberOfEnemies: number;
 
     /**
      * Constructor
@@ -41,14 +48,19 @@ export default class Tutorial2 implements State {
         this.type = type;
         this._stateManager = stateManager;
         this._tutorialUI = new TutoUI(this._scene, this._scene.activeCamera, this._stateManager);
-        this.levelNumber = 2;
+        this.levelNumber = 3;
+
+        this._timer = 0;
+        this._timerMax = 3;
+
+        this._numberOfEnemies = 4;
     }
 
     /**
      * Check if the tutorial is finished
      */
     public checkTutorialStatus(): void {
-        if (this._gun.isOverheated()) {
+        if (this._zone.getNbEnemies() === 0) {
             this._success = true;
             this._tutorialUI.flashNextButton();
         }
@@ -60,22 +72,45 @@ export default class Tutorial2 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Face à vous se trouve une cible verte.
-        Maintenez le bouton de tir enfoncé pour tirer rapidement dessus, mais attention à ne pas trop tirer d'affilée, car votre arme va surchauffer et se bloquer temporairement pour se refroidir.
-        
-        Apprendre à maîtriser la surchauffe de votre arme est crucial.
-        Soyez stratégique dans vos tirs pour éviter de la faire surchauffer et optimiser son potentiel`;
+        const text = `Attention, attention ! Des robots ennemis ont envahi votre île et menacent votre arbre géant !
+        Regardez devant vous : vous verrez des robots flottants. Utilisez votre arme pour les abattre et sauver votre île.
+
+        N'oubliez pas que ces robots sont très méchants, alors tirez-leur dessus avec toute votre rage et votre détermination.
+        Bonne chanve!`;
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
         Game.player = new Player(this._scene);
         this._gun.heatPerShot = 5;
 
-        // Targets
-        this._target = new TutoHotTarget(this._scene, new Vector3(19, 4, -50));
-
         xrHandler.setControllerVisibility(false, 'left');
         xrHandler.setControllerVisibility(true, 'right');
+
+        const caracteristics = {
+            shotFreq: 0,
+            bulletFreq: 0,
+            nbBullet: 0,
+            bulletSpeed: 0,
+            speed: 4,
+            life: 3,
+            score: 0,
+            bias: 0,
+        };
+
+        const spawnPointsNames = ['Spawn2', 'Spawn3', 'Spawn4', 'Spawn5', 'Spawn6'];
+        const spawnPoints = spawnPointsNames.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
+
+        this._zone = new Zone(
+            new Vector3(10, 0, -55),
+            new Vector3(30, 15, -35),
+            spawnPoints,
+            this._scene,
+            this._numberOfEnemies,
+            caracteristics,
+            0,
+            0
+        );
+        this._zone.instantiate(this._numberOfEnemies);
     }
 
     /**
@@ -84,7 +119,7 @@ export default class Tutorial2 implements State {
     public dispose(): void {
         this._gun.dispose();
         this._tutorialUI.dispose();
-        this._target.dispose();
+        this._zone.dispose();
     }
 
     /**
@@ -109,12 +144,23 @@ export default class Tutorial2 implements State {
      */
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
+        this._zone.animate(deltaTime);
 
         if (!this._success) {
             this.checkTutorialStatus();
         }
 
-        this._target.animate(deltaTime);
+        // Change the destination of the enemies
+        this._timer += deltaTime;
+        if (this._timer > this._timerMax) {
+            this._timer = 0;
+            this._zone.getCommandos().forEach((commando: Commando) => {
+                const destination = this._zone.getRandomPoint();
+                commando.getEnemies().forEach((enemy: Enemy) => {
+                    enemy.setDestination(destination);
+                });
+            });
+        }
     }
 
     /**

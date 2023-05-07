@@ -6,6 +6,7 @@ import { MainMenuState } from './mainMenuState';
 import { State } from './state';
 import Tutorial1 from './tuto/tuto1';
 import Tutorial2 from './tuto/tuto2';
+import Tutorial3 from './tuto/tuto3';
 
 export enum StatesEnum {
     MAINMENU,
@@ -55,7 +56,7 @@ export class StateManager {
                 this._currentState = new Tutorial2(this._scene, StatesEnum.TUTO2, this);
                 break;
             case StatesEnum.TUTO3:
-                this._currentState = new Tutorial1(this._scene, StatesEnum.TUTO3, this);
+                this._currentState = new Tutorial3(this._scene, StatesEnum.TUTO3, this);
                 break;
             case StatesEnum.TUTO4:
                 this._currentState = new Tutorial1(this._scene, StatesEnum.TUTO4, this);
