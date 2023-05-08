@@ -2,7 +2,6 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import xrHandler from '../XRHandler';
 import { StateManager, StatesEnum } from '../states/stateManager';
-import scoreUI from './scoreUI';
 import UI from './ui';
 
 export default class MainGUI implements UI {
@@ -70,8 +69,6 @@ export default class MainGUI implements UI {
         leftPanel.addControl(button1);
 
         // Add score to right panel
-        await scoreUI.displayTopScores(rightPanel, 1);
-        await scoreUI.displayTopScores(rightPanel, 2);
 
         // Add controls to middle panel
         let button5 = this.createLevelButton('Test', StatesEnum.LEVELTEST);

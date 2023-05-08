@@ -85,11 +85,9 @@ export default class Inputs {
             if (timeControl.isPaused()) {
                 timeControl.resume();
                 currentstate.resume();
-                xrHandler.setControllerVisibility(false);
             } else {
                 timeControl.pause();
                 currentstate.pause();
-                xrHandler.setControllerVisibility(true);
             }
         }
     }

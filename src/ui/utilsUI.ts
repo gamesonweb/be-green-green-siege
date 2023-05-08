@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
+import score from '../Score';
 
 /**
  * Utils for UI
@@ -16,7 +17,6 @@ class UtilsUI {
      * @param callback the callback when the button is clicked
      * @param albedoColor albedo color of the button
      * @param innerGlowColorIntensity intensity of the inner glow
-     * @returns
      */
     public static createActionButton(
         text: string,
@@ -96,7 +96,7 @@ class UtilsUI {
         textBlock.text = text;
         textBlock.color = 'white';
         textBlock.fontSize = fontSize;
-        // textBlock.fontWeight = 'bold';
+        textBlock.fontWeight = 'bold';
         textBlock.textWrapping = true; // Enable text wrapping
         textBlock.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         textBlock.textVerticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER;
@@ -123,6 +123,66 @@ class UtilsUI {
         panel.addControl(meshButton);
 
         return meshButton;
+    }
+
+    /**
+     * Create a text zone for the current score
+     * @param panel the panel where the text zone will be added
+     * @param scene the scene
+     * @param width the width of the text zone
+     * @param height the height of the text zone
+     * @param fontSize the font size of the text zone
+     */
+    public static async createCurrentScoreTextZone(
+        panel: GUI.StackPanel3D,
+        scene: BABYLON.Scene,
+        width: number,
+        height: number,
+        fontSize: number
+    ) {
+        const rank = score.getRank();
+        let text;
+        if (rank === 0) {
+            text = `Your score: ${score.getCurrentScore()}`;
+        } else {
+            text = `Your score: ${score.getCurrentScore()} (Rank: ${rank})`;
+        }
+        UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
+    }
+
+    /**
+     * Create a text zone for the top scores
+     * @param panel the panel where the text zone will be added
+     * @param scene the scene
+     * @param width the width of the text zone
+     * @param height the height of the text zone
+     * @param fontSize the font size of the text zone
+     * @param levelNumber the level number
+     * @param top the number maximum of top scores to display
+     */
+    public static async createTopScoresTextZone(
+        panel: GUI.StackPanel3D,
+        scene: BABYLON.Scene,
+        width: number,
+        height: number,
+        fontSize: number,
+        levelNumber: number,
+        top: number
+    ) {
+        await score.loadTopScores(levelNumber);
+        const topScores = score.getTopScores(top);
+
+        topScores
+            .slice()
+            .reverse()
+            .forEach((score, index) => {
+                const text = `${topScores.length - index}. ${score.score} (${new Date(
+                    score.timestamp
+                ).toLocaleString()})`;
+                UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
+            });
+
+        UtilsUI.createTextZone(`Top scores level ${levelNumber}:`, panel, width, height, fontSize, scene);
     }
 }
 
