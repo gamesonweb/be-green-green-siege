@@ -78,7 +78,7 @@ export default class Tutorial4 implements State {
         Game.player.resetLife();
 
         xrHandler.setControllerVisibility(true, 'left');
-        xrHandler.setControllerVisibility(false, 'right');
+        xrHandler.setControllerVisibility(true, 'right');
 
         const caracteristics = {
             shotFreq: 8,

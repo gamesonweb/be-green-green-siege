@@ -103,7 +103,7 @@ export default class Tutorial6 implements State {
         const spawnPoints = spawnPointsNames.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
 
         this._zone = new Zone(
-            new Vector3(10, 0, -55),
+            new Vector3(10, 4, -55),
             new Vector3(30, 15, -35),
             spawnPoints,
             this._scene,

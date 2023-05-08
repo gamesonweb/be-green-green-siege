@@ -73,8 +73,8 @@ export default class Tutorial2 implements State {
         // Targets
         this._target = new TutoHotTarget(this._scene, new Vector3(19, 4, -50));
 
-        xrHandler.setControllerVisibility(false, 'left');
-        xrHandler.setControllerVisibility(true, 'right');
+        xrHandler.setControllerVisibility(true, 'left');
+        xrHandler.setControllerVisibility(false, 'right');
     }
 
     /**

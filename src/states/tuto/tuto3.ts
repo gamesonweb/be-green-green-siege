@@ -82,8 +82,8 @@ export default class Tutorial3 implements State {
         Game.player.resetLife();
         this._gun.heatPerShot = 5;
 
-        xrHandler.setControllerVisibility(false, 'left');
-        xrHandler.setControllerVisibility(true, 'right');
+        xrHandler.setControllerVisibility(true, 'left');
+        xrHandler.setControllerVisibility(false, 'right');
 
         const caracteristics = {
             shotFreq: 0,
@@ -100,7 +100,7 @@ export default class Tutorial3 implements State {
         const spawnPoints = spawnPointsNames.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
 
         this._zone = new Zone(
-            new Vector3(10, 0, -55),
+            new Vector3(10, 4, -55),
             new Vector3(30, 15, -35),
             spawnPoints,
             this._scene,

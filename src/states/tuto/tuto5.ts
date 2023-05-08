@@ -81,8 +81,10 @@ export default class Tutorial5 implements State {
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();
 
-        xrHandler.setControllerVisibility(true, 'left');
-        xrHandler.setControllerVisibility(false, 'right');
+        this.shieldSize = 0;
+
+        xrHandler.setControllerVisibility(false, 'left');
+        xrHandler.setControllerVisibility(true, 'right');
 
         const caracteristics = {
             shotFreq: 8,
@@ -99,7 +101,7 @@ export default class Tutorial5 implements State {
         const spawnPoints = spawnPointsNames.map((name) => this._scene.getMeshByName(name).getAbsolutePosition());
 
         this._zone = new Zone(
-            new Vector3(10, 0, -55),
+            new Vector3(10, 4, -55),
             new Vector3(30, 15, -35),
             spawnPoints,
             this._scene,
@@ -125,7 +127,7 @@ export default class Tutorial5 implements State {
      * @returns The name of the tutorial
      */
     public getName(): String {
-        return 'Tutorial 1';
+        return 'Tutorial 5';
     }
 
     /**

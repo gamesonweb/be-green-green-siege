@@ -71,8 +71,8 @@ class XRHandler {
         if (!this._xr) return;
         this._xr.input.controllers.forEach((controller, index) => {
             if (
-                (controllerSide === 'right' && index === 0) ||
-                (controllerSide === 'left' && index === 1) ||
+                (controllerSide === 'right' && index === 1) ||
+                (controllerSide === 'left' && index === 0) ||
                 controllerSide === 'both'
             ) {
                 controller.motionController!.rootMesh.getChildMeshes().forEach((mesh) => {
@@ -92,8 +92,13 @@ class XRHandler {
             }
         }
 
-        this._hideMeshWithChildren(this._scene.getMeshByName('GunParent'), !visible);
-        this._hideMeshWithChildren(this._scene.getMeshByName('ShieldGrip'), !visible);
+        if (controllerSide === 'both' || controllerSide === 'right') {
+            this._hideMeshWithChildren(this._scene.getMeshByName('GunParent'), !visible);
+        }
+
+        if (controllerSide === 'both' || controllerSide === 'left') {
+            this._hideMeshWithChildren(this._scene.getMeshByName('ShieldGrip'), !visible);
+        }
     }
 
     private _hideMeshWithChildren(mesh: BABYLON.AbstractMesh, hide: boolean) {

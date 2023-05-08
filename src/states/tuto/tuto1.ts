@@ -77,8 +77,8 @@ export default class Tutorial1 implements State {
         this._targets.push(new TutoTarget(this._scene, new Vector3(19, 8, -45)));
         this._targets.push(new TutoTarget(this._scene, new Vector3(10, 3, -49)));
 
-        xrHandler.setControllerVisibility(false, 'left');
-        xrHandler.setControllerVisibility(true, 'right');
+        xrHandler.setControllerVisibility(true, 'left');
+        xrHandler.setControllerVisibility(false, 'right');
     }
 
     /**
