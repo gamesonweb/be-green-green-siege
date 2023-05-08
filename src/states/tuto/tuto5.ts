@@ -74,8 +74,10 @@ export default class Tutorial5 implements State {
         this._success = false;
 
         const text = `Vous avez un bouclier en plus dans la main.
-        Utilisez-le pour vous protéger des tirs ennemis, mais gardez à l'esprit que le bouclier a une durée de vie limitée. Si le bouclier se brise, il faudra quelques secondes pour qu'il se recharge.
+        Utilisez-le pour vous protéger des tirs ennemis, mais gardez à l'esprit que le bouclier a une durée de vie limitée.
+        Si le bouclier se brise, il faudra quelques secondes pour qu'il se recharge.
         
+        Utilisez le bouton "trigger" à l'arrière de votre manette Oculus Touch pour deployer le bouclier.
         Bonne chance dans votre mission de défense de l'île !`;
 
         this._tutorialUI.load(text, this.levelNumber);
