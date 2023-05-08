@@ -19,12 +19,14 @@
   "dependencies": {
     "babylonjs": "^6.1.0",
     "babylonjs-gui": "^6.1.0",
-    "babylonjs-loaders": "^6.1.0"
+    "babylonjs-loaders": "^6.1.0",
+    "http-server": "^14.1.1"
   },
   "scripts": {
     "build": "webpack",
     "start": "webpack serve",
-    "vr": "webpack && http-server -S –c-1 -C cert.pem dist/"
+    "vr": "webpack && http-server -S -c-1 -C cert.pem dist/",
+    "deploy": "http-server -c-1 -p3630 dist/"
   },
   "repository": {
     "type": "git",
