@@ -7,6 +7,9 @@ import { State } from './state';
 import Tutorial1 from './tuto/tuto1';
 import Tutorial2 from './tuto/tuto2';
 import Tutorial3 from './tuto/tuto3';
+import Tutorial4 from './tuto/tuto4';
+import Tutorial5 from './tuto/tuto5';
+import Tutorial6 from './tuto/tuto6';
 
 export enum StatesEnum {
     MAINMENU,
@@ -59,13 +62,13 @@ export class StateManager {
                 this._currentState = new Tutorial3(this._scene, StatesEnum.TUTO3, this);
                 break;
             case StatesEnum.TUTO4:
-                this._currentState = new Tutorial1(this._scene, StatesEnum.TUTO4, this);
+                this._currentState = new Tutorial4(this._scene, StatesEnum.TUTO4, this);
                 break;
             case StatesEnum.TUTO5:
-                this._currentState = new Tutorial1(this._scene, StatesEnum.TUTO5, this);
+                this._currentState = new Tutorial5(this._scene, StatesEnum.TUTO5, this);
                 break;
             case StatesEnum.TUTO6:
-                this._currentState = new Tutorial1(this._scene, StatesEnum.TUTO6, this);
+                this._currentState = new Tutorial6(this._scene, StatesEnum.TUTO6, this);
                 break;
             default:
                 console.error('State not found');

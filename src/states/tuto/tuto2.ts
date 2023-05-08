@@ -2,7 +2,6 @@ import { Scene, Vector3 } from 'babylonjs';
 import xrHandler from '../../XRHandler';
 import { Game } from '../../game';
 import { LaserGun } from '../../gun/laserGun';
-import { Player } from '../../player/player';
 import { Laser } from '../../projectile/laser';
 import { TutoHotTarget } from '../../target/tutoHotTarget';
 import TutoUI from '../../ui/tutoUI';
@@ -22,7 +21,7 @@ export default class Tutorial2 implements State {
     public shieldSize: number;
 
     // Gun
-    private _gun: any;
+    private _gun: LaserGun;
 
     // UI
     private _tutorialUI: TutoUI;
@@ -68,7 +67,7 @@ export default class Tutorial2 implements State {
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
-        Game.player = new Player(this._scene);
+        Game.player.resetLife();
         this._gun.heatPerShot = 5;
 
         // Targets
@@ -92,7 +91,7 @@ export default class Tutorial2 implements State {
      * @returns The name of the tutorial
      */
     public getName(): String {
-        return 'Tutorial 1';
+        return 'Tutorial 2';
     }
 
     /**

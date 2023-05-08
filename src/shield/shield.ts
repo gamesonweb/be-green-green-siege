@@ -107,12 +107,15 @@ export class Shield extends Targetable {
 
     private _updateScaling(shieldSize: number, deltaTime: number): void {
         if (this._regenerating) {
-            this._shieldMesh.scaling =this._baseScale.clone();
-        }
-        else {
+            this._shieldMesh.scaling = this._baseScale.clone();
+        } else {
             const scalingLerpSpeed = 11 * deltaTime;
             const currentScaling = this._shieldMesh.scaling;
-            const targetScaling = new BABYLON.Vector3(this._baseScale.x, this._baseScale.y + shieldSize, this._baseScale.z);
+            const targetScaling = new BABYLON.Vector3(
+                this._baseScale.x,
+                this._baseScale.y + shieldSize,
+                this._baseScale.z
+            );
             this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);
         }
     }
@@ -144,31 +147,34 @@ export class Shield extends Targetable {
             }
         }
     }
-    
+
     private breakShield(): void {
         this._regenerating = true;
         this._shieldMesh.scaling = this._baseScale;
         // TODO SOUND: Play shield break sound
     }
-    
-    private _regenerateShield(deltaTime: number): void {
 
+    private _regenerateShield(deltaTime: number): void {
         const regenerationSpeed = 0.5 * deltaTime;
-        this._life = BABYLON.Scalar.Lerp(this._life, this._maxLife+20, regenerationSpeed);
-        
+        this._life = BABYLON.Scalar.Lerp(this._life, this._maxLife + 20, regenerationSpeed);
+
         if (this._life >= this._maxLife) {
             this._life = this._maxLife;
             this._regenerating = false;
         }
     }
-    
+
     private updateColor(): void {
         let lifePercentage = this._life / this._maxLife;
         let maxColor = new BABYLON.Color3(0.0471, 0.4078, 0.4706);
         let minColor = new BABYLON.Color3(0.4706, 0.0471, 0.0471);
         let currentColor = BABYLON.Color3.Lerp(minColor, maxColor, lifePercentage);
-        
+
         (this._shieldMesh.material as BABYLON.StandardMaterial).diffuseColor = currentColor;
+    }
+
+    public getLife(): number {
+        return this._life;
     }
 
     /**
@@ -176,6 +182,6 @@ export class Shield extends Targetable {
      */
     public dispose(): void {
         this._shieldGrip.parent = null;
-        this._shieldGrip.position = new BABYLON.Vector3(0,0,0)
+        this._shieldGrip.position = new BABYLON.Vector3(0, 0, 0);
     }
 }

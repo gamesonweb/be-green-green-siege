@@ -1,7 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { Zone } from '../enemy/zone';
 import { LaserGun } from '../gun/laserGun';
-import { Player } from '../player/player';
 import { Laser } from '../projectile/laser';
 import { Shield } from '../shield/shield';
 import { State } from './state';
@@ -12,13 +11,12 @@ import xrHandler from '../XRHandler';
 import level1 from '../assets/levels/level1.json';
 import level2 from '../assets/levels/level2.json';
 import { Game } from '../game';
-import StateUI, { StateUIEnum } from '../ui/stateUI';
-import { StateManager, StatesEnum } from './stateManager';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
+import StateUI, { StateUIEnum } from '../ui/stateUI';
+import { StateManager, StatesEnum } from './stateManager';
 
 export default class Level implements State {
-
     private _scene: BABYLON.Scene;
     private _level: any;
 
@@ -154,7 +152,7 @@ export default class Level implements State {
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
         this._shield = new Shield(this._scene);
         this._zones = [];
-        Game.player = new Player(this._scene);
+        Game.player.resetLife();
         this.currentScore = 0;
         this.currentWave = 0;
 

@@ -6,11 +6,12 @@ import { Zone } from '../../enemy/zone';
 import { Game } from '../../game';
 import { LaserGun } from '../../gun/laserGun';
 import { Laser } from '../../projectile/laser';
+import { Shield } from '../../shield/shield';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
 
-export default class Tutorial3 implements State {
+export default class Tutorial6 implements State {
     private _scene: Scene;
 
     // Level properties
@@ -22,7 +23,8 @@ export default class Tutorial3 implements State {
     // Shield
     public shieldSize: number;
 
-    // Gun
+    // Shield
+    private _shield: Shield;
     private _gun: LaserGun;
 
     // UI
@@ -47,12 +49,17 @@ export default class Tutorial3 implements State {
         this.type = type;
         this._stateManager = stateManager;
         this._tutorialUI = new TutoUI(this._scene, this._scene.activeCamera, this._stateManager);
-        this.levelNumber = 3;
+        this.levelNumber = 6;
+
+        this._shield = new Shield(this._scene);
+        this.shieldSize = 0;
+
+        this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
         this._timer = 0;
-        this._timerMax = 3;
+        this._timerMax = 1;
 
-        this._numberOfEnemies = 4;
+        this._numberOfEnemies = 3;
     }
 
     /**
@@ -71,25 +78,21 @@ export default class Tutorial3 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Attention, attention ! Des robots ennemis ont envahi votre île et menacent votre arbre géant !
-        Regardez devant vous : vous verrez des robots flottants. Utilisez votre arme pour les abattre et sauver votre île.
+        const text = `Vous êtes prêt à défendre votre île contre les ennemis qui approchent.
+        Utilisez toutes les compétences que vous avez apprises dans chaque tutoriel pour affronter les vagues d'ennemis qui se présentent devant vous. Soyez rapide, soyez précis et gardez votre sang-froid pour protéger votre île et votre arbre géant.
 
-        N'oubliez pas que ces robots sont très méchants, alors tirez-leur dessus avec toute votre rage et votre détermination.
-        Bonne chanve!`;
+        Bonne chance dans votre mission de défense de l'île, et souvenez-vous : la survie de votre île est entre vos mains !`;
 
         this._tutorialUI.load(text, this.levelNumber);
-        this._gun = new LaserGun(this._scene, new Laser(this._scene));
         Game.player.resetLife();
-        this._gun.heatPerShot = 5;
 
-        xrHandler.setControllerVisibility(false, 'left');
-        xrHandler.setControllerVisibility(true, 'right');
+        xrHandler.setControllerVisibility(false);
 
         const caracteristics = {
-            shotFreq: 0,
-            bulletFreq: 0,
-            nbBullet: 0,
-            bulletSpeed: 0,
+            shotFreq: 8,
+            bulletFreq: 1,
+            nbBullet: 3,
+            bulletSpeed: 20,
             speed: 4,
             life: 3,
             score: 0,
@@ -116,8 +119,9 @@ export default class Tutorial3 implements State {
      * Dispose the tutorial
      */
     public dispose(): void {
-        this._gun.dispose();
+        this._shield.dispose();
         this._tutorialUI.dispose();
+        this._gun.dispose();
         this._zone.dispose();
     }
 
@@ -126,7 +130,7 @@ export default class Tutorial3 implements State {
      * @returns The name of the tutorial
      */
     public getName(): String {
-        return 'Tutorial 3';
+        return 'Tutorial 1';
     }
 
     /**
@@ -142,11 +146,14 @@ export default class Tutorial3 implements State {
      * @param deltaTime The delta time
      */
     public animate(deltaTime: number): void {
+        this._shield.animate(deltaTime, this.shieldSize);
         this._gun.animate(deltaTime);
         this._zone.animate(deltaTime);
 
         if (!this._success) {
             this.checkTutorialStatus();
+        } else {
+            xrHandler.setControllerVisibility(true);
         }
 
         // Change the destination of the enemies
