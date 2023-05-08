@@ -3,10 +3,10 @@ import { AnimationName, animations } from '../AnimationController';
 import score from '../Score';
 import { Game } from '../game';
 import { Laser } from '../projectile/laser';
-import { Targetable } from '../target/targetable';
-import { IEnemy } from './IEnemy';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
+import { Targetable } from '../target/targetable';
+import { IEnemy } from './IEnemy';
 
 export class Enemy extends Targetable implements IEnemy {
     private _scene: BABYLON.Scene;
@@ -114,7 +114,7 @@ export class Enemy extends Targetable implements IEnemy {
         this._smokeParticles.color2 = new BABYLON.Color4(0.1, 0.1, 0.1, 0);
         this._smokeParticles.minSize = 0.1;
 
-        // sounds 
+        // sounds
         this._sound_bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 25, scene, this._mesh);
         this._sound_bip_bip.playWithRepeater(10 + 10 * Math.random());
         this._sound_explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 8, this._scene, this._mesh);
@@ -261,9 +261,8 @@ export class Enemy extends Targetable implements IEnemy {
                 this.dispose();
             });
         }, 1000);
-        
+
         //
-        
     }
 
     private move(deltaTime: number, enemiesPositions: BABYLON.Vector3[]) {
@@ -388,6 +387,7 @@ export class Enemy extends Targetable implements IEnemy {
         this.fire(deltaTime);
         this.smoke(deltaTime);
         this.updateVibration();
+        this._explosion.updateSpeed = 1 * deltaTime;
     }
 
     public touch(): void {
@@ -396,7 +396,7 @@ export class Enemy extends Targetable implements IEnemy {
         const playerDistance = BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition());
         score.playerHitRobot(playerDistance);
         this._sound_touched.play();
-        if(this._lifePoint == 1) {
+        if (this._lifePoint == 1) {
             this._sound_touched.stopAndDispose();
         }
     }
@@ -407,9 +407,9 @@ export class Enemy extends Targetable implements IEnemy {
 
     private createExplosion() {
         // Create a particle system
-        this._explosion = new BABYLON.ParticleSystem("explosion", 200, this._scene);
+        this._explosion = new BABYLON.ParticleSystem('explosion', 200, this._scene);
         // Load the texture for the particles
-        this._explosion.particleTexture = new BABYLON.Texture("assets/cloud.png", this._scene);
+        this._explosion.particleTexture = new BABYLON.Texture('assets/cloud.png', this._scene);
         // Set the position of the particles
         this._explosion.emitter = this._mesh.position;
         this._explosion.minEmitBox = new BABYLON.Vector3(-2.5, -2.5, -2.5);

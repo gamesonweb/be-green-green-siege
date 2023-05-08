@@ -67,6 +67,8 @@ export default class Level implements State {
     }
 
     private updateLevel(deltaTime: number): void {
+        if (this._paused || this._win || this._lose) return;
+
         if (Game.player.getCurrentLife() <= 0) {
             this._lose = true;
             console.log('LOSE');
@@ -172,8 +174,6 @@ export default class Level implements State {
     // This function is called at each image rendering
     // You must use this function to animate all the things in this level
     public animate(deltaTime: number): void {
-        if (this._paused || this._win || this._lose) return;
-
         this._gun.animate(deltaTime);
         this._shield.animate(deltaTime, this.shieldSize);
         Game.sounds.forEach((sound) => {

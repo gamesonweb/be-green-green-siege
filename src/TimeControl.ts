@@ -1,6 +1,5 @@
 import { animations } from './AnimationController';
 import starManager from './StarManager';
-import { Game } from './game';
 
 /**
  * Class responsible for controlling the simulation time.
@@ -18,13 +17,14 @@ class TimeControl {
     private _slowDanger: boolean = false;
     private _slowDangerTime: number;
 
+    private _timeScale: number = 1;
+
     /**
      * Activates the pause state of the simulation.
      */
     public pause(): void {
         if (!this._paused) {
             this._paused = true;
-            this.update();
         }
     }
 
@@ -34,7 +34,6 @@ class TimeControl {
     public resume(): void {
         if (this._paused) {
             this._paused = false;
-            this.update();
         }
     }
 
@@ -65,7 +64,6 @@ class TimeControl {
         if (this.validInput(force) && this._slowPowerTime !== force) {
             this._slowPower = true;
             this._slowPowerTime = force;
-            this.update();
         }
     }
 
@@ -77,7 +75,6 @@ class TimeControl {
         if (this.validInput(force) && this._slowDangerTime !== force) {
             this._slowDanger = true;
             this._slowDangerTime = force;
-            this.update();
         }
     }
 
@@ -87,7 +84,6 @@ class TimeControl {
     public disableSlowPower(): void {
         if (this._slowPower) {
             this._slowPower = false;
-            this.update();
         }
 
         // reset the slow power time to undefined to allow the slow power to be activated again
@@ -100,7 +96,6 @@ class TimeControl {
     public disableSlowDanger(): void {
         if (this._slowDanger) {
             this._slowDanger = false;
-            this.update();
         }
 
         // reset the slow danger time to undefined to allow the slow danger to be activated again
@@ -108,22 +103,31 @@ class TimeControl {
     }
 
     /**
-     * Updates the speed ratio of the animations and the star manager based on the current state.
+     * Linear interpolation function.
+     * @param a The actual value.
+     * @param b The target value.
+     * @param t The transition speed.
+     * @returns {number} - The interpolated value.
      */
-    private update(): void {
-        if (this._paused) {
-            animations.updateSpeedRatio(this._pausedTime);
-            starManager.updateSpeedRatio(this._pausedTime);
-        } else if (this._slowDanger) {
-            animations.updateSpeedRatio(this._slowDangerTime);
-            starManager.updateSpeedRatio(this._slowDangerTime);
-        } else if (this._slowPower) {
-            animations.updateSpeedRatio(this._slowPowerTime);
-            starManager.updateSpeedRatio(this._slowPowerTime);
-        } else {
-            animations.updateSpeedRatio(this._normalTime);
-            starManager.updateSpeedRatio(this._normalTime);
-        }
+    private _lerp(a: number, b: number, t: number): number {
+        return a * (1 - t) + b * t;
+    }
+
+    public update(): void {
+        const targetSpeedRatio = this._paused
+            ? this._pausedTime
+            : this._slowDanger
+            ? this._slowDangerTime
+            : this._slowPower
+            ? this._slowPowerTime
+            : this._normalTime;
+
+        const transitionSpeed = 0.08;
+        const currentSpeedRatio = this._lerp(timeControl.getTimeScale(), targetSpeedRatio, transitionSpeed);
+        this._timeScale = currentSpeedRatio;
+
+        animations.updateSpeedRatio(currentSpeedRatio);
+        starManager.updateSpeedRatio(currentSpeedRatio);
     }
 
     /**
@@ -131,15 +135,7 @@ class TimeControl {
      * @returns {number} - The current time scale factor.
      */
     public getTimeScale(): number {
-        if (this._paused) {
-            return this._pausedTime;
-        } else if (this._slowDanger) {
-            return this._slowDangerTime;
-        } else if (this._slowPower) {
-            return this._slowPowerTime;
-        } else {
-            return this._normalTime;
-        }
+        return this._timeScale;
     }
 
     /**

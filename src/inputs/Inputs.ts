@@ -3,6 +3,7 @@ import timeControl from '../TimeControl';
 import Logger from '../debug/logger';
 import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
+import xrHandler from '../XRHandler';
 
 export default class Inputs {
     private _scene: BABYLON.Scene;
@@ -84,9 +85,11 @@ export default class Inputs {
             if (timeControl.isPaused()) {
                 timeControl.resume();
                 currentstate.resume();
+                xrHandler.setControllerVisibility(false);
             } else {
                 timeControl.pause();
                 currentstate.pause();
+                xrHandler.setControllerVisibility(true);
             }
         }
     }

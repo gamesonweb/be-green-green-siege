@@ -1,9 +1,11 @@
 import * as BABYLON from 'babylonjs';
 import timeControl from './TimeControl';
+import { StateManager } from './states/stateManager';
 
 class XRHandler {
     // Scene
     private _scene: BABYLON.Scene;
+    private _stateManager: StateManager;
 
     // XR
     public _xr: BABYLON.WebXRDefaultExperience;
@@ -16,8 +18,9 @@ class XRHandler {
      * Initialize XR.
      * @param scene The scene.
      */
-    public async initXR(scene: BABYLON.Scene): Promise<void> {
+    public async initXR(scene: BABYLON.Scene, StateManager: StateManager): Promise<void> {
         this._scene = scene;
+        this._stateManager = StateManager;
 
         // Get platform
         const platform = scene.getMeshByName('n1b14');
@@ -51,6 +54,7 @@ class XRHandler {
         this._xr.baseExperience.sessionManager.onXRSessionEnded.add(() => {
             // FIXME : appeler la fonction pause du jeu et pas juste le temps
             timeControl.pause();
+            this._stateManager.getCurrentState().pause();
         });
     }
 

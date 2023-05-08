@@ -13,8 +13,8 @@ import XRInputs from './inputs/XRInputs';
 import { InstanceLoader } from './instanceLoader';
 import { Player } from './player/player';
 import TimeControlledProjectileAnimation from './projectile/TimeControlledProjectileAnimation';
-import { StateManager, StatesEnum } from './states/stateManager';
 import { SoundPlayer } from './sounds/soundPlayer';
+import { StateManager, StatesEnum } from './states/stateManager';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -69,12 +69,18 @@ export class Game {
         debugCamera.angularSensibility = 1000;
     }
 
-    async createInput(scene: BABYLON.Scene, camera: BABYLON.FreeCamera, cavnas: HTMLCanvasElement, inputs: Inputs) {
+    async createInput(
+        scene: BABYLON.Scene,
+        camera: BABYLON.FreeCamera,
+        cavnas: HTMLCanvasElement,
+        inputs: Inputs,
+        stateManager: StateManager
+    ) {
         if (Game.vrSupported) {
             Logger.log('VR supported');
 
             // Load input
-            await xrHandler.initXR(scene);
+            await xrHandler.initXR(scene, stateManager);
 
             new XRInputs(scene, camera, cavnas, xrHandler.getXR(), inputs);
         } else {
@@ -115,7 +121,6 @@ export class Game {
         Game.sounds = [];
 
         // Load platform
-        // FIXME : Changer pour chargé l'objet unique
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
         let testTask = this._assetManager.addMeshTask('robot', '', './assets/', 'robot.glb');
         let gunTask = this._assetManager.addMeshTask('gun', '', './assets/', 'gun.glb');
@@ -145,7 +150,7 @@ export class Game {
             this._camera.rotation.y -= Math.PI;
 
             // Load input
-            this.createInput(this._scene, this._camera, this._canvas, this._inputs);
+            this.createInput(this._scene, this._camera, this._canvas, this._inputs, this._stateManager);
 
             this._stateManager.switchState(StatesEnum.MAINMENU);
 
@@ -174,6 +179,7 @@ export class Game {
             Game.player.animate();
             this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
             TimeControlledProjectileAnimation.animate();
+            timeControl.update();
         });
 
         // run the render loop
