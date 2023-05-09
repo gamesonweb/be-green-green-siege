@@ -131,14 +131,6 @@ export default class MainGUI implements UI {
         this._createEmptySpace(this._middlePanel, 1);
         this._createEmptySpace(this._rightPanel, 1);
         this._createEmptySpace(this._extraRightPanel, 1);
-
-        // Top scores
-        // UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1, 0.25, 34, 1, 5);
-
-        // Test
-        // this.createLevelButton('Test', StatesEnum.LEVELTEST, this._middlePanel);
-
-        // Tutorial
     }
 
     private createLevelButton(
@@ -156,7 +148,7 @@ export default class MainGUI implements UI {
 
                 // Add top scores
                 if (levelNumber !== undefined) {
-                    UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 34, levelNumber, 5);
+                    UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
                 }
             },
             out: () => {
