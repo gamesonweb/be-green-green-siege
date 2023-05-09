@@ -1,8 +1,10 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import xrHandler from '../XRHandler';
+import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
 import UI from './ui';
+import UtilsUI from './utilsUI';
 
 export default class MainGUI implements UI {
     private _scene: BABYLON.Scene;
@@ -13,69 +15,164 @@ export default class MainGUI implements UI {
 
     public anchor: BABYLON.TransformNode;
 
+    private _mainPanel: GUI.StackPanel3D;
+    private _topPanel: GUI.StackPanel3D;
+    private _bottomPanel: GUI.StackPanel3D;
+    private _leftPanel: GUI.StackPanel3D;
+    private _middlePanel: GUI.StackPanel3D;
+    private _rightPanel: GUI.StackPanel3D;
+    private _extraRightPanel: GUI.StackPanel3D;
+
     constructor(scene: BABYLON.Scene, camera: BABYLON.Camera, _stateManager: StateManager) {
         this._scene = scene;
         this._camera = camera;
         this._stateManager = _stateManager;
     }
 
-    private createLevelButton(text: string, levelenum: StatesEnum, levelNumber: number = undefined) {
-        let button = new GUI.HolographicButton('button');
-        button.text = text;
-        button.onPointerClickObservable.add(() => {
-            this._stateManager.switchState(levelenum, levelNumber);
-        });
+    private _initAnchor(): void {
+        // Create anchor transform node
+        this.anchor = new BABYLON.TransformNode('anchorTuto');
+        this.anchor.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
+        this.anchor.position = this._camera.position.clone();
+        this.anchor.position.z -= 5;
+        this.anchor.position.y = 2;
+        this._mainPanel.linkToTransformNode(this.anchor);
+    }
 
-        return button;
+    private _createEmptySpace(panel: GUI.StackPanel3D, height: number) {
+        // Create an invisible button
+        const button = UtilsUI.createTextZone('', panel, 0, height, 0, this._scene);
+        button.isVisible = false;
+    }
+
+    private _initSubpanelsExtraRight(): void {
+        // Create extra right sub panel
+        this._extraRightPanel = new GUI.StackPanel3D(true);
+        this._extraRightPanel.isVertical = true;
+        this._mainPanel.addControl(this._extraRightPanel);
+        this._extraRightPanel.position.x = 3;
+        this._extraRightPanel.position.y = -0.5;
+    }
+
+    private _initSubPanels(): void {
+        // Create top sub panel
+        this._topPanel = new GUI.StackPanel3D(true);
+        this._topPanel.isVertical = false;
+        this._mainPanel.addControl(this._topPanel);
+        this._topPanel.position.y = 0.4;
+
+        // Create left sub panel
+        this._leftPanel = new GUI.StackPanel3D(true);
+        this._leftPanel.isVertical = true;
+        this._mainPanel.addControl(this._leftPanel);
+        this._leftPanel.position.x = -1.5;
+
+        // Create middle sub panel
+        this._middlePanel = new GUI.StackPanel3D(true);
+        this._middlePanel.isVertical = true;
+        this._mainPanel.addControl(this._middlePanel);
+        this._middlePanel.position.x = 0;
+
+        // Create right sub panel
+        this._rightPanel = new GUI.StackPanel3D(true);
+        this._rightPanel.isVertical = true;
+        this._mainPanel.addControl(this._rightPanel);
+        this._rightPanel.position.x = 1.5;
+
+        // Create extra right sub panel
+        this._initSubpanelsExtraRight();
+
+        // Create bottom sub panel
+        this._bottomPanel = new GUI.StackPanel3D(true);
+        this._bottomPanel.isVertical = false;
+        this._mainPanel.addControl(this._bottomPanel);
+        this._bottomPanel.position.y = -0.4;
     }
 
     async load() {
-        xrHandler.setControllerVisibility(true);
-
-        // this._scene.debugLayer.show();
+        // Create manager
         this._manager = new GUI.GUI3DManager(this._scene);
 
-        this.anchor = new BABYLON.TransformNode('anchorPanel');
-        this.anchor.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
+        // Create a main panel that will contain 3D UI
+        this._mainPanel = new GUI.StackPanel3D();
+        this._manager.addControl(this._mainPanel);
 
-        let panel = new GUI.StackPanel3D();
+        // Create anchor transform node
+        this._initAnchor();
 
-        this._manager.addControl(panel);
-        panel.linkToTransformNode(this.anchor);
-        this.anchor.position = this._camera.position.clone();
-        this.anchor.position.z -= 5;
+        // Create panels
+        this._initSubPanels();
 
-        let leftPanel = new GUI.StackPanel3D(true);
-        leftPanel.isVertical = true;
-        panel.addControl(leftPanel);
-        leftPanel.position.x = -1.5; // Position to the left of center
+        // Show the controller
+        if (Game.vrSupported) {
+            xrHandler.setControllerVisibility(true);
+        }
 
-        let rightPanel = new GUI.StackPanel3D(true);
-        rightPanel.isVertical = true;
-        panel.addControl(rightPanel);
-        rightPanel.position.x = 1.5; // Position to the right of center
+        ////////////////////
+        // Create buttons //
+        ////////////////////
 
-        let middlePanel = new GUI.StackPanel3D(true);
-        middlePanel.isVertical = true;
-        panel.addControl(middlePanel);
-        middlePanel.position.x = 0; // Position in the center
+        // Title
+        UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
 
-        // Add controls to left panel
-        let button2 = this.createLevelButton('Level 2', StatesEnum.LEVEL, 2);
-        leftPanel.addControl(button2);
+        // Levels
+        this.createLevelButton('Level 3', StatesEnum.LEVEL, this._leftPanel, 3);
+        this.createLevelButton('Level 2', StatesEnum.LEVEL, this._leftPanel, 2);
+        this.createLevelButton('Level 1', StatesEnum.LEVEL, this._leftPanel, 1);
+        this.createLevelButton('Tutorials', StatesEnum.TUTO1, this._leftPanel);
+        // this.createLevelButton('Level 7', StatesEnum.LEVEL, this._middlePanel, 7);
+        this.createLevelButton('Level 6', StatesEnum.LEVEL, this._middlePanel, 6);
+        this.createLevelButton('Level 5', StatesEnum.LEVEL, this._middlePanel, 5);
+        this.createLevelButton('Level 4', StatesEnum.LEVEL, this._middlePanel, 4);
+        this._createEmptySpace(this._middlePanel, 0.3);
 
-        // Add controls to left panel
-        let button1 = this.createLevelButton('Level 1', StatesEnum.LEVEL, 1);
-        leftPanel.addControl(button1);
+        // add empty spaces
+        this._createEmptySpace(this._leftPanel, 1);
+        this._createEmptySpace(this._middlePanel, 1);
+        this._createEmptySpace(this._rightPanel, 1);
+        this._createEmptySpace(this._extraRightPanel, 1);
 
-        // Add score to right panel
+        // Top scores
+        // UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1, 0.25, 34, 1, 5);
 
-        // Add controls to middle panel
-        let button5 = this.createLevelButton('Test', StatesEnum.LEVELTEST);
-        middlePanel.addControl(button5);
+        // Test
+        // this.createLevelButton('Test', StatesEnum.LEVELTEST, this._middlePanel);
 
-        let tutorials = this.createLevelButton('Tutorials', StatesEnum.TUTO1);
-        middlePanel.addControl(tutorials);
+        // Tutorial
+    }
+
+    private createLevelButton(
+        text: string,
+        levelenum: StatesEnum,
+        panel: GUI.StackPanel3D,
+        levelNumber: number = undefined
+    ) {
+        const hoverCallback = {
+            in: () => {
+                this._extraRightPanel.dispose();
+
+                // Create extra right sub panel
+                this._initSubpanelsExtraRight();
+
+                // Add top scores
+                if (levelNumber !== undefined) {
+                    UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 34, levelNumber, 5);
+                }
+            },
+            out: () => {
+            },
+        };
+
+        return UtilsUI.createActionButton(
+            text,
+            panel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this._stateManager.switchState(levelenum, levelNumber);
+            },
+            hoverCallback
+        );
     }
 
     dispose() {

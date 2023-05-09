@@ -65,10 +65,10 @@ export default class StateUI implements UI {
         });
 
         // Score
-        UtilsUI.createCurrentScoreTextZone(this._bottomPanel, this._scene, 1, 0.25, 34);
+        UtilsUI.createCurrentScoreTextZone(this._bottomPanel, this._scene, 1, 0.25, 34, levelNumber);
 
         // Top scores
-        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1, 0.25, 34, levelNumber, 5);
+        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 34, levelNumber, 5);
     }
 
     private loadWinMenu(levelNumber: number) {
@@ -95,10 +95,10 @@ export default class StateUI implements UI {
         });
 
         // Score
-        UtilsUI.createCurrentScoreTextZone(this._bottomPanel, this._scene, 1, 0.25, 34);
+        UtilsUI.createCurrentScoreTextZone(this._bottomPanel, this._scene, 1, 0.25, 34, levelNumber);
 
         // Top scores
-        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1, 0.25, 34, levelNumber, 5);
+        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 34, levelNumber, 5);
 
         // Win text
         UtilsUI.createTextZone('You WIN !', this._topPanel, 4, 0.35, 40, this._scene);
@@ -120,7 +120,7 @@ export default class StateUI implements UI {
         });
 
         // Top scores
-        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1, 0.25, 34, levelNumber, 5);
+        UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 34, levelNumber, 5);
 
         // Loose text
         UtilsUI.createTextZone('You LOOSE !', this._topPanel, 4, 0.35, 40, this._scene);

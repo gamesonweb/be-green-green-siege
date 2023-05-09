@@ -15,6 +15,7 @@ class UtilsUI {
      * @param scale the scale of the button
      * @param fontSize the font size of the button
      * @param callback the callback when the button is clicked
+     * @param hoverCallback the callback when the button is hovered
      * @param albedoColor albedo color of the button
      * @param innerGlowColorIntensity intensity of the inner glow
      */
@@ -24,12 +25,19 @@ class UtilsUI {
         scale: BABYLON.Vector3,
         fontSize: number,
         callback: () => void,
+        hoverCallback?: { in: () => void; out: () => void },
         albedoColor?: BABYLON.Color3,
         innerGlowColorIntensity?: number
     ): GUI.HolographicButton {
         // Create a button
         const button = new GUI.HolographicButton(text);
         button.onPointerClickObservable.add(callback);
+
+        if (hoverCallback) {
+            button.onPointerEnterObservable.add(hoverCallback.in);
+            button.onPointerOutObservable.add(hoverCallback.out);
+        }
+
         panel.addControl(button);
         button.scaling = scale;
 
@@ -118,6 +126,8 @@ class UtilsUI {
         // Disable scaling effect on pointer enter and exit
         meshButton.pointerEnterAnimation = () => {};
         meshButton.pointerOutAnimation = () => {};
+        meshButton.pointerUpAnimation = () => {};
+        meshButton.pointerDownAnimation = () => {};
 
         // Add the mesh button to the 3D stack panel
         panel.addControl(meshButton);
@@ -132,15 +142,17 @@ class UtilsUI {
      * @param width the width of the text zone
      * @param height the height of the text zone
      * @param fontSize the font size of the text zone
+     * @param levelNumber the level number
      */
     public static async createCurrentScoreTextZone(
         panel: GUI.StackPanel3D,
         scene: BABYLON.Scene,
         width: number,
         height: number,
-        fontSize: number
+        fontSize: number,
+        levelNumber: number
     ) {
-        const rank = score.getRank();
+        const rank = await score.getRank(levelNumber);
         let text;
         if (rank === 0) {
             text = `Your score: ${score.getCurrentScore()}`;
@@ -169,16 +181,20 @@ class UtilsUI {
         levelNumber: number,
         top: number
     ) {
-        await score.loadTopScores(levelNumber);
-        const topScores = score.getTopScores(top);
+        const topScores = await score.getTopScores(levelNumber, top);
 
-        topScores
+        // Create an array of the top scores or empty strings if there are not enough scores
+        const displayScores = Array(top)
+            .fill('')
+            .map((_, index) => topScores[index] || { score: '', timestamp: '' });
+
+        displayScores
             .slice()
             .reverse()
             .forEach((score, index) => {
-                const text = `${topScores.length - index}. ${score.score} (${new Date(
-                    score.timestamp
-                ).toLocaleString()})`;
+                const text = score.score
+                    ? `${displayScores.length - index}. ${score.score} (${new Date(score.timestamp).toLocaleString()})`
+                    : `${displayScores.length - index}. ---`;
                 UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
             });
 
