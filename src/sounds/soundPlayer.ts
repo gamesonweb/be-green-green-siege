@@ -21,14 +21,11 @@ export class SoundPlayer {
             });
 
             this._sound.attachToMesh(this._mesh);
-            this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
+            // this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
             this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
         } else {
-            this._sound = new BABYLON.Sound(this._id, SoundsBank.getPathByName(name), scene, null, {
-                spatialSound: true,
-                maxDistance: 20000,
-            });
-            this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
+            this._sound = new BABYLON.Sound(this._id, SoundsBank.getPathByName(name), scene, null);
+            // this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
             this._sound.setVolume(this._volume);
         }
         // console.log(this._sound.name);
