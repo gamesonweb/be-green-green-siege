@@ -51,13 +51,15 @@ class Score {
      * Load top scores from the localStorage for the given level.
      * @param {number} levelName - The level number.
      */
-    async loadTopScores(levelName: number): Promise<void> {
+    private async loadTopScores(levelName: number): Promise<void> {
         console.log('loadTopScores', levelName);
         const topScoresKey = `topScores_${levelName}`;
         try {
             const data = localStorage.getItem(topScoresKey);
             if (data) {
                 this.topScores = JSON.parse(data);
+            } else {
+                this.topScores = [];
             }
         } catch (error) {
             console.error('Error loading top scores:', error);
@@ -112,19 +114,24 @@ class Score {
     }
 
     /**
-     * Get the rank of the current score.
+     * Get the rank of the current score for a specific level.
+     * @param {number} level - The level number.
      * @returns {number} - The rank of the current score.
      */
-    public getRank(): number {
+    public async getRank(level: number): Promise<number> {
+        await this.loadTopScores(level);
         const currentScore = this.getCurrentScore();
         return this.topScores.findIndex((score) => score.score < currentScore) + 1;
     }
 
     /**
-     * Get the top 10 scores.
+     * Get the top scores for a specific level.
+     * @param {number} level - The level number.
+     * @param {number} top - Number of top scores to retrieve.
      * @returns {Array} - The top scores.
      */
-    public getTopScores(top: number): { score: number; timestamp: string }[] {
+    public async getTopScores(level: number, top: number): Promise<{ score: number; timestamp: string }[]> {
+        await this.loadTopScores(level);
         return this.topScores.slice(0, top);
     }
 

@@ -102,10 +102,10 @@ export default class Level implements State {
             if (this.currentWave >= this._level.waves.length) {
                 this._win = true;
                 console.log('WIN');
+                score.saveTopScore(this.levelNumber);
                 Game.debug3D.log = 'WIN';
                 timeControl.pause();
                 this._stateUI.load(StateUIEnum.WIN, this.levelNumber);
-                score.saveTopScore(this.levelNumber);
                 return;
             }
             this.beginWave();
