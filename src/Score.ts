@@ -79,6 +79,14 @@ class Score {
         return `${day}/${month}/${year}`;
     }
 
+    private formatTimeToFrenchStyle(date) {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
     /**
      * Save the current score to the localStorage if it's in the top 100 for the given level.
      * @param {number} level - The level number.
@@ -95,7 +103,8 @@ class Score {
             if (this.topScores.length < 100 || this.currentScore > this.topScores[99].score) {
                 const newEntry = {
                     score: this.currentScore,
-                    timestamp: this.formatDateToFrenchStyle(new Date()),
+                    timestamp:
+                        this.formatDateToFrenchStyle(new Date()) + ' ' + this.formatTimeToFrenchStyle(new Date()),
                 };
 
                 // Insert the new score and sort the array
