@@ -10,7 +10,7 @@ export class Laser implements Projectile {
     private _camera: BABYLON.Camera;
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number = 70;
-    private _dispownDistance: number = 80;
+    private _dispawnDistance: number = 80;
     private _collisionDistance: number = 50;
     private _slowTimeDistance: number = 9;
     private _slowTimeFactor: number = 0.1;
@@ -28,7 +28,7 @@ export class Laser implements Projectile {
     ) {
         const {
             speed = this._laserSpeed,
-            dispowerDistance = this._dispownDistance,
+            dispowerDistance = this._dispawnDistance,
             collisionDistance = this._collisionDistance,
             slowTimeDistance = this._slowTimeDistance,
             slowTimeFactor = this._slowTimeFactor,
@@ -41,7 +41,7 @@ export class Laser implements Projectile {
             this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
         }
         this._laserSpeed = speed;
-        this._dispownDistance = dispowerDistance;
+        this._dispawnDistance = dispowerDistance;
         this._collisionDistance = collisionDistance;
         this._slowTimeDistance = slowTimeDistance;
         this._slowTimeFactor = slowTimeFactor;
@@ -185,7 +185,7 @@ export class Laser implements Projectile {
             const distancePlayer = BABYLON.Vector3.Distance(nextPosition, this._camera.position);
 
             // Dispose if the laser is too far away from the player
-            if (distancePlayer > this._dispownDistance) {
+            if (distancePlayer > this._dispawnDistance) {
                 laser.dispose();
             }
 
@@ -203,6 +203,10 @@ export class Laser implements Projectile {
         if (minDistance !== Infinity) {
             TimeControlledProjectileAnimation.askSlowTime(this._slowTimeFactor);
         }
+    }
+
+    public get dispawnDistance(): number {
+        return this._dispawnDistance;
     }
 
     public waitAndDispose(callback: () => void): void {

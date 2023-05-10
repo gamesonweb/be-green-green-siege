@@ -134,6 +134,12 @@ export class Enemy extends Targetable implements IEnemy {
             return;
         }
 
+        if (
+            BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition()) > this._laser.dispawnDistance
+        ) {
+            return;
+        }
+
         // fire
         this._timeSinceLastFire += deltaTime;
 
