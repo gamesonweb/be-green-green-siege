@@ -7,6 +7,7 @@ import { TutoHotTarget } from '../../target/tutoHotTarget';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial2 implements State {
     private _scene: Scene;
@@ -59,11 +60,7 @@ export default class Tutorial2 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Face à vous se trouve une cible verte.
-        Maintenez le bouton de tir enfoncé pour tirer rapidement dessus, mais attention à ne pas trop tirer d'affilée, car votre arme va surchauffer et se bloquer temporairement pour se refroidir.
-        
-        Apprendre à maîtriser la surchauffe de votre arme est crucial.
-        Soyez stratégique dans vos tirs pour éviter de la faire surchauffer et optimiser son potentiel`;
+        const text = dialog.getTuto("tuto2");
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));

@@ -10,6 +10,7 @@ import Tutorial3 from './tuto/tuto3';
 import Tutorial4 from './tuto/tuto4';
 import Tutorial5 from './tuto/tuto5';
 import Tutorial6 from './tuto/tuto6';
+import dialog from '../ui/dialog';
 
 export enum StatesEnum {
     MAINMENU,
@@ -21,6 +22,7 @@ export enum StatesEnum {
     TUTO4,
     TUTO5,
     TUTO6,
+    LANG
 }
 
 export class StateManager {
@@ -69,6 +71,9 @@ export class StateManager {
                 break;
             case StatesEnum.TUTO6:
                 this._currentState = new Tutorial6(this._scene, StatesEnum.TUTO6, this);
+                break;
+            case StatesEnum.LANG:
+                dialog.changeLang();
                 break;
             default:
                 console.error('State not found');

@@ -10,6 +10,7 @@ import { Shield } from '../../shield/shield';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial6 implements State {
     private _scene: Scene;
@@ -78,10 +79,7 @@ export default class Tutorial6 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Vous êtes prêt à défendre votre île contre les ennemis qui approchent.
-        Utilisez toutes les compétences que vous avez apprises dans chaque tutoriel pour affronter les vagues d'ennemis qui se présentent devant vous. Soyez rapide, soyez précis et gardez votre sang-froid pour protéger votre île et votre arbre géant.
-
-        Bonne chance dans votre mission de défense de l'île, et souvenez-vous : la survie de votre île est entre vos mains !`;
+        const text = dialog.getTuto("tuto6");
 
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();

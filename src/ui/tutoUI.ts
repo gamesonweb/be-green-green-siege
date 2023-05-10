@@ -2,6 +2,7 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import { StateManager, StatesEnum } from '../states/stateManager';
 import UtilsUI from './utilsUI';
+import dialog from './dialog';
 
 export default class TutoUI {
     private _scene: BABYLON.Scene;
@@ -133,13 +134,13 @@ export default class TutoUI {
         UtilsUI.createTextZone(tutorialText, this._topPanel, 4, 0.5, 30, this._scene);
 
         // Return to menu button
-        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.MAINMENU);
         });
 
         // Restart button
-        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(this.getNextTutorial(tutorialNumber));
         });
@@ -147,7 +148,7 @@ export default class TutoUI {
         // Next tutorial button
         if (tutorialNumber < this.NUMBER_OF_TUTORIALS) {
             this._nextButton = UtilsUI.createActionButton(
-                'Next Tutorial',
+                dialog.get("next_tuto"),
                 this._rightPanel,
                 new BABYLON.Vector3(1, 0.25, 1),
                 20,
@@ -158,7 +159,7 @@ export default class TutoUI {
             );
         } else {
             UtilsUI.createActionButton(
-                'Restart Tutorials',
+                dialog.get("restart_tuto"),
                 this._rightPanel,
                 new BABYLON.Vector3(1, 0.25, 1),
                 20,

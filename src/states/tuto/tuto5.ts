@@ -8,6 +8,7 @@ import { Shield } from '../../shield/shield';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial5 implements State {
     private _scene: Scene;
@@ -73,12 +74,7 @@ export default class Tutorial5 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Vous avez un bouclier en plus dans la main.
-        Utilisez-le pour vous protéger des tirs ennemis, mais gardez à l'esprit que le bouclier a une durée de vie limitée.
-        Si le bouclier se brise, il faudra quelques secondes pour qu'il se recharge.
-        
-        Utilisez le bouton "trigger" à l'arrière de votre manette Oculus Touch pour deployer le bouclier.
-        Bonne chance dans votre mission de défense de l'île !`;
+        const text = dialog.getTuto("tuto5");
 
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();

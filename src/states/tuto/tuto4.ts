@@ -8,6 +8,7 @@ import { Game } from '../../game';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial4 implements State {
     private _scene: Scene;
@@ -67,12 +68,7 @@ export default class Tutorial4 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Vous êtes en mode défensif. Vous n'avez plus rien dans les mains, mais cela ne veut pas dire que vous êtes sans défense.
-        
-        Un robot ennemi tire sur vous. Lorsque la balle approche de vous, le temps se ralentit pour vous permettre d'éviter la balle.
-        Utilisez les mouvements de votre corps pour vous déplacer et éviter la balle.
-
-        Apprenez à bien synchroniser vos mouvements avec le temps ralenti pour esquiver les balles ennemies. `;
+        const text = dialog.getTuto("tuto4");
 
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();

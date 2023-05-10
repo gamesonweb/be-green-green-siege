@@ -5,6 +5,7 @@ import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
 import UI from './ui';
 import UtilsUI from './utilsUI';
+import dialog from './dialog';
 
 export default class MainGUI implements UI {
     private _scene: BABYLON.Scene;
@@ -116,15 +117,16 @@ export default class MainGUI implements UI {
         UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
 
         // Levels
-        this.createLevelButton('Level 3', StatesEnum.LEVEL, this._leftPanel, 3);
-        this.createLevelButton('Level 2', StatesEnum.LEVEL, this._leftPanel, 2);
-        this.createLevelButton('Level 1', StatesEnum.LEVEL, this._leftPanel, 1);
-        this.createLevelButton('Tutorials', StatesEnum.TUTO1, this._leftPanel);
-        // this.createLevelButton('Level 7', StatesEnum.LEVEL, this._middlePanel, 7);
-        this.createLevelButton('Level 6', StatesEnum.LEVEL, this._middlePanel, 6);
-        this.createLevelButton('Level 5', StatesEnum.LEVEL, this._middlePanel, 5);
-        this.createLevelButton('Level 4', StatesEnum.LEVEL, this._middlePanel, 4);
+        this.createLevelButton(dialog.get("level")+' 3', StatesEnum.LEVEL, this._leftPanel, 3);
+        this.createLevelButton(dialog.get("level")+' 2', StatesEnum.LEVEL, this._leftPanel, 2);
+        this.createLevelButton(dialog.get("level")+' 1', StatesEnum.LEVEL, this._leftPanel, 1);
+        this.createLevelButton(dialog.get("tuto"), StatesEnum.TUTO1, this._leftPanel);
+        // this.createLevelButton('7', StatesEnum.LEVEL, this._middlePanel, 7);
+        this.createLevelButton(dialog.get("level")+' 6', StatesEnum.LEVEL, this._middlePanel, 6);
+        this.createLevelButton(dialog.get("level")+' 5', StatesEnum.LEVEL, this._middlePanel, 5);
+        this.createLevelButton(dialog.get("level")+' 4', StatesEnum.LEVEL, this._middlePanel, 4);
         this._createEmptySpace(this._middlePanel, 0.3);
+        this.createLevelButton(dialog.get("lang"), StatesEnum.LANG, this._rightPanel);
 
         // add empty spaces
         this._createEmptySpace(this._leftPanel, 1);
