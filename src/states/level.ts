@@ -38,7 +38,7 @@ export default class Level implements State {
 
     private _music_level: SoundPlayer;
 
-    shieldSize: number;
+    shieldDeploymentPercentage: number;
     type: StatesEnum;
     levelNumber: number;
 
@@ -49,7 +49,7 @@ export default class Level implements State {
         this.type = type;
         this._stateManager = stateManager;
         this._stateUI = new StateUI(this._scene, this._scene.activeCamera, this._stateManager);
-        this.shieldSize = 0;
+        this.shieldDeploymentPercentage = 0;
         this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, 0.3, this._scene);
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
@@ -175,7 +175,7 @@ export default class Level implements State {
     // You must use this function to animate all the things in this level
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
-        this._shield.animate(deltaTime, this.shieldSize);
+        this._shield.animate(deltaTime, this.shieldDeploymentPercentage);
         Game.sounds.forEach((sound) => {
             sound.setPitch(timeControl.getTimeScale());
         });

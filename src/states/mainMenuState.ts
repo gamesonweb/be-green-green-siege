@@ -11,7 +11,7 @@ export class MainMenuState implements State {
 
     public type: StatesEnum;
     levelNumber: number;
-    shieldSize: number;
+    shieldDeploymentPercentage: number;
 
     constructor(scene: BABYLON.Scene, stateManager: StateManager, type: StatesEnum) {
         this._scene = scene;
