@@ -7,6 +7,7 @@ import { TutoTarget } from '../../target/tutoTarget';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial1 implements State {
     private _scene: Scene;
@@ -59,13 +60,7 @@ export default class Tutorial1 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Bienvenue dans Green Siege !
-
-        Dans ce tutoriel, vous allez apprendre à utiliser votre arme pour tirer sur les ennemis qui approchent.
-        Utilisez le bouton "trigger" à l'arrière de votre manette Oculus Touch pour tirer sur les cibles devant vous.
-        
-        Votre objectif est de défendre votre île contre les robots envahisseurs, alors soyez prêt à les affronter à tout moment.
-        Bonne chance !`;
+        const text = dialog.getTuto("tuto1");
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));

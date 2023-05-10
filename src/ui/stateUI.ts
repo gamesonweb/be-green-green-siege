@@ -6,6 +6,7 @@ import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
 import UI from './ui';
 import UtilsUI from './utilsUI';
+import dialog from './dialog';
 
 export enum StateUIEnum {
     PAUSE = 0,
@@ -44,21 +45,21 @@ export default class StateUI implements UI {
 
     private loadPauseMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.MAINMENU);
             timeControl.resume();
         });
 
         // Restart button
-        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
             timeControl.resume();
         });
 
         // Resume button
-        UtilsUI.createActionButton('Resume', this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("resume"), this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             timeControl.resume();
             this.dispose();
             this._stateManager.getCurrentState().resume();
@@ -73,21 +74,21 @@ export default class StateUI implements UI {
 
     private loadWinMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.MAINMENU);
             timeControl.resume();
         });
 
         // Restart button
-        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
             timeControl.resume();
         });
 
         // Next button
-        UtilsUI.createActionButton('Next Level', this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("next_lvl"), this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             timeControl.resume();
             let level = this._stateManager.getCurrentState().levelNumber;
@@ -101,19 +102,19 @@ export default class StateUI implements UI {
         UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
 
         // Win text
-        UtilsUI.createTextZone('You WIN !', this._topPanel, 4, 0.35, 40, this._scene);
+        UtilsUI.createTextZone(dialog.get("win"), this._topPanel, 4, 0.35, 40, this._scene);
     }
 
     private loadLoseMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton('Return to menu', this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.MAINMENU);
             timeControl.resume();
         });
 
         // Restart button
-        UtilsUI.createActionButton('Restart', this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             this.dispose();
             this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
             timeControl.resume();
@@ -123,7 +124,7 @@ export default class StateUI implements UI {
         UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
 
         // Loose text
-        UtilsUI.createTextZone('You LOOSE !', this._topPanel, 4, 0.35, 40, this._scene);
+        UtilsUI.createTextZone(dialog.get("loose"), this._topPanel, 4, 0.35, 40, this._scene);
     }
 
     createActionButton(text: string, callback: () => void) {

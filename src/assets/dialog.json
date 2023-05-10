@@ -1,0 +1,50 @@
+{
+    "en": {
+        "collection": {
+            "restart_tuto": "restart tutorials",
+            "next_tuto": "next tutorial",
+            "next_lvl": "next level",
+            "tuto": "tutorials",
+            "restart": "restart",
+            "return_menu": "return to menu",
+            "level": "level",
+            "resume": "resume",
+            "win": "You WIN !",
+            "loose": "You LOOSE !",
+            "score": "Your score: ",
+            "rank": "Rank: ",
+            "top_score": "Top scores level ",
+            "lang": "Lang: en"
+        },
+        "tuto1": "Welcome to Green Siege!\n\nIn this tutorial, you will learn how to use your weapon to shoot at approaching enemies.\nUse the 'trigger' button on the back of your Oculus Touch controller to shoot the targets in front of you.\n\nYour goal is to defend your island against the invading robots, so be ready to face them at any time.\nGood luck!",
+        "tuto2": "In front of you is a green target.\nHold down the fire button to shoot quickly, but be careful not to shoot too much in a row, as your weapon will overheat and temporarily lock up to cool down.\n\nLearning to control the overheating of your weapon is crucial.\nBe strategic in your shooting to avoid overheating and maximize its potential.",
+        "tuto3": "Watch out ! Enemy robots have invaded your island and are threatening your giant tree!\nLook ahead and you'll see floating robots. Use your weapon to shoot them down and save your island.\n\nRemember, these robots are very mean, so shoot them with all your rage and determination.\nGood luck!",
+        "tuto4": "You are in defensive mode. You have nothing left in your hands, but that doesn't mean you're defenseless.\n\nAs the bullet approaches you, time slows down to allow you to dodge the bullet.\nUse your body movements to move and dodge the bullet.\n\nLearn to synchronize your movements with the slow time to dodge enemy bullets.",
+        "tuto5": "You have an extra shield in your hand. Use it to protect yourself from enemy fire, but keep in mind that the shield has a limited life span.\nIf the shield breaks, it will take a few seconds to recharge. Use the 'trigger' button on the back of your Oculus Touch controller to deploy the shield.\nGood luck!",
+        "tuto6": "You're ready to defend your island against the approaching enemies.\nUse all the skills you've learned in each tutorial to battle the waves of enemies that come your way. Be fast, be accurate and keep your cool to protect your island and your giant tree.\n\nGood luck and remember: the survival of your island is in your hands!"
+    },
+    "fr": {
+        "collection": {
+            "restart_tuto": "redémarrer les tutoriels",
+            "next_tuto": "prochain tutoriel",
+            "next_lvl": "prochain niveau",
+            "tuto": "tutoriels",
+            "restart": "redémarrer",
+            "return_menu": "Retour au menu",
+            "level": "niveau",
+            "resume": "reprendre",
+            "win": "Tu as gagné !",
+            "loose": "Tu as perdu ...",
+            "score": "Ton score: ",
+            "rank": "Rang: ",
+            "top_score": "Meilleurs scores du niveau ",
+            "lang": "Langue: fr"
+        },
+        "tuto1": "Bienvenue dans Green Siege !\n\nDans ce tutoriel, vous allez apprendre à utiliser votre arme pour tirer sur les ennemis qui approchent.\nUtilisez le bouton 'trigger' à l'arrière de votre manette Oculus Touch pour tirer sur les cibles devant vous.\nVotre objectif est de défendre votre île contre les robots envahisseurs, alors soyez prêt à les affronter à tout moment.\nBonne chance !",
+        "tuto2": "Face à vous se trouve une cible verte.\nMaintenez le bouton de tir enfoncé pour tirer rapidement dessus, mais attention à ne pas trop tirer d'affilée, car votre arme va surchauffer et se bloquer temporairement pour se refroidir.\n\nApprendre à maîtriser la surchauffe de votre arme est crucial.\nSoyez stratégique dans vos tirs pour éviter de la faire surchauffer et optimiser son potentiel",
+        "tuto3": "Attention, attention ! Des robots ennemis ont envahi votre île et menacent votre arbre géant !\nRegardez devant vous : vous verrez des robots flottants. Utilisez votre arme pour les abattre et sauver votre île.\n\nN'oubliez pas que ces robots sont très méchants, alors tirez-leur dessus avec toute votre rage et votre détermination.\nBonne chance!",
+        "tuto4": "Vous êtes en mode défensif. Vous n'avez plus rien dans les mains, mais cela ne veut pas dire que vous êtes sans défense.\n\nUn robot ennemi tire sur vous. Lorsque la balle approche de vous, le temps se ralentit pour vous permettre d'éviter la balle.\nUtilisez les mouvements de votre corps pour vous déplacer et éviter la balle.\n\nApprenez à bien synchroniser vos mouvements avec le temps ralenti pour esquiver les balles ennemies.",
+        "tuto5": "Vous avez un bouclier en plus dans la main.\nUtilisez-le pour vous protéger des tirs ennemis, mais gardez à l'esprit que le bouclier a une durée de vie limitée.\nSi le bouclier se brise, il faudra quelques secondes pour qu'il se recharge.\n\nUtilisez le bouton 'trigger' à l'arrière de votre manette Oculus Touch pour deployer le bouclier.\nBonne chance!",
+        "tuto6": "Vous êtes prêt à défendre votre île contre les ennemis qui approchent.\nUtilisez toutes les compétences que vous avez apprises dans chaque tutoriel pour affronter les vagues d'ennemis qui se présentent devant vous. Soyez rapide, soyez précis et gardez votre sang-froid pour protéger votre île et votre arbre géant.\n\nBonne chance ! Et souvenez-vous: la survie de votre île est entre vos mains !"
+    }
+}

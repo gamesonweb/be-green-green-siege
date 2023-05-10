@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import score from '../Score';
+import dialog from './dialog';
 
 /**
  * Utils for UI
@@ -155,9 +156,9 @@ class UtilsUI {
         const rank = await score.getRank(levelNumber);
         let text;
         if (rank === 0) {
-            text = `Your score: ${score.getCurrentScore()}`;
+            text = dialog.get("score") + `: ${score.getCurrentScore()}`;
         } else {
-            text = `Your score: ${score.getCurrentScore()} (Rank: ${rank})`;
+            text = dialog.get("score") + `: ${score.getCurrentScore()} (` + dialog.get("rank") + `: ${rank})`;
         }
         UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
     }
@@ -198,7 +199,7 @@ class UtilsUI {
                 UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
             });
 
-        UtilsUI.createTextZone(`Top scores level ${levelNumber}:`, panel, width, height, fontSize, scene);
+        UtilsUI.createTextZone(dialog.get("top_score") + ` ${levelNumber}:`, panel, width, height, fontSize, scene);
     }
 }
 

@@ -9,6 +9,7 @@ import { Laser } from '../../projectile/laser';
 import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
+import dialog from '../../ui/dialog';
 
 export default class Tutorial3 implements State {
     private _scene: Scene;
@@ -71,11 +72,7 @@ export default class Tutorial3 implements State {
     public load(): void {
         this._success = false;
 
-        const text = `Attention, attention ! Des robots ennemis ont envahi votre île et menacent votre arbre géant !
-        Regardez devant vous : vous verrez des robots flottants. Utilisez votre arme pour les abattre et sauver votre île.
-
-        N'oubliez pas que ces robots sont très méchants, alors tirez-leur dessus avec toute votre rage et votre détermination.
-        Bonne chanve!`;
+        const text = dialog.getTuto("tuto3");
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
