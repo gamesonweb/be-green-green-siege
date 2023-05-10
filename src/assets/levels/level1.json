@@ -4,8 +4,8 @@
         {
             "zones": [
                 {
-                    "nbRobots": 5,
-                    "spawnPoints": ["Spawn4", "Spawn5"],
+                    "nbRobots": 3,
+                    "spawnPoints": ["Spawn1", "Spawn3"],
                     "tresholdEnemy": 2,
                     "cooldown": 2,
                     "min": {
@@ -34,10 +34,10 @@
         {
             "zones": [
                 {
-                    "nbRobots": 5,
-                    "spawnPoints": ["Spawn1", "Spawn4", "Spawn5"],
+                    "nbRobots": 3,
+                    "spawnPoints": ["Spawn1", "Spawn3"],
                     "tresholdEnemy": 2,
-                    "cooldown": 10,
+                    "cooldown": 2,
                     "min": {
                         "x": 58,
                         "y": 4,
@@ -58,28 +58,32 @@
                         "score": 10,
                         "bias": 0.02
                     }
-                },
+                }
+            ]
+        },
+        {
+            "zones": [
                 {
                     "nbRobots": 3,
-                    "spawnPoints": ["Spawn1", "Spawn2", "Spawn3", "Spawn5"],
+                    "spawnPoints": ["Spawn1", "Spawn2", "Spawn3"],
                     "tresholdEnemy": 2,
-                    "cooldown": 10,
+                    "cooldown": 2,
                     "min": {
-                        "x": 20,
-                        "y": 10,
-                        "z": 40
+                        "x": 58,
+                        "y": 4,
+                        "z": -30
                     },
                     "max": {
-                        "x": 21,
-                        "y": 12,
-                        "z": 45
+                        "x": -1,
+                        "y": 13,
+                        "z": -55
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
                         "nbBullet": 3,
                         "bulletSpeed": 20,
-                        "speed": 4,
+                        "speed": 6,
                         "life": 3,
                         "score": 10,
                         "bias": 0.02
