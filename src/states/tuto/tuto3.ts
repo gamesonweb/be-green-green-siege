@@ -21,7 +21,7 @@ export default class Tutorial3 implements State {
     private _stateManager: StateManager;
 
     // Shield
-    public shieldSize: number;
+    public shieldDeploymentPercentage: number;
 
     // Gun
     private _gun: LaserGun;

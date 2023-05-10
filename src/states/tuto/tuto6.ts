@@ -22,7 +22,7 @@ export default class Tutorial6 implements State {
     private _stateManager: StateManager;
 
     // Shield
-    public shieldSize: number;
+    public shieldDeploymentPercentage: number;
 
     // Shield
     private _shield: Shield;
@@ -53,7 +53,7 @@ export default class Tutorial6 implements State {
         this.levelNumber = 6;
 
         this._shield = new Shield(this._scene);
-        this.shieldSize = 0;
+        this.shieldDeploymentPercentage = 0;
 
         this._gun = new LaserGun(this._scene, new Laser(this._scene));
 
@@ -144,7 +144,7 @@ export default class Tutorial6 implements State {
      * @param deltaTime The delta time
      */
     public animate(deltaTime: number): void {
-        this._shield.animate(deltaTime, this.shieldSize);
+        this._shield.animate(deltaTime, this.shieldDeploymentPercentage);
         this._gun.animate(deltaTime);
         this._zone.animate(deltaTime);
 

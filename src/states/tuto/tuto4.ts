@@ -20,7 +20,7 @@ export default class Tutorial4 implements State {
     private _stateManager: StateManager;
 
     // Shield
-    public shieldSize: number;
+    public shieldDeploymentPercentage: number;
 
     // UI
     private _tutorialUI: TutoUI;

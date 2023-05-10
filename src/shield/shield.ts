@@ -18,6 +18,7 @@ export class Shield extends Targetable {
     private _shieldMesh: BABYLON.Mesh;
     private _shieldGrip: BABYLON.Mesh;
     private _baseScale: BABYLON.Vector3;
+    private _sizeMax: number = 0.8;
 
     private _life: number = 100;
     private readonly _maxLife: number = 100;
@@ -42,7 +43,7 @@ export class Shield extends Targetable {
     private _initShield(): void {
         this._shieldMesh = this._scene.getMeshByName('ShieldHitBox') as BABYLON.Mesh;
         this._shieldGrip = this._scene.getMeshByName('ShieldGrip') as BABYLON.Mesh;
-        this._baseScale = this._shieldMesh.scaling.clone();
+        this._baseScale = new BABYLON.Vector3(0.028150120750069618, 0.04071023315191269, 0.3871135413646698);
         this._shieldMesh.metadata = { parentClass: this };
 
         // const shieldMesh = BABYLON.MeshBuilder.CreateBox('shield', { width: 0.5, height: 1, depth: 0.1 }, this._scene);
@@ -96,8 +97,8 @@ export class Shield extends Targetable {
         this._shieldGrip.rotate(BABYLON.Axis.Y, -Math.PI / 2, BABYLON.Space.LOCAL);
     }
 
-    public animate(deltaTime: number, shieldSize: number): void {
-        this._updateScaling(shieldSize, deltaTime);
+    public animate(deltaTime: number, shieldDeploymentPercentage: number): void {
+        this._updateScaling(shieldDeploymentPercentage, deltaTime);
         this._updateAlpha(deltaTime);
         this.updateColor();
         if (this._regenerating) {
@@ -105,7 +106,7 @@ export class Shield extends Targetable {
         }
     }
 
-    private _updateScaling(shieldSize: number, deltaTime: number): void {
+    private _updateScaling(shieldDeploymentPercentage: number, deltaTime: number): void {
         if (this._regenerating) {
             this._shieldMesh.scaling = this._baseScale.clone();
         } else {
@@ -113,7 +114,7 @@ export class Shield extends Targetable {
             const currentScaling = this._shieldMesh.scaling;
             const targetScaling = new BABYLON.Vector3(
                 this._baseScale.x,
-                this._baseScale.y + shieldSize,
+                this._baseScale.y + this._sizeMax * shieldDeploymentPercentage,
                 this._baseScale.z
             );
             this._shieldMesh.scaling = BABYLON.Vector3.Lerp(currentScaling, targetScaling, scalingLerpSpeed);

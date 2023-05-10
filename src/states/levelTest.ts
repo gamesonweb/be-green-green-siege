@@ -19,7 +19,7 @@ export class LevelTestGunState implements State {
     private _enemy1: Enemy;
     private _enemy2: Enemy;
 
-    public shieldSize: number = 0;
+    public shieldDeploymentPercentage: number = 0;
     public type: StatesEnum;
     levelNumber: number;
 
@@ -78,7 +78,7 @@ export class LevelTestGunState implements State {
 
     public animate(deltaTime: number): void {
         this._gun.animate(deltaTime);
-        this._shield.animate(deltaTime, this.shieldSize);
+        this._shield.animate(deltaTime, this.shieldDeploymentPercentage);
 
         // this._fakeEnemy.animate(deltaTime);
         this._enemy1.animate(deltaTime, [this._enemy2.getPosition()]);

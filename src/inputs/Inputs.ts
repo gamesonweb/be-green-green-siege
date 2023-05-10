@@ -24,7 +24,7 @@ export default class Inputs {
 
         const currentstate = this._stateManager.getCurrentState();
 
-        currentstate.shieldSize = force;
+        currentstate.shieldDeploymentPercentage = force;
     }
 
     private _rightTriggerMaintained: boolean = false;
