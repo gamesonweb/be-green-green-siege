@@ -72,6 +72,11 @@ class XRHandler {
                     }
                 }, 50);
             }, 1000);
+
+            // Switch to menu state
+            if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+            }
         });
 
         // Pause the game when the session is ended

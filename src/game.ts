@@ -152,7 +152,7 @@ export class Game {
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs, this._stateManager);
 
-            this._stateManager.switchState(StatesEnum.MAINMENU);
+            this._stateManager.switchState(StatesEnum.NOVR);
 
             // Debug
             this.createDebugCamera(this._scene, this._canvas);

@@ -1,8 +1,10 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
+import dialog from '../ui/dialog';
 import Level from './level';
 import { LevelTestGunState } from './levelTest';
 import { MainMenuState } from './mainMenuState';
+import { NoVrState } from './noVrState';
 import { State } from './state';
 import Tutorial1 from './tuto/tuto1';
 import Tutorial2 from './tuto/tuto2';
@@ -10,7 +12,6 @@ import Tutorial3 from './tuto/tuto3';
 import Tutorial4 from './tuto/tuto4';
 import Tutorial5 from './tuto/tuto5';
 import Tutorial6 from './tuto/tuto6';
-import dialog from '../ui/dialog';
 
 export enum StatesEnum {
     MAINMENU,
@@ -22,7 +23,8 @@ export enum StatesEnum {
     TUTO4,
     TUTO5,
     TUTO6,
-    LANG
+    NOVR,
+    LANG,
 }
 
 export class StateManager {
@@ -71,6 +73,9 @@ export class StateManager {
                 break;
             case StatesEnum.TUTO6:
                 this._currentState = new Tutorial6(this._scene, StatesEnum.TUTO6, this);
+                break;
+            case StatesEnum.NOVR:
+                this._currentState = new NoVrState(this._scene, this, StatesEnum.NOVR);
                 break;
             case StatesEnum.LANG:
                 dialog.changeLang();

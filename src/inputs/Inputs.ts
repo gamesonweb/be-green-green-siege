@@ -91,6 +91,10 @@ export default class Inputs {
         if (pressed) {
             Game.debug.toggleDebug();
             Game.debug3D.toggleDebug();
+
+            if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+            }
         }
     }
 
