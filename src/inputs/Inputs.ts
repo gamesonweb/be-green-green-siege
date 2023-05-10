@@ -94,6 +94,7 @@ export default class Inputs {
 
             if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
                 this._stateManager.switchState(StatesEnum.MAINMENU);
+                this._camera.attachControl(this._canvas, true);
             }
         }
     }
