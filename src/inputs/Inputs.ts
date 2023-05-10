@@ -57,11 +57,9 @@ export default class Inputs {
     }
 
     public leftSqueeze(pressed: boolean, force: number): void {
-        
         //////////////////////////////////////////
         // Time control power, disabled for now //
         //////////////////////////////////////////
-
         // const newTimeScale = 1.1 - force;
         // if (newTimeScale < 1) {
         //     timeControl.activeSlowPower(newTimeScale);
@@ -73,7 +71,7 @@ export default class Inputs {
     public rightSqueeze(pressed: boolean, force: number): void {}
 
     public leftPrimary(pressed: boolean): void {
-        let currentstate = this._stateManager.getCurrentState();
+        const currentstate = this._stateManager.getCurrentState();
         if (currentstate.type !== StatesEnum.LEVEL) return;
 
         if (pressed) {

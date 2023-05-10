@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import timeControl from './TimeControl';
-import { StateManager } from './states/stateManager';
+import { StateManager, StatesEnum } from './states/stateManager';
 
 class XRHandler {
     // Scene
@@ -52,9 +52,13 @@ class XRHandler {
         this._xr.baseExperience.sessionManager.onXRSessionInit.add(() => {});
 
         this._xr.baseExperience.sessionManager.onXRSessionEnded.add(() => {
-            // FIXME : appeler la fonction pause du jeu et pas juste le temps
-            timeControl.pause();
-            this._stateManager.getCurrentState().pause();
+            const currentstate = this._stateManager.getCurrentState();
+            if (currentstate.type === StatesEnum.LEVEL) {
+                if (!timeControl.isPaused()) {
+                    timeControl.pause();
+                    currentstate.pause();
+                }
+            }
         });
     }
 
