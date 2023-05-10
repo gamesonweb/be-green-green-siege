@@ -59,7 +59,7 @@ export default class TutoUI {
         this._anchor.rotate(BABYLON.Axis.Y, Math.PI, BABYLON.Space.LOCAL);
         this._anchor.position = this._camera.position.clone();
         this._anchor.position.z -= 4;
-        this._anchor.position.y = 1;
+        this._anchor.position.y = 0.2;
         this._mainPanel.linkToTransformNode(this._anchor);
     }
 
