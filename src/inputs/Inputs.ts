@@ -57,12 +57,17 @@ export default class Inputs {
     }
 
     public leftSqueeze(pressed: boolean, force: number): void {
-        const newTimeScale = 1.1 - force;
-        if (newTimeScale < 1) {
-            timeControl.activeSlowPower(newTimeScale);
-        } else {
-            timeControl.disableSlowPower();
-        }
+        
+        //////////////////////////////////////////
+        // Time control power, disabled for now //
+        //////////////////////////////////////////
+
+        // const newTimeScale = 1.1 - force;
+        // if (newTimeScale < 1) {
+        //     timeControl.activeSlowPower(newTimeScale);
+        // } else {
+        //     timeControl.disableSlowPower();
+        // }
     }
 
     public rightSqueeze(pressed: boolean, force: number): void {}
