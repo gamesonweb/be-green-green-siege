@@ -1,21 +1,20 @@
 import data from '../assets/dialog.json';
 
 class Dialog {
-
     private _dialog: any;
     private _lang: string;
 
     constructor() {
-        this._lang = "en";
-        this._dialog = data.en;
+        this._lang = 'fr';
+        this._dialog = data.fr;
     }
 
     public changeLang(): void {
-        if(this._lang === "en") {
-            this._lang = "fr";
+        if (this._lang === 'en') {
+            this._lang = 'fr';
             this._dialog = data.fr;
         } else {
-            this._lang = "en";
+            this._lang = 'en';
             this._dialog = data.en;
         }
     }
@@ -31,7 +30,6 @@ class Dialog {
     public getTuto(tuto: string): string {
         return this._dialog[tuto];
     }
-
 }
 const dialog = new Dialog();
 export default dialog;
