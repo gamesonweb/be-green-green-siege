@@ -1,5 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import timeControl from './TimeControl';
+import { Game } from './game';
 import { StateManager, StatesEnum } from './states/stateManager';
 
 class XRHandler {
@@ -49,8 +50,31 @@ class XRHandler {
     }
 
     private _handleXRSessionInit(): void {
-        this._xr.baseExperience.sessionManager.onXRSessionInit.add(() => {});
+        this._xr.baseExperience.sessionManager.onXRSessionInit.add(() => {
+            // Create a sphere to show the user where the center of the world is
+            let sphere = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 2 }, this._scene);
+            sphere.position = Game.player.getHeadPosition();
+            let material = new BABYLON.StandardMaterial('black', this._scene);
+            material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            material.backFaceCulling = false;
+            material.alpha = 1;
+            sphere.material = material;
 
+            // Fade out the sphere
+            setTimeout(() => {
+                let alpha = 1;
+                let interval = setInterval(() => {
+                    alpha -= 0.05;
+                    material.alpha = alpha;
+                    if (alpha <= 0) {
+                        clearInterval(interval);
+                        sphere.dispose();
+                    }
+                }, 50);
+            }, 1000);
+        });
+
+        // Pause the game when the session is ended
         this._xr.baseExperience.sessionManager.onXRSessionEnded.add(() => {
             const currentstate = this._stateManager.getCurrentState();
             if (currentstate.type === StatesEnum.LEVEL) {
