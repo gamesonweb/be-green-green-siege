@@ -5,7 +5,7 @@
             "zones": [
                 {
                     "nbRobots": 3,
-                    "spawnPoints": ["Spawn1", "Spawn3"],
+                    "spawnPoints": ["Spawn2", "Spawn3"],
                     "tresholdEnemy": 2,
                     "cooldown": 2,
                     "min": {
@@ -35,7 +35,7 @@
             "zones": [
                 {
                     "nbRobots": 3,
-                    "spawnPoints": ["Spawn1", "Spawn3"],
+                    "spawnPoints": ["Spawn2", "Spawn3"],
                     "tresholdEnemy": 2,
                     "cooldown": 2,
                     "min": {
@@ -65,7 +65,7 @@
             "zones": [
                 {
                     "nbRobots": 3,
-                    "spawnPoints": ["Spawn1", "Spawn2", "Spawn3"],
+                    "spawnPoints": ["Spawn4", "Spawn2", "Spawn3"],
                     "tresholdEnemy": 2,
                     "cooldown": 2,
                     "min": {
