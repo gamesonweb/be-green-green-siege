@@ -1,6 +1,5 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
-import dialog from '../ui/dialog';
 import Level from './level';
 import { LevelTestGunState } from './levelTest';
 import { MainMenuState } from './mainMenuState';
@@ -24,7 +23,6 @@ export enum StatesEnum {
     TUTO5,
     TUTO6,
     NOVR,
-    LANG,
 }
 
 export class StateManager {
@@ -76,9 +74,6 @@ export class StateManager {
                 break;
             case StatesEnum.NOVR:
                 this._currentState = new NoVrState(this._scene, this, StatesEnum.NOVR);
-                break;
-            case StatesEnum.LANG:
-                dialog.changeLang();
                 break;
             default:
                 console.error('State not found');

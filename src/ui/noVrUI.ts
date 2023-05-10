@@ -66,13 +66,20 @@ export default class noVRGUI implements UI {
         // Create buttons //
         ////////////////////
 
-        this.createLevelButton(dialog.get('lang'), StatesEnum.LANG, this._topPanel);
+        this.createLangButton(dialog.get('lang'), this._topPanel);
 
         // Message
         UtilsUI.createTextZone(dialog.get('novr'), this._topPanel, 4, 1, 30, this._scene);
 
         // Title
         UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
+    }
+
+    private createLangButton(text: string, panel: GUI.StackPanel3D) {
+        return UtilsUI.createActionButton(text, panel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+            dialog.changeLang();
+            this._stateManager.switchState(StatesEnum.NOVR);
+        });
     }
 
     private createLevelButton(
@@ -89,5 +96,7 @@ export default class noVRGUI implements UI {
     dispose() {
         this._manager.dispose();
         this.anchor.dispose();
+        this._mainPanel.dispose();
+        this._topPanel.dispose();
     }
 }

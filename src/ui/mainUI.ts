@@ -3,9 +3,9 @@ import * as GUI from 'babylonjs-gui';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
+import dialog from './dialog';
 import UI from './ui';
 import UtilsUI from './utilsUI';
-import dialog from './dialog';
 
 export default class MainGUI implements UI {
     private _scene: BABYLON.Scene;
@@ -117,22 +117,29 @@ export default class MainGUI implements UI {
         UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
 
         // Levels
-        this.createLevelButton(dialog.get("level")+' 3', StatesEnum.LEVEL, this._leftPanel, 3);
-        this.createLevelButton(dialog.get("level")+' 2', StatesEnum.LEVEL, this._leftPanel, 2);
-        this.createLevelButton(dialog.get("level")+' 1', StatesEnum.LEVEL, this._leftPanel, 1);
-        this.createLevelButton(dialog.get("tuto"), StatesEnum.TUTO1, this._leftPanel);
+        this.createLevelButton(dialog.get('level') + ' 3', StatesEnum.LEVEL, this._leftPanel, 3);
+        this.createLevelButton(dialog.get('level') + ' 2', StatesEnum.LEVEL, this._leftPanel, 2);
+        this.createLevelButton(dialog.get('level') + ' 1', StatesEnum.LEVEL, this._leftPanel, 1);
+        this.createLevelButton(dialog.get('tuto'), StatesEnum.TUTO1, this._leftPanel);
         // this.createLevelButton('7', StatesEnum.LEVEL, this._middlePanel, 7);
-        this.createLevelButton(dialog.get("level")+' 6', StatesEnum.LEVEL, this._middlePanel, 6);
-        this.createLevelButton(dialog.get("level")+' 5', StatesEnum.LEVEL, this._middlePanel, 5);
-        this.createLevelButton(dialog.get("level")+' 4', StatesEnum.LEVEL, this._middlePanel, 4);
+        this.createLevelButton(dialog.get('level') + ' 6', StatesEnum.LEVEL, this._middlePanel, 6);
+        this.createLevelButton(dialog.get('level') + ' 5', StatesEnum.LEVEL, this._middlePanel, 5);
+        this.createLevelButton(dialog.get('level') + ' 4', StatesEnum.LEVEL, this._middlePanel, 4);
         this._createEmptySpace(this._middlePanel, 0.3);
-        this.createLevelButton(dialog.get("lang"), StatesEnum.LANG, this._rightPanel);
+        this.createLangButton(dialog.get('lang'), this._rightPanel);
 
         // add empty spaces
         this._createEmptySpace(this._leftPanel, 1);
         this._createEmptySpace(this._middlePanel, 1);
         this._createEmptySpace(this._rightPanel, 1);
         this._createEmptySpace(this._extraRightPanel, 1);
+    }
+
+    private createLangButton(text: string, panel: GUI.StackPanel3D) {
+        return UtilsUI.createActionButton(text, panel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+            dialog.changeLang();
+            this._stateManager.switchState(StatesEnum.MAINMENU);
+        });
     }
 
     private createLevelButton(
@@ -153,8 +160,7 @@ export default class MainGUI implements UI {
                     UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
                 }
             },
-            out: () => {
-            },
+            out: () => {},
         };
 
         return UtilsUI.createActionButton(
@@ -172,5 +178,12 @@ export default class MainGUI implements UI {
     dispose() {
         this._manager.dispose();
         this.anchor.dispose();
+        this._mainPanel.dispose();
+        this._topPanel.dispose();
+        this._leftPanel.dispose();
+        this._middlePanel.dispose();
+        this._rightPanel.dispose();
+        this._bottomPanel.dispose();
+        this._extraRightPanel.dispose();
     }
 }
