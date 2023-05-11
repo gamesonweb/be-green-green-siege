@@ -36,6 +36,7 @@ export class Game {
 
     public static player: Player;
     public static sounds: SoundPlayer[];
+    static MAX_LEVEL: number = 6;
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);

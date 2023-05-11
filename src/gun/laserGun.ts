@@ -60,7 +60,7 @@ export class LaserGun implements Gun {
         this._isOverheated = false;
         this._maxHeat = 30;
         this.heatPerShot = 5;
-        this._coolingRate = 20;
+        this._coolingRate = 15;
     }
 
     private initSound() {

@@ -20,6 +20,10 @@ export class NoVrState implements State {
         this._mainUI = new noVRGUI(this._scene, this._scene.activeCamera, this._stateManager);
     }
 
+    public canbePaused(): boolean {
+        return false;
+    }
+
     fire(force: number): void {}
 
     public getName() {

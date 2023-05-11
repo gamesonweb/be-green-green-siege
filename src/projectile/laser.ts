@@ -11,7 +11,7 @@ export class Laser implements Projectile {
     private _laserModel: BABYLON.Mesh;
     private _laserSpeed: number = 70;
     private _dispawnDistance: number = 80;
-    private _collisionDistance: number = 50;
+    private _collisionDistance: number = 60;
     private _slowTimeDistance: number = 9;
     private _slowTimeFactor: number = 0.1;
     private _sparkParticles: BABYLON.ParticleSystem;

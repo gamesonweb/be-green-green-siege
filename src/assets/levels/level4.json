@@ -1,22 +1,104 @@
 {
-    "name": "Level 2",
+    "name": "Level 4",
     "waves": [
         {
             "zones": [
                 {
-                    "nbRobots": 2,
+                    "nbRobots": 5,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "tresholdEnemy": 5,
+                    "cooldown": 6,
+                    "min": {
+                        "x": -6,
+                        "y": 6,
+                        "z": -12
+                    },
+                    "max": {
+                        "x": 64,
+                        "y": 30,
+                        "z": -60
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 12,
+                        "bulletFreq": 2,
+                        "nbBullet": 1,
+                        "bulletSpeed": 20,
+                        "speed": 4,
+                        "life": 3,
+                        "score": 10,
+                        "bias": 0.02
+                    }
+                }
+            ]
+        },
+        {
+            "zones": [
+                {
+                    "nbRobots": 1,
+                    "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
+                    "tresholdEnemy": 1,
+                    "cooldown": 4,
                     "min": {
                         "x": 44,
                         "y": 3,
                         "z": -40
                     },
                     "max": {
-                        "x": 64,
+                        "x": 48,
+                        "y": 5,
+                        "z": -36
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 10,
+                        "bulletFreq": 1,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
+                        "speed": 4,
+                        "life": 3,
+                        "score": 10,
+                        "bias": 0.02
+                    }
+                },
+                {
+                    "nbRobots": 1,
+                    "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
+                    "tresholdEnemy": 1,
+                    "cooldown": 4,
+                    "min": {
+                        "x": 60,
+                        "y": 26,
+                        "z": -56
+                    },
+                    "max": {
+                        "x": 54,
                         "y": 30,
                         "z": -60
+                    },
+                    "robotCaracteristics": {
+                        "shotFreq": 10,
+                        "bulletFreq": 1,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
+                        "speed": 4,
+                        "life": 3,
+                        "score": 10,
+                        "bias": 0.02
+                    }
+                },
+                {
+                    "nbRobots": 1,
+                    "spawnPoints": ["Spawn4", "Spawn5"],
+                    "tresholdEnemy": 1,
+                    "cooldown": 4,
+                    "min": {
+                        "x": -6,
+                        "y": 4,
+                        "z": -12
+                    },
+                    "max": {
+                        "x": -2,
+                        "y": 8,
+                        "z": -8
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -33,16 +115,16 @@
                     "nbRobots": 1,
                     "spawnPoints": ["Spawn4", "Spawn5"],
                     "tresholdEnemy": 1,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
-                        "x": 58,
-                        "y": 4,
-                        "z": -30
+                        "x": -34,
+                        "y": 14,
+                        "z": -8
                     },
                     "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
+                        "x": -30,
+                        "y": 18,
+                        "z": -4
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -59,71 +141,15 @@
         },
         {
             "zones": [
-                {
-                    "nbRobots": 3,
-                    "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 2,
-                    "cooldown": 2,
-                    "min": {
-                        "x": 44,
-                        "y": 3,
-                        "z": -40
-                    },
-                    "max": {
-                        "x": 64,
-                        "y": 30,
-                        "z": -60
-                    },
-                    "robotCaracteristics": {
-                        "shotFreq": 10,
-                        "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 20,
-                        "speed": 4,
-                        "life": 3,
-                        "score": 10,
-                        "bias": 0.02
-                    }
-                },
                 {
                     "nbRobots": 2,
-                    "spawnPoints": ["Spawn4", "Spawn5"],
-                    "tresholdEnemy": 1,
-                    "cooldown": 2,
-                    "min": {
-                        "x": 58,
-                        "y": 4,
-                        "z": -30
-                    },
-                    "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
-                    },
-                    "robotCaracteristics": {
-                        "shotFreq": 10,
-                        "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 20,
-                        "speed": 4,
-                        "life": 3,
-                        "score": 10,
-                        "bias": 0.02
-                    }
-                }
-            ]
-        },
-        {
-            "zones": [
-                {
-                    "nbRobots": 3,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
                     "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "cooldown": 6,
                     "min": {
-                        "x": 44,
-                        "y": 3,
-                        "z": -40
+                        "x": -6,
+                        "y": 6,
+                        "z": -12
                     },
                     "max": {
                         "x": 64,
@@ -133,7 +159,7 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
+                        "nbBullet": 1,
                         "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
@@ -142,26 +168,26 @@
                     }
                 },
                 {
-                    "nbRobots": 3,
-                    "spawnPoints": ["Spawn4", "Spawn5"],
-                    "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "nbRobots": 1,
+                    "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
+                    "tresholdEnemy": 1,
+                    "cooldown": 6,
                     "min": {
-                        "x": 58,
-                        "y": 4,
-                        "z": -30
+                        "x": -6,
+                        "y": 6,
+                        "z": -12
                     },
                     "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
+                        "x": 64,
+                        "y": 30,
+                        "z": -60
                     },
                     "robotCaracteristics": {
-                        "shotFreq": 10,
+                        "shotFreq": 20,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 20,
-                        "speed": 4,
+                        "nbBullet": 2,
+                        "bulletSpeed": 10,
+                        "speed": 6,
                         "life": 3,
                         "score": 10,
                         "bias": 0.02

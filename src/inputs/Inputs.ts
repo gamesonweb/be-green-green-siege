@@ -72,7 +72,7 @@ export default class Inputs {
 
     public leftPrimary(pressed: boolean): void {
         const currentstate = this._stateManager.getCurrentState();
-        if (currentstate.type !== StatesEnum.LEVEL) return;
+        if (!currentstate.canbePaused()) return;
 
         if (pressed) {
             if (timeControl.isPaused()) {
@@ -90,7 +90,7 @@ export default class Inputs {
     public leftSecondary(pressed: boolean): void {
         if (pressed) {
             Game.debug.toggleDebug();
-            Game.debug3D.toggleDebug();
+            // Game.debug3D.toggleDebug();
 
             if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
                 this._stateManager.switchState(StatesEnum.MAINMENU);

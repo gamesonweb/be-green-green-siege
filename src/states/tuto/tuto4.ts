@@ -52,12 +52,16 @@ export default class Tutorial4 implements State {
         this._numberOfEnemies = 1;
     }
 
+    public canbePaused(): boolean {
+        return false;
+    }
+
     /**
      * Check if the tutorial is finished
      */
     public checkTutorialStatus(): void {
+        this._success = true;
         if (timeControl.isSlowDanger()) {
-            this._success = true;
             this._tutorialUI.flashNextButton();
         }
     }
@@ -68,7 +72,7 @@ export default class Tutorial4 implements State {
     public load(): void {
         this._success = false;
 
-        const text = dialog.getTuto("tuto4");
+        const text = dialog.getTuto('tuto4');
 
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();

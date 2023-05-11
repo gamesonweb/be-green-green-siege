@@ -58,6 +58,10 @@ export default class Tutorial5 implements State {
         this._numberOfEnemies = 1;
     }
 
+    public canbePaused(): boolean {
+        return false;
+    }
+
     /**
      * Check if the tutorial is finished
      */
@@ -74,7 +78,7 @@ export default class Tutorial5 implements State {
     public load(): void {
         this._success = false;
 
-        const text = dialog.getTuto("tuto5");
+        const text = dialog.getTuto('tuto5');
 
         this._tutorialUI.load(text, this.levelNumber);
         Game.player.resetLife();

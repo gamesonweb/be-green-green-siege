@@ -10,6 +10,10 @@ import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import level1 from '../assets/levels/level1.json';
 import level2 from '../assets/levels/level2.json';
+import level3 from '../assets/levels/level3.json';
+import level4 from '../assets/levels/level4.json';
+import level5 from '../assets/levels/level5.json';
+import level6 from '../assets/levels/level6.json';
 import { Game } from '../game';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
@@ -24,7 +28,6 @@ export default class Level implements State {
     private _shield: Shield;
     private _zones: Zone[];
 
-    private currentScore: number;
     private currentWave: number;
 
     private _win: boolean;
@@ -55,12 +58,24 @@ export default class Level implements State {
         this._music_level.setAutoplay(true);
     }
 
+    canbePaused(): boolean {
+        return !this._win && !this._lose;
+    }
+
     private getLevelByNumber(levelNumber: number): any {
         switch (levelNumber) {
             case 1:
                 return level1;
             case 2:
                 return level2;
+            case 3:
+                return level3;
+            case 4:
+                return level4;
+            case 5:
+                return level5;
+            case 6:
+                return level6;
             default:
                 throw new Error('Level ' + levelNumber + ' not found');
         }
@@ -155,7 +170,6 @@ export default class Level implements State {
         this._shield = new Shield(this._scene);
         this._zones = [];
         Game.player.resetLife();
-        this.currentScore = 0;
         this.currentWave = 0;
 
         this.beginWave();
