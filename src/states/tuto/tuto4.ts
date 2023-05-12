@@ -140,6 +140,10 @@ export default class Tutorial4 implements State {
             this.checkTutorialStatus();
         }
 
+        Game.sounds.forEach((sound) => {
+            sound.setPitch(timeControl.getTimeScale());
+        });
+
         // Change the destination of the enemies
         this._timer += deltaTime;
         if (this._timer > this._timerMax) {

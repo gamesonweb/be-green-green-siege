@@ -11,6 +11,7 @@ import TutoUI from '../../ui/tutoUI';
 import { State } from '../state';
 import { StateManager, StatesEnum } from '../stateManager';
 import dialog from '../../ui/dialog';
+import timeControl from '../../TimeControl';
 
 export default class Tutorial6 implements State {
     private _scene: Scene;
@@ -157,6 +158,10 @@ export default class Tutorial6 implements State {
         } else {
             xrHandler.setControllerVisibility(true);
         }
+
+        Game.sounds.forEach((sound) => {
+            sound.setPitch(timeControl.getTimeScale());
+        });
 
         // Change the destination of the enemies
         this._timer += deltaTime;
