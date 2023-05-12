@@ -61,6 +61,8 @@ export default class Level implements State {
         this._stateUI = new StateUI(this._scene, this._scene.activeCamera, this._stateManager);
         this._playerUI = new PlayerUI(this._scene);
         this.shieldDeploymentPercentage = 0;
+        // stop music green siege and start music level
+        Game.music_green_siege.stopAndDispose();
         this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, this._scene);
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
