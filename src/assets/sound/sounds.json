@@ -1,22 +1,22 @@
 {
     "bip_bip": {
         "file": "/assets/sound/bip_bip_bip.mp3",
-        "volume": 0.2,
+        "volume": 0.08,
         "spatialized": true
     },
     "explosion": {
         "file": "/assets/sound/explosion.mp3",
-        "volume": 0.2,
+        "volume": 0.06,
         "spatialized": true
     },
     "fuckin": {
         "file": "/assets/sound/fuckin.mp3",
-        "volume": 0.25,
+        "volume": 0.1,
         "spatialized": true
     },
     "enemy_touched": {
         "file": "/assets/sound/enemy_touched.mp3",
-        "volume": 0.2,
+        "volume": 0.1,
         "spatialized": true
     },
     "enemy_shoot": {
@@ -26,12 +26,12 @@
     },
     "gun_shoot": {
         "file": "/assets/sound/shoot.mp3",
-        "volume": 0.1,
+        "volume": 0.07,
         "spatialized": true
     },
     "gun_reload": {
         "file": "/assets/sound/reload_gun.mp3",
-        "volume": 0.5,
+        "volume": 0.1,
         "spatialized": true
     },
     "player_hurt": {
@@ -52,6 +52,11 @@
     "music_level": {
         "file": "/assets/sound/music_level.mp3",
         "volume": 0.1,
+        "spatialized": false
+    },
+    "music_green_siege": {
+        "file": "/assets/sound/music_green_siege.mp3",
+        "volume": 0.3,
         "spatialized": false
     }
 }
