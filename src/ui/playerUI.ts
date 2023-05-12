@@ -132,7 +132,7 @@ export default class PlayerUI {
         this.anchorUI.setParent(anchor);
         this.anchorUI.position = anchor.position.clone();
         this.anchorUI.rotation = anchor.rotation.clone();
-        this.anchorUI.position.x += 0;
+        this.anchorUI.rotation.x += 0.3;
         this.anchorUI.position.y += 0.2;
         this.anchorUI.position.z += -0.1;
     }
