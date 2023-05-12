@@ -17,9 +17,9 @@ import level6 from '../assets/levels/level6.json';
 import { Game } from '../game';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
+import PlayerUI from '../ui/playerUI';
 import StateUI, { StateUIEnum } from '../ui/stateUI';
 import { StateManager, StatesEnum } from './stateManager';
-import PlayerUI from '../ui/playerUI';
 
 export default class Level implements State {
     private _scene: BABYLON.Scene;
@@ -61,11 +61,11 @@ export default class Level implements State {
         this._stateUI = new StateUI(this._scene, this._scene.activeCamera, this._stateManager);
         this._playerUI = new PlayerUI(this._scene);
         this.shieldDeploymentPercentage = 0;
-        // stop music green siege and start music level
-        Game.music_green_siege.stopAndDispose();
+        Game.music_green_siege.pause();
         this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, this._scene);
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
+        this._music_level.setLoop(true);
     }
 
     canbePaused(): boolean {
@@ -96,7 +96,6 @@ export default class Level implements State {
 
         if (Game.player.getCurrentLife() <= 0) {
             this._lose = true;
-            console.log('LOSE');
             Game.debug3D.log = 'LOSE';
             timeControl.pause();
             this._stateUI.load(StateUIEnum.LOSE, this.levelNumber);
@@ -126,7 +125,6 @@ export default class Level implements State {
             this.currentWave++;
             if (this.currentWave >= this._level.waves.length) {
                 this._win = true;
-                console.log('WIN');
                 score.saveTopScore(this.levelNumber);
                 Game.debug3D.log = 'WIN';
                 timeControl.pause();

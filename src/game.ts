@@ -15,7 +15,6 @@ import { Player } from './player/player';
 import TimeControlledProjectileAnimation from './projectile/TimeControlledProjectileAnimation';
 import { SoundPlayer } from './sounds/soundPlayer';
 import { StateManager, StatesEnum } from './states/stateManager';
-import { SoundsBank } from './sounds/soundsBank';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -30,6 +29,7 @@ export class Game {
     public static vrSupported: Boolean;
     public static instanceLoader: InstanceLoader;
     public static avoidSpheres: { position: BABYLON.Vector3; radius: number }[];
+    public static music_green_siege: SoundPlayer;
 
     private _assetManager: BABYLON.AssetsManager;
     private _spawnPoint: BABYLON.AbstractMesh;
@@ -38,8 +38,6 @@ export class Game {
     public static player: Player;
     public static sounds: SoundPlayer[];
     static MAX_LEVEL: number = 6;
-
-    public static music_green_siege: SoundPlayer;
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
@@ -120,7 +118,6 @@ export class Game {
 
         // sounds
         Game.sounds = [];
-        Game.music_green_siege = new SoundPlayer(SoundsBank.MUSIC_GREEN_SIEGE, this._scene);
 
         // Player
         Game.player = new Player(this._scene);
@@ -161,7 +158,6 @@ export class Game {
 
             // Debug
             this.createDebugCamera(this._scene, this._canvas);
-            Game.music_green_siege.play();
 
             this.animate();
         });

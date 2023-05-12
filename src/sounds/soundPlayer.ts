@@ -6,7 +6,8 @@ export class SoundPlayer {
     private _id: string;
     private _mesh: BABYLON.Mesh;
     private _sound: BABYLON.Sound;
-    private _volume: number;
+
+    private _curentTime: number = 0;
 
     public constructor(name: string, scene: BABYLON.Scene, mesh?: BABYLON.Mesh) {
         this._id = name + '_' + Math.random() * 1000000;
@@ -39,21 +40,27 @@ export class SoundPlayer {
     }
 
     public play(ignoreIsPlaying: boolean = false): void {
-        // update distance
-        // if(this._mesh !== undefined) {
-        //     this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
-        // }
-        if (ignoreIsPlaying) {
-            // e.g. laser shot
+        if (this._sound.isPaused) {
+            this._sound.setPlaybackRate(1);
+            this._sound.play(0, this._curentTime);
+        } else if (ignoreIsPlaying) {
             this._sound.play();
         } else if (!this._sound.isPlaying) {
             this._sound.play();
-            // console.log(this._id, "-> : tutu");
         }
     }
 
     public setPitch(rate: number) {
         this._sound.setPlaybackRate(rate);
+    }
+
+    public pause(): void {
+        this._sound.pause();
+        this._curentTime = this._sound.currentTime;
+    }
+
+    public setLoop(bool: boolean): void {
+        this._sound.loop = bool;
     }
 
     public stopAndDispose(): void {

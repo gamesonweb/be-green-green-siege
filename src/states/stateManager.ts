@@ -2,6 +2,7 @@ import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
 import Level from './level';
 import { LevelTestGunState } from './levelTest';
+import { LobyState } from './lobyState';
 import { MainMenuState } from './mainMenuState';
 import { NoVrState } from './noVrState';
 import { State } from './state';
@@ -23,6 +24,7 @@ export enum StatesEnum {
     TUTO5,
     TUTO6,
     NOVR,
+    LOBY,
 }
 
 export class StateManager {
@@ -74,6 +76,9 @@ export class StateManager {
                 break;
             case StatesEnum.NOVR:
                 this._currentState = new NoVrState(this._scene, this, StatesEnum.NOVR);
+                break;
+            case StatesEnum.LOBY:
+                this._currentState = new LobyState(this._scene, this, StatesEnum.LOBY);
                 break;
             default:
                 console.error('State not found');

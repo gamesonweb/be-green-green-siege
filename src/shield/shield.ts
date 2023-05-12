@@ -110,7 +110,6 @@ export class Shield extends Targetable {
     }
 
     public animate(deltaTime: number, shieldDeploymentPercentage: number): void {
-        // console.log("shieldDeploymentPercentage= ", shieldDeploymentPercentage);
         if(shieldDeploymentPercentage != 0) {
             this._sound_activated.setVolume(this._sound_activated.getVolume() * shieldDeploymentPercentage, 0.01);
             this._sound_activated.play();

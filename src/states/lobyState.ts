@@ -1,14 +1,16 @@
 import * as BABYLON from 'babylonjs';
 import { Game } from '../game';
-import MainGUI from '../ui/mainUI';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
+import LobyUI from '../ui/lobyUI';
 import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
 
-export class MainMenuState implements State {
+export class LobyState implements State {
     private _scene: BABYLON.Scene;
     private _stateManager: StateManager;
 
-    private _mainUI: MainGUI;
+    private _mainUI: LobyUI;
 
     public type: StatesEnum;
     levelNumber: number;
@@ -18,7 +20,7 @@ export class MainMenuState implements State {
         this._scene = scene;
         this._stateManager = stateManager;
         this.type = type;
-        this._mainUI = new MainGUI(this._scene, this._scene.activeCamera, this._stateManager);
+        this._mainUI = new LobyUI(this._scene, this._scene.activeCamera, this._stateManager);
     }
 
     public canbePaused(): boolean {
@@ -28,14 +30,17 @@ export class MainMenuState implements State {
     fire(force: number): void {}
 
     public getName() {
-        return 'Main Menu';
+        return 'Loby';
     }
 
     public load(): void {
         this._mainUI.load();
 
         // Music
-        Game.music_green_siege.play();
+        Game.music_green_siege = new SoundPlayer(SoundsBank.MUSIC_GREEN_SIEGE, this._scene);
+        Game.music_green_siege.setPosition(Game.player.getBodyPosition());
+        Game.music_green_siege.setAutoplay(true);
+        Game.music_green_siege.setLoop(true);
     }
 
     public dispose(): void {

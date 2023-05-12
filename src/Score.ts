@@ -52,7 +52,6 @@ class Score {
      * @param {number} levelName - The level number.
      */
     private async loadTopScores(levelName: number): Promise<void> {
-        console.log('loadTopScores', levelName);
         const topScoresKey = `topScores_${levelName}`;
         try {
             const data = localStorage.getItem(topScoresKey);
@@ -92,7 +91,6 @@ class Score {
      * @param {number} level - The level number.
      */
     async saveTopScore(level: number): Promise<void> {
-        console.log('saveTopScore', level);
         const topScoresKey = `topScores_${level}`;
 
         try {

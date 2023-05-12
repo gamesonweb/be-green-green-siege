@@ -93,7 +93,7 @@ export default class Inputs {
             // Game.debug3D.toggleDebug();
 
             if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
-                this._stateManager.switchState(StatesEnum.MAINMENU);
+                this._stateManager.switchState(StatesEnum.LOBY);
                 this._camera.attachControl(this._canvas, true);
             }
         }

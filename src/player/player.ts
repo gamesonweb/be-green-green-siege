@@ -99,6 +99,5 @@ export class Player extends Targetable {
 
     public animate() {
         this.updatePlayerModelPosition();
-        // console.log(this._bodyMesh.position);
     }
 }
