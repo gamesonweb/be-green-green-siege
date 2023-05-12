@@ -1,9 +1,8 @@
-import { Game } from "../game";
-import * as GUI from 'babylonjs-gui';
 import * as BABYLON from 'babylonjs';
+import * as GUI from 'babylonjs-gui';
+import { Game } from '../game';
 
 export default class PlayerUI {
-
     scoreString: string;
     shieldLifeString: string;
     lifeString: string;
@@ -17,16 +16,16 @@ export default class PlayerUI {
 
     private static WIDTH = 0.5;
     private static HEIGHT = 0.2;
-    private static FONT_SIZE = 40;
+    private static FONT_SIZE = 35;
 
     constructor(_scene: BABYLON.Scene) {
-        this.scoreString = "🪙 0";
-        this.shieldLifeString = "🛡️ 0";
-        this.lifeString = "❤️ 0";
+        this.scoreString = '🪙 0';
+        this.shieldLifeString = '🛡️ 0';
+        this.lifeString = '❤️ 0';
 
         this._scene = _scene;
     }
-    
+
     load() {
         // this._scene.debugLayer.show();
         if (Game.vrSupported) {
@@ -74,7 +73,7 @@ export default class PlayerUI {
 
         // Create a text block inside the rectangle
         const textBlock = new GUI.TextBlock();
-        textBlock.text = "test";
+        textBlock.text = 'test';
         textBlock.color = 'white';
         textBlock.fontSize = PlayerUI.FONT_SIZE;
         textBlock.fontWeight = 'bold';
@@ -117,7 +116,7 @@ export default class PlayerUI {
         this._mainPanel.linkToTransformNode(this.anchorUI);
     }
 
-    private _attach():void {
+    private _attach(): void {
         const leftAnchor = this._scene.getMeshByName('leftAnchor') as BABYLON.Mesh;
 
         if (Game.vrSupported) {
@@ -127,43 +126,43 @@ export default class PlayerUI {
             // If VR is not supported, attach the gun model to the camera
             this.attachToCamera(leftAnchor);
         }
-    } 
-    
+    }
+
     private attachToVRHand(anchor: BABYLON.Mesh): void {
         this.anchorUI.setParent(anchor);
         this.anchorUI.position = anchor.position.clone();
         this.anchorUI.rotation = anchor.rotation.clone();
-        this.anchorUI.position.x += 0;
+        this.anchorUI.rotation.x += 0.3;
         this.anchorUI.position.y += 0.2;
         this.anchorUI.position.z += -0.1;
-    } 
+    }
 
     private attachToCamera(anchor: BABYLON.Mesh): void {
         this.anchorUI.setParent(anchor);
         this.anchorUI.position = anchor.position.clone();
         this.anchorUI.rotation = anchor.rotation.clone();
+        this.anchorUI.rotation.x += 0.3;
         this.anchorUI.position.x += 0;
         this.anchorUI.position.y += 0.2;
         this.anchorUI.position.z += -0.1;
-
     }
 
     updateText() {
-        let text = " "+this.lifeString + "  " + this.shieldLifeString + "\n " + this.scoreString;
+        let text = ' ' + this.lifeString + '  ' + this.shieldLifeString + '\n ' + this.scoreString;
         this.textBox.text = text;
     }
 
     updateScore(score: number) {
-        this.scoreString = "🪙 "+score;
+        this.scoreString = '🪙 ' + score;
     }
 
     updateShieldLife(shieldLife: number) {
         shieldLife = Math.round(shieldLife);
-        this.shieldLifeString = "🛡️ "+shieldLife;
+        this.shieldLifeString = '🛡️ ' + shieldLife;
     }
-    
+
     updateLife(life: number) {
-        this.lifeString = "❤️ "+life;
+        this.lifeString = '❤️ ' + life;
     }
 
     dispose() {
