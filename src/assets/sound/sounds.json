@@ -1,0 +1,57 @@
+{
+    "bip_bip": {
+        "file": "/assets/sound/bip_bip_bip.mp3",
+        "volume": 0.2,
+        "spatialized": true
+    },
+    "explosion": {
+        "file": "/assets/sound/explosion.mp3",
+        "volume": 0.2,
+        "spatialized": true
+    },
+    "fuckin": {
+        "file": "/assets/sound/fuckin.mp3",
+        "volume": 0.25,
+        "spatialized": true
+    },
+    "enemy_touched": {
+        "file": "/assets/sound/enemy_touched.mp3",
+        "volume": 0.2,
+        "spatialized": true
+    },
+    "enemy_shoot": {
+        "file": "/assets/sound/enemy_shoot.mp3",
+        "volume": 0.15,
+        "spatialized": true
+    },
+    "gun_shoot": {
+        "file": "/assets/sound/shoot.mp3",
+        "volume": 0.1,
+        "spatialized": true
+    },
+    "gun_reload": {
+        "file": "/assets/sound/reload_gun.mp3",
+        "volume": 0.5,
+        "spatialized": true
+    },
+    "player_hurt": {
+        "file": "/assets/sound/player_hurt.mp3",
+        "volume": 0.8,
+        "spatialized": false
+    },
+    "shield_activation": {
+        "file": "/assets/sound/shield_activation.mp3",
+        "volume": 0.05,
+        "spatialized": true
+    },
+    "shield_broken": {
+        "file": "/assets/sound/shield_broken.mp3",
+        "volume": 0.6,
+        "spatialized": true
+    },
+    "music_level": {
+        "file": "/assets/sound/music_level.mp3",
+        "volume": 0.1,
+        "spatialized": false
+    }
+}

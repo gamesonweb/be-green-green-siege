@@ -65,9 +65,9 @@ export class EnemyOLD extends Targetable {
         this.createMesh();
         // this._lifePoint = this._MAX_LIFE_POINT;
         // sounds
-        this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, 5, scene, this.mesh);
+        this._bip_bip = new SoundPlayer(SoundsBank.ENEMY_BIP_BIP, scene, this.mesh);
         this._bip_bip.playWithRepeater(3);
-        this._explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, 0.5, this.scene);
+        this._explosion = new SoundPlayer(SoundsBank.ENEMY_EXPLOSION, this.scene);
     }
 
     public createMesh() {

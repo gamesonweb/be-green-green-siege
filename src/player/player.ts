@@ -3,13 +3,17 @@ import score from '../Score';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 
 export class Player extends Targetable {
+
     private _scene: BABYLON.Scene;
     private _currentLife: number;
     private readonly _initialLife: number = 5;
     private _bodyMesh: BABYLON.Mesh;
     private _headMesh: BABYLON.Mesh;
+    private _sound_hurt: SoundPlayer;
 
     constructor(scene: BABYLON.Scene) {
         super();
@@ -17,6 +21,7 @@ export class Player extends Targetable {
         this._currentLife = this._initialLife;
         this._headMesh = this.initHeadPlayer(this._scene);
         this._bodyMesh = this.initBodyPlayerModel(this._scene);
+        this._sound_hurt = new SoundPlayer(SoundsBank.PLAYER_HURT, this._scene);
     }
 
     public resetLife(): void {
@@ -58,6 +63,7 @@ export class Player extends Targetable {
     }
 
     public touch(): void {
+        this._sound_hurt.play(true);
         this._currentLife--;
         xrHandler.vibrateController('all', 1, 60);
         xrHandler.vibrateController('all', 1, 60, 200);
@@ -93,5 +99,6 @@ export class Player extends Targetable {
 
     public animate() {
         this.updatePlayerModelPosition();
+        // console.log(this._bodyMesh.position);
     }
 }

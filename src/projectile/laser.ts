@@ -69,6 +69,7 @@ export class Laser implements Projectile {
         return model;
     }
 
+
     private initSparkParticles(): BABYLON.ParticleSystem {
         const particleSystem = new BABYLON.ParticleSystem('sparkParticles', 2000, this._scene);
 

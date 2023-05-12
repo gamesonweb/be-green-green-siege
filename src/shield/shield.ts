@@ -2,6 +2,8 @@ import * as BABYLON from 'babylonjs';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { Targetable } from '../target/targetable';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 
 /**
  * Shield class that creates and animates a shield in the scene.
@@ -24,6 +26,10 @@ export class Shield extends Targetable {
     private readonly _maxLife: number = 100;
     private _regenerating: boolean = false;
 
+    // sounds effect
+    private _sound_activated: SoundPlayer;
+    private _sound_broken: SoundPlayer;
+
     /**
      * Shield constructor.
      * @param {BABYLON.Scene} scene - The Babylon.js scene.
@@ -38,6 +44,12 @@ export class Shield extends Targetable {
             this._camera = this._scene.getCameraByName('PlayerNoVRCamera');
         }
         this._attach();
+        this.initSounds();
+    }
+
+    public initSounds(): void {
+        this._sound_activated = new SoundPlayer(SoundsBank.SHIELD_ACTIVATION, this._scene, this._shieldMesh);
+        this._sound_broken = new SoundPlayer(SoundsBank.SHIELD_BROKEN, this._scene, this._shieldMesh);
     }
 
     private _initShield(): void {
@@ -98,6 +110,11 @@ export class Shield extends Targetable {
     }
 
     public animate(deltaTime: number, shieldDeploymentPercentage: number): void {
+        // console.log("shieldDeploymentPercentage= ", shieldDeploymentPercentage);
+        if(shieldDeploymentPercentage != 0) {
+            this._sound_activated.setVolume(this._sound_activated.getVolume() * shieldDeploymentPercentage, 0.01);
+            this._sound_activated.play();
+        }
         this._updateScaling(shieldDeploymentPercentage, deltaTime);
         this._updateAlpha(deltaTime);
         this.updateColor();
@@ -153,6 +170,7 @@ export class Shield extends Targetable {
         this._regenerating = true;
         this._shieldMesh.scaling = this._baseScale;
         // TODO SOUND: Play shield break sound
+        this._sound_broken.play();
     }
 
     private _regenerateShield(deltaTime: number): void {

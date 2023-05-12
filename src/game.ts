@@ -115,11 +115,11 @@ export class Game {
         Game.debug = new DebugConsole(this, this._scene, this._camera, this._canvas);
         Game.debug3D = new Debug3D(this._scene);
 
-        // Player
-        Game.player = new Player(this._scene);
-
         // sounds
         Game.sounds = [];
+
+        // Player
+        Game.player = new Player(this._scene);
 
         // Load platform
         let platformTask = this._assetManager.addMeshTask('scene', '', './assets/', 'scene.glb');
