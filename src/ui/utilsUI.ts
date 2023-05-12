@@ -98,6 +98,7 @@ class UtilsUI {
         const textZone = new GUI.Rectangle('textZone');
         textZone.thickness = 3;
         textZone.background = 'rgba(0, 0, 0, 0.5)';
+        textZone.cornerRadius = 10;
         advancedTexture.addControl(textZone);
 
         // Create a text block inside the rectangle
