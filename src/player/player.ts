@@ -65,8 +65,9 @@ export class Player extends Targetable {
     public touch(): void {
         this._sound_hurt.play(true);
         this._currentLife--;
-        xrHandler.vibrateController('all', 0.8, 60);
-        xrHandler.vibrateController('all', 0.8, 60, 200);
+        xrHandler.vibrateController('all', 1, 60);
+        xrHandler.vibrateController('all', 1, 60, 200);
+        xrHandler.vibrateController('all', 1, 60, 400);
 
         // Update score
         score.playerHit();

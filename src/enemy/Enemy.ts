@@ -44,7 +44,7 @@ export class Enemy extends Targetable implements IEnemy {
     private _bulletFreq: number = 1;
     private _AIMBIAS: number = 0.02;
     private _lastShotLeft: boolean = false;
-    private _timeSinceLastFire: number = Infinity;
+    private _timeSinceLastFire: number;
 
     // Score
     private _score: number = 0;
@@ -78,6 +78,9 @@ export class Enemy extends Targetable implements IEnemy {
         this._INITIAL_LIFE_POINT = caracteristics.life;
         this._score = caracteristics.score;
         this._AIMBIAS = caracteristics.bias;
+
+        // Initialate _timeSinceLastFire with value between 0 and _shotFreq
+        this._timeSinceLastFire = Math.random() * this._shotFreq;
 
         // Camera
         if (Game.vrSupported) {
@@ -131,6 +134,12 @@ export class Enemy extends Targetable implements IEnemy {
         this._laser.animate(deltaTime);
 
         if (this.isDeath()) {
+            return;
+        }
+
+        if (
+            BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition()) > this._laser.dispawnDistance
+        ) {
             return;
         }
 

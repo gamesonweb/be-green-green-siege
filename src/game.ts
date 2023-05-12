@@ -36,6 +36,7 @@ export class Game {
 
     public static player: Player;
     public static sounds: SoundPlayer[];
+    static MAX_LEVEL: number = 6;
 
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
@@ -50,7 +51,7 @@ export class Game {
 
     createFreeCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): BABYLON.FreeCamera {
         const camera = new BABYLON.FreeCamera('PlayerNoVRCamera', BABYLON.Vector3.Zero(), scene);
-        camera.attachControl(cavnas, true);
+        // camera.attachControl(cavnas, true);
         camera.inertia = 0;
         camera.speed = 30;
         camera.angularSensibility = 1000;
@@ -152,7 +153,7 @@ export class Game {
             // Load input
             this.createInput(this._scene, this._camera, this._canvas, this._inputs, this._stateManager);
 
-            this._stateManager.switchState(StatesEnum.MAINMENU);
+            this._stateManager.switchState(StatesEnum.NOVR);
 
             // Debug
             this.createDebugCamera(this._scene, this._canvas);

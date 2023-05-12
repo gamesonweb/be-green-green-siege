@@ -1,13 +1,13 @@
 {
-    "name": "Level 2",
+    "name": "Level 3",
     "waves": [
         {
             "zones": [
                 {
-                    "nbRobots": 2,
+                    "nbRobots": 1,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "tresholdEnemy": 1,
+                    "cooldown": 4,
                     "min": {
                         "x": 44,
                         "y": 3,
@@ -33,16 +33,16 @@
                     "nbRobots": 1,
                     "spawnPoints": ["Spawn4", "Spawn5"],
                     "tresholdEnemy": 1,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
-                        "x": 58,
+                        "x": -6,
                         "y": 4,
-                        "z": -30
+                        "z": -31
                     },
                     "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
+                        "x": -30,
+                        "y": 18,
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -60,10 +60,10 @@
         {
             "zones": [
                 {
-                    "nbRobots": 3,
+                    "nbRobots": 2,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
                     "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
                         "x": 44,
                         "y": 3,
@@ -89,16 +89,16 @@
                     "nbRobots": 2,
                     "spawnPoints": ["Spawn4", "Spawn5"],
                     "tresholdEnemy": 1,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
-                        "x": 58,
+                        "x": -6,
                         "y": 4,
-                        "z": -30
+                        "z": -31
                     },
                     "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
+                        "x": -30,
+                        "y": 18,
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -119,7 +119,7 @@
                     "nbRobots": 3,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
                     "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
                         "x": 44,
                         "y": 3,
@@ -145,16 +145,16 @@
                     "nbRobots": 3,
                     "spawnPoints": ["Spawn4", "Spawn5"],
                     "tresholdEnemy": 2,
-                    "cooldown": 2,
+                    "cooldown": 4,
                     "min": {
-                        "x": 58,
+                        "x": -6,
                         "y": 4,
-                        "z": -30
+                        "z": -31
                     },
                     "max": {
-                        "x": -1,
-                        "y": 13,
-                        "z": -55
+                        "x": -30,
+                        "y": 18,
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,

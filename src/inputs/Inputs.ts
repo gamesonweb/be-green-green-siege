@@ -1,9 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import timeControl from '../TimeControl';
-import Logger from '../debug/logger';
 import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
-import xrHandler from '../XRHandler';
 
 export default class Inputs {
     private _scene: BABYLON.Scene;
@@ -11,7 +9,13 @@ export default class Inputs {
     private _canvas: HTMLCanvasElement;
     private _stateManager: StateManager;
 
-    constructor(game: Game, stateManager: StateManager, scene: BABYLON.Scene, camera: BABYLON.FreeCamera, canvas: HTMLCanvasElement) {
+    constructor(
+        game: Game,
+        stateManager: StateManager,
+        scene: BABYLON.Scene,
+        camera: BABYLON.FreeCamera,
+        canvas: HTMLCanvasElement
+    ) {
         this._scene = scene;
         this._camera = camera;
         this._canvas = canvas;
@@ -19,9 +23,6 @@ export default class Inputs {
     }
 
     public leftTrigger(pressed: boolean, force: number): void {
-        // Logger.log('Left Trigger : ' + force);
-        // Game.debug3D.log = 'Left Trigger : ' + force;
-
         const currentstate = this._stateManager.getCurrentState();
 
         currentstate.shieldDeploymentPercentage = force;
@@ -32,9 +33,6 @@ export default class Inputs {
     private _rightTriggerCurrentForce: number = 0;
 
     public rightTrigger(pressed: boolean, force: number): void {
-        Logger.log('Right Trigger : ' + force);
-        // Game.debug3D.log = 'Right Trigger : ' + force;
-
         const currentstate = this._stateManager.getCurrentState();
 
         if (pressed) {
@@ -59,28 +57,23 @@ export default class Inputs {
     }
 
     public leftSqueeze(pressed: boolean, force: number): void {
-        Logger.log('Left Squeeze : ' + force);
-        // Game.debug3D.log = 'Left Squeeze : ' + force;
-
-        const newTimeScale = 1.1 - force;
-        if (newTimeScale < 1) {
-            timeControl.activeSlowPower(newTimeScale);
-        } else {
-            timeControl.disableSlowPower();
-        }
+        //////////////////////////////////////////
+        // Time control power, disabled for now //
+        //////////////////////////////////////////
+        // const newTimeScale = 1.1 - force;
+        // if (newTimeScale < 1) {
+        //     timeControl.activeSlowPower(newTimeScale);
+        // } else {
+        //     timeControl.disableSlowPower();
+        // }
     }
 
-    public rightSqueeze(pressed: boolean, force: number): void {
-        Logger.log('Right Squeeze' + force);
-        // Game.debug3D.log = 'Right Squeeze : ' + force;
-    }
+    public rightSqueeze(pressed: boolean, force: number): void {}
 
     public leftPrimary(pressed: boolean): void {
-        Logger.log('Left Primary');
-        // Game.debug3D.log = 'Left Primary';
-        let currentstate = this._stateManager.getCurrentState();
-        if (currentstate.type !== StatesEnum.LEVEL) return;
-        
+        const currentstate = this._stateManager.getCurrentState();
+        if (!currentstate.canbePaused()) return;
+
         if (pressed) {
             if (timeControl.isPaused()) {
                 timeControl.resume();
@@ -92,22 +85,19 @@ export default class Inputs {
         }
     }
 
-    public rightPrimary(pressed: boolean): void {
-        Logger.log('Right Primary');
-        // Game.debug3D.log = 'Right Primary';
-    }
+    public rightPrimary(pressed: boolean): void {}
 
     public leftSecondary(pressed: boolean): void {
-        Logger.log('Left Secondary');
-        // Game.debug3D.log = 'Left Secondary';
         if (pressed) {
             Game.debug.toggleDebug();
-            Game.debug3D.toggleDebug();
+            // Game.debug3D.toggleDebug();
+
+            if (this._stateManager.getCurrentState().type === StatesEnum.NOVR) {
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+                this._camera.attachControl(this._canvas, true);
+            }
         }
     }
 
-    public rightSecondary(pressed: boolean): void {
-        Logger.log('Right Secondary');
-        // Game.debug3D.log = 'Right Secondary';
-    }
+    public rightSecondary(pressed: boolean): void {}
 }

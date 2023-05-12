@@ -10,11 +10,16 @@ import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import level1 from '../assets/levels/level1.json';
 import level2 from '../assets/levels/level2.json';
+import level3 from '../assets/levels/level3.json';
+import level4 from '../assets/levels/level4.json';
+import level5 from '../assets/levels/level5.json';
+import level6 from '../assets/levels/level6.json';
 import { Game } from '../game';
 import { SoundPlayer } from '../sounds/soundPlayer';
 import { SoundsBank } from '../sounds/soundsBank';
 import StateUI, { StateUIEnum } from '../ui/stateUI';
 import { StateManager, StatesEnum } from './stateManager';
+import PlayerUI from '../ui/playerUI';
 
 export default class Level implements State {
     private _scene: BABYLON.Scene;
@@ -24,7 +29,6 @@ export default class Level implements State {
     private _shield: Shield;
     private _zones: Zone[];
 
-    private currentScore: number;
     private currentWave: number;
 
     private _win: boolean;
@@ -38,6 +42,12 @@ export default class Level implements State {
 
     private _music_level: SoundPlayer;
 
+    private _playerUI: PlayerUI;
+
+    private _previousScore: number;
+    private _previousLife: number;
+    private _previousLifeShield: number;
+
     shieldDeploymentPercentage: number;
     type: StatesEnum;
     levelNumber: number;
@@ -49,10 +59,15 @@ export default class Level implements State {
         this.type = type;
         this._stateManager = stateManager;
         this._stateUI = new StateUI(this._scene, this._scene.activeCamera, this._stateManager);
+        this._playerUI = new PlayerUI(this._scene);
         this.shieldDeploymentPercentage = 0;
         this._music_level = new SoundPlayer(SoundsBank.MUSIC_LEVEL, this._scene);
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
+    }
+
+    canbePaused(): boolean {
+        return !this._win && !this._lose;
     }
 
     private getLevelByNumber(levelNumber: number): any {
@@ -61,6 +76,14 @@ export default class Level implements State {
                 return level1;
             case 2:
                 return level2;
+            case 3:
+                return level3;
+            case 4:
+                return level4;
+            case 5:
+                return level5;
+            case 6:
+                return level6;
             default:
                 throw new Error('Level ' + levelNumber + ' not found');
         }
@@ -112,6 +135,33 @@ export default class Level implements State {
         }
     }
 
+    private updatePlayerUI(): void {
+        let update = false;
+
+        let newScore = score.getCurrentScore();
+        if (newScore !== this._previousScore) {
+            this._playerUI.updateScore(newScore);
+            this._previousScore = newScore;
+            update = true;
+        }
+        let newLife = Game.player.getCurrentLife();
+        if (newLife !== this._previousLife) {
+            this._playerUI.updateLife(newLife);
+            this._previousLife = newLife;
+            update = true;
+        }
+        let newLifeShield = this._shield.getLife();
+        if (newLifeShield !== this._previousLifeShield) {
+            this._playerUI.updateShieldLife(newLifeShield);
+            this._previousLifeShield = newLifeShield;
+            update = true;
+        }
+
+        if (update) {
+            this._playerUI.updateText();
+        }
+    }
+
     private beginWave(): void {
         for (let zone of this._level.waves[this.currentWave].zones) {
             let minVec = new BABYLON.Vector3(zone.min.x, zone.min.y, zone.min.z);
@@ -155,8 +205,8 @@ export default class Level implements State {
         this._shield = new Shield(this._scene);
         this._zones = [];
         Game.player.resetLife();
-        this.currentScore = 0;
         this.currentWave = 0;
+        this._playerUI.load();
 
         this.beginWave();
     }
@@ -169,6 +219,7 @@ export default class Level implements State {
         for (let zone of this._zones) {
             zone.dispose();
         }
+        this._playerUI.dispose();
     }
 
     // This function is called at each image rendering
@@ -182,6 +233,7 @@ export default class Level implements State {
         for (let zone of this._zones) {
             zone.animate(deltaTime);
         }
+        this.updatePlayerUI();
         this.updateLevel(deltaTime);
     }
 

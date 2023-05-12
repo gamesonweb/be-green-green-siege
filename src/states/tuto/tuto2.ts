@@ -44,6 +44,10 @@ export default class Tutorial2 implements State {
         this.levelNumber = 2;
     }
 
+    public canbePaused(): boolean {
+        return false;
+    }
+
     /**
      * Check if the tutorial is finished
      */
@@ -60,7 +64,7 @@ export default class Tutorial2 implements State {
     public load(): void {
         this._success = false;
 
-        const text = dialog.getTuto("tuto2");
+        const text = dialog.getTuto('tuto2');
 
         this._tutorialUI.load(text, this.levelNumber);
         this._gun = new LaserGun(this._scene, new Laser(this._scene));

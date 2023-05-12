@@ -62,7 +62,7 @@ export class LaserGun implements Gun {
         this._isOverheated = false;
         this._maxHeat = 30;
         this.heatPerShot = 5;
-        this._coolingRate = 20;
+        this._coolingRate = 15;
     }
 
     private initSound() {
@@ -93,7 +93,7 @@ export class LaserGun implements Gun {
         this._gunModel.setParent(rightAnchor);
         this._gunModel.position = new BABYLON.Vector3(0, 0, 0);
         this._gunModel.rotation = rightAnchor.rotation.clone();
-        this._gunModel.rotate(BABYLON.Axis.X, (-2 * Math.PI) / 3, BABYLON.Space.LOCAL);
+        this._gunModel.rotate(BABYLON.Axis.X, (-2 * Math.PI) / 3 + 0.5, BABYLON.Space.LOCAL);
         this._gunModel.rotate(BABYLON.Axis.Z, -0.1745, BABYLON.Space.LOCAL);
     }
 

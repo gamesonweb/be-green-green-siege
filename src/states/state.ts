@@ -11,4 +11,5 @@ export interface State {
     animate(deltaTime: number): void;
     pause();
     resume();
+    canbePaused(): boolean;
 }

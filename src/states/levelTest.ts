@@ -28,6 +28,10 @@ export class LevelTestGunState implements State {
         this.type = type;
     }
 
+    canbePaused(): boolean {
+        return true;
+    }
+
     fire(force: number): void {
         this._gun.fire(force);
     }

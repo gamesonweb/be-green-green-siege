@@ -4,9 +4,9 @@ import timeControl from '../TimeControl';
 import xrHandler from '../XRHandler';
 import { Game } from '../game';
 import { StateManager, StatesEnum } from '../states/stateManager';
+import dialog from './dialog';
 import UI from './ui';
 import UtilsUI from './utilsUI';
-import dialog from './dialog';
 
 export enum StateUIEnum {
     PAUSE = 0,
@@ -45,21 +45,33 @@ export default class StateUI implements UI {
 
     private loadPauseMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.MAINMENU);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('return_menu'),
+            this._leftPanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+                timeControl.resume();
+            }
+        );
 
         // Restart button
-        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('restart'),
+            this._middlePanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
+                timeControl.resume();
+            }
+        );
 
         // Resume button
-        UtilsUI.createActionButton(dialog.get("resume"), this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+        UtilsUI.createActionButton(dialog.get('resume'), this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
             timeControl.resume();
             this.dispose();
             this._stateManager.getCurrentState().resume();
@@ -74,26 +86,45 @@ export default class StateUI implements UI {
 
     private loadWinMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.MAINMENU);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('return_menu'),
+            this._leftPanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+                timeControl.resume();
+            }
+        );
 
         // Restart button
-        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('restart'),
+            this._middlePanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
+                timeControl.resume();
+            }
+        );
 
         // Next button
-        UtilsUI.createActionButton(dialog.get("next_lvl"), this._rightPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            timeControl.resume();
-            let level = this._stateManager.getCurrentState().levelNumber;
-            this._stateManager.switchState(StatesEnum.LEVEL, level++);
-        });
+        if (levelNumber < Game.MAX_LEVEL) {
+            UtilsUI.createActionButton(
+                dialog.get('next_lvl'),
+                this._rightPanel,
+                new BABYLON.Vector3(1, 0.25, 1),
+                20,
+                () => {
+                    this.dispose();
+                    timeControl.resume();
+                    this._stateManager.switchState(StatesEnum.LEVEL, levelNumber + 1);
+                }
+            );
+        }
 
         // Score
         UtilsUI.createCurrentScoreTextZone(this._bottomPanel, this._scene, 1, 0.25, 40, levelNumber);
@@ -102,29 +133,41 @@ export default class StateUI implements UI {
         UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
 
         // Win text
-        UtilsUI.createTextZone(dialog.get("win"), this._topPanel, 4, 0.35, 40, this._scene);
+        UtilsUI.createTextZone(dialog.get('win'), this._topPanel, 4, 0.35, 40, this._scene);
     }
 
     private loadLoseMenu(levelNumber: number) {
         // Return to menu button
-        UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.MAINMENU);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('return_menu'),
+            this._leftPanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.MAINMENU);
+                timeControl.resume();
+            }
+        );
 
         // Restart button
-        UtilsUI.createActionButton(dialog.get("restart"), this._middlePanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            this.dispose();
-            this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
-            timeControl.resume();
-        });
+        UtilsUI.createActionButton(
+            dialog.get('restart'),
+            this._middlePanel,
+            new BABYLON.Vector3(1, 0.25, 1),
+            20,
+            () => {
+                this.dispose();
+                this._stateManager.switchState(StatesEnum.LEVEL, levelNumber);
+                timeControl.resume();
+            }
+        );
 
         // Top scores
         UtilsUI.createTopScoresTextZone(this._extraRightPanel, this._scene, 1.4, 0.25, 40, levelNumber, 5);
 
         // Loose text
-        UtilsUI.createTextZone(dialog.get("loose"), this._topPanel, 4, 0.35, 40, this._scene);
+        UtilsUI.createTextZone(dialog.get('loose'), this._topPanel, 4, 0.35, 40, this._scene);
     }
 
     createActionButton(text: string, callback: () => void) {

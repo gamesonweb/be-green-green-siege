@@ -130,7 +130,23 @@ class Score {
     public async getRank(level: number): Promise<number> {
         await this.loadTopScores(level);
         const currentScore = this.getCurrentScore();
-        return this.topScores.findIndex((score) => score.score < currentScore) + 1;
+
+        // Sort topScores in descending order to get the correct rank
+        this.topScores.sort((a, b) => b.score - a.score);
+
+        // Use findIndex to find the index (rank) of the score equal to the current score
+        const rank = this.topScores.findIndex((score) => score.score === currentScore);
+
+        // If the current score is in topScores, return the rank
+        if (rank !== -1) {
+            return rank + 1;
+        }
+
+        // If the current score is not in topScores, find the index of the first score that is lower
+        const theoreticalRank = this.topScores.findIndex((score) => score.score < currentScore);
+
+        // If all scores in topScores are higher, the current score should be the last one
+        return theoreticalRank === -1 ? this.topScores.length + 1 : theoreticalRank + 1;
     }
 
     /**

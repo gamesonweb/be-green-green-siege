@@ -1,13 +1,13 @@
 import * as BABYLON from 'babylonjs';
-import MainGUI from '../ui/mainUI';
+import noVRGUI from '../ui/noVrUI';
 import { State } from './state';
 import { StateManager, StatesEnum } from './stateManager';
 
-export class MainMenuState implements State {
+export class NoVrState implements State {
     private _scene: BABYLON.Scene;
     private _stateManager: StateManager;
 
-    private _mainUI: MainGUI;
+    private _mainUI: noVRGUI;
 
     public type: StatesEnum;
     levelNumber: number;
@@ -17,7 +17,7 @@ export class MainMenuState implements State {
         this._scene = scene;
         this._stateManager = stateManager;
         this.type = type;
-        this._mainUI = new MainGUI(this._scene, this._scene.activeCamera, this._stateManager);
+        this._mainUI = new noVRGUI(this._scene, this._scene.activeCamera, this._stateManager);
     }
 
     public canbePaused(): boolean {
