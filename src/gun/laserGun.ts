@@ -37,6 +37,8 @@ export class LaserGun implements Gun {
     private _shoot: SoundPlayer;
     private _reloadGun: SoundPlayer;
 
+    private _color: BABYLON.Color3;
+
     /**
      * Creates an instance of LaserGun.
      * @param scene scene to add the gun to
@@ -64,8 +66,8 @@ export class LaserGun implements Gun {
     }
 
     private initSound() {
-        this._shoot = new SoundPlayer(SoundsBank.GUN_SHOOT, 2, this._scene, this._gunModel);
-        this._reloadGun = new SoundPlayer(SoundsBank.GUN_RELOAD, 2, this._scene, this._gunModel);
+        this._shoot = new SoundPlayer(SoundsBank.GUN_SHOOT, this._scene, this._gunModel);
+        this._reloadGun = new SoundPlayer(SoundsBank.GUN_RELOAD, this._scene, this._gunModel);
     }
 
     private initializeGunModel(): void {
@@ -129,6 +131,9 @@ export class LaserGun implements Gun {
         }
 
         // fire
+        const material = new BABYLON.StandardMaterial('newcolor', this._scene);
+        material.diffuseColor = this._color;
+        this._laser.laserModel.material = material;
         const laserDirection = this._laserPoint.absolutePosition.subtract(this._gunBack.absolutePosition);
         this._laser.fire(this._laserPoint.getAbsolutePosition(), laserDirection);
 
@@ -185,6 +190,7 @@ export class LaserGun implements Gun {
         const material = this._gunEnergy.material as BABYLON.StandardMaterial;
         material.diffuseColor = currentColor;
         material.emissiveColor = currentColor;
+        this._color = currentColor;
         material.alpha = 0.8;
 
         // update scale

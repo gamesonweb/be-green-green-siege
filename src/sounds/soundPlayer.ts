@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
-import { SoundsBank } from './soundsBank';
 import { Game } from '../game';
+import data from '../assets/sound/sounds.json';
 
 export class SoundPlayer {
     private _id: string;
@@ -8,30 +8,17 @@ export class SoundPlayer {
     private _sound: BABYLON.Sound;
     private _volume: number;
 
-    public constructor(name: string, volume: number, scene: BABYLON.Scene, mesh?: BABYLON.Mesh) {
+    public constructor(name: string, scene: BABYLON.Scene, mesh?: BABYLON.Mesh) {
         this._id = name + '_' + Math.random() * 1000000;
-        this._volume = volume;
+        this._sound = new BABYLON.Sound(this._id, data[name].file, scene, null);
+        this._sound.spatialSound = data[name].spatialized;
+        this._sound.setVolume(data[name].volume);
         // init sound
         if (mesh !== undefined) {
             this._mesh = mesh;
-
-            this._sound = new BABYLON.Sound(this._id, SoundsBank.getPathByName(name), scene, null, {
-                spatialSound: true,
-                maxDistance: 20000,
-            });
-
             this._sound.attachToMesh(this._mesh);
-            // this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
-            this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
-        } else {
-            this._sound = new BABYLON.Sound(this._id, SoundsBank.getPathByName(name), scene, null);
-            // this._sound.setLocalDirectionToMesh(scene.activeCamera.position);
-            this._sound.setVolume(this._volume);
         }
-        // console.log(this._sound.name);
         Game.sounds.push(this);
-        // console.log(this._sound.getPlaybackRate());
-        // console.log(name, " is ", this._mesh);
     }
 
     public setPosition(position: BABYLON.Vector3) {
@@ -42,11 +29,19 @@ export class SoundPlayer {
         this._sound.autoplay = bool;
     }
 
+    public setVolume(volume: number, time?: number) {
+        if(time !== undefined) {
+            this._sound.setVolume(volume, time);
+        } else {
+            this._sound.setVolume(volume);
+        }
+    }
+
     public play(ignoreIsPlaying: boolean = false): void {
         // update distance
-        if(this._mesh !== undefined) {
-            this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
-        }
+        // if(this._mesh !== undefined) {
+        //     this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
+        // }
         if(ignoreIsPlaying) {
             // e.g. laser shot
             this._sound.play();
@@ -72,6 +67,10 @@ export class SoundPlayer {
             Game.sounds.splice(index, 1);
         }
 
+    }
+
+    public getVolume(): number {
+        return this._sound.getVolume();
     }
 
     public playWithRepeater(second: number) {
