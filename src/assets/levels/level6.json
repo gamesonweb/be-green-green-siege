@@ -21,8 +21,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 1,
+                        "bulletSpeed": 20,
                         "speed": 6,
                         "life": 3,
                         "score": 10,
@@ -47,8 +47,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 1,
+                        "bulletSpeed": 20,
                         "speed": 6,
                         "life": 3,
                         "score": 10,
@@ -77,8 +77,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
                         "score": 10,
@@ -107,8 +107,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
                         "score": 10,
@@ -133,8 +133,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
                         "score": 10,
@@ -159,8 +159,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 1,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
                         "score": 10,
@@ -185,8 +185,8 @@
                     "robotCaracteristics": {
                         "shotFreq": 10,
                         "bulletFreq": 3,
-                        "nbBullet": 3,
-                        "bulletSpeed": 25,
+                        "nbBullet": 2,
+                        "bulletSpeed": 20,
                         "speed": 4,
                         "life": 3,
                         "score": 10,
@@ -198,9 +198,9 @@
         {
             "zones": [
                 {
-                    "nbRobots": 5,
+                    "nbRobots": 4,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 3,
+                    "tresholdEnemy": 2,
                     "cooldown": 4,
                     "min": {
                         "x": 44,
@@ -250,9 +250,9 @@
                     }
                 },
                 {
-                    "nbRobots": 5,
+                    "nbRobots": 4,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 3,
+                    "tresholdEnemy": 2,
                     "cooldown": 4,
                     "min": {
                         "x": -6,
