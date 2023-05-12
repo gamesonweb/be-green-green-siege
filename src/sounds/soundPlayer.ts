@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
-import { Game } from '../game';
 import data from '../assets/sound/sounds.json';
+import { Game } from '../game';
 
 export class SoundPlayer {
     private _id: string;
@@ -18,6 +18,7 @@ export class SoundPlayer {
             this._mesh = mesh;
             this._sound.attachToMesh(this._mesh);
         }
+        BABYLON.Engine.audioEngine.audioContext?.resume();
         Game.sounds.push(this);
     }
 
@@ -30,7 +31,7 @@ export class SoundPlayer {
     }
 
     public setVolume(volume: number, time?: number) {
-        if(time !== undefined) {
+        if (time !== undefined) {
             this._sound.setVolume(volume, time);
         } else {
             this._sound.setVolume(volume);
@@ -42,7 +43,7 @@ export class SoundPlayer {
         // if(this._mesh !== undefined) {
         //     this._sound.setVolume(this._volume / (1 + BABYLON.Vector3.Distance(this._mesh.position, Game.player.getHeadPosition())));
         // }
-        if(ignoreIsPlaying) {
+        if (ignoreIsPlaying) {
             // e.g. laser shot
             this._sound.play();
         } else if (!this._sound.isPlaying) {
@@ -66,7 +67,6 @@ export class SoundPlayer {
         if (index !== -1) {
             Game.sounds.splice(index, 1);
         }
-
     }
 
     public getVolume(): number {
