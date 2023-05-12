@@ -1,0 +1,48 @@
+{
+  "name": "green-siege",
+  "version": "1.0.0",
+  "description": "A VR shooter game where you must defend your tree.",
+  "main": "./src/index.ejs",
+  "devDependencies": {
+    "@types/es6-shim": "^0.31.42",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.3",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.2",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.2",
+    "webpack-dev-server": "^4.13.3"
+  },
+  "dependencies": {
+    "babylonjs": "^6.1.0",
+    "babylonjs-gui": "^6.1.0",
+    "babylonjs-loaders": "^6.1.0",
+    "http-server": "^14.1.1"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve",
+    "vr": "webpack && http-server -S -c-1 -C cert.pem dist/",
+    "deploy": "http-server -c-1 -p3630 dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brotherta/green-siege.git"
+  },
+  "keywords": [
+    "vr",
+    "game of web",
+    "shooter",
+    "video-game",
+    "game"
+  ],
+  "author": "Rémi Cérès, Rémi Felin, Antoine Vidal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Brotherta/green-siege/issues"
+  },
+  "homepage": "https://github.com/Brotherta/green-siege#readme"
+}
