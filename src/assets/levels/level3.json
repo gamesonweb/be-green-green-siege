@@ -37,12 +37,12 @@
                     "min": {
                         "x": -6,
                         "y": 4,
-                        "z": -12
+                        "z": -31
                     },
                     "max": {
                         "x": -30,
                         "y": 18,
-                        "z": -4
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -86,19 +86,19 @@
                     }
                 },
                 {
-                    "nbRobots": 1,
+                    "nbRobots": 2,
                     "spawnPoints": ["Spawn4", "Spawn5"],
                     "tresholdEnemy": 1,
                     "cooldown": 4,
                     "min": {
                         "x": -6,
                         "y": 4,
-                        "z": -12
+                        "z": -31
                     },
                     "max": {
                         "x": -30,
                         "y": 18,
-                        "z": -4
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
@@ -118,7 +118,7 @@
                 {
                     "nbRobots": 3,
                     "spawnPoints": ["Spawn2", "Spawn3", "Spawn6"],
-                    "tresholdEnemy": 3,
+                    "tresholdEnemy": 2,
                     "cooldown": 4,
                     "min": {
                         "x": 44,
@@ -144,17 +144,17 @@
                 {
                     "nbRobots": 3,
                     "spawnPoints": ["Spawn4", "Spawn5"],
-                    "tresholdEnemy": 3,
+                    "tresholdEnemy": 2,
                     "cooldown": 4,
                     "min": {
                         "x": -6,
                         "y": 4,
-                        "z": -12
+                        "z": -31
                     },
                     "max": {
                         "x": -30,
                         "y": 18,
-                        "z": -4
+                        "z": -19
                     },
                     "robotCaracteristics": {
                         "shotFreq": 10,
