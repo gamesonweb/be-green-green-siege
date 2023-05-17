@@ -41,12 +41,12 @@
     },
     "shield_activation": {
         "file": "/assets/sound/shield_activation.mp3",
-        "volume": 0.05,
+        "volume": 0.02,
         "spatialized": true
     },
     "shield_broken": {
         "file": "/assets/sound/shield_broken.mp3",
-        "volume": 0.6,
+        "volume": 0.3,
         "spatialized": true
     },
     "music_level": {
@@ -57,6 +57,11 @@
     "music_green_siege": {
         "file": "/assets/sound/music_green_siege.mp3",
         "volume": 0.3,
+        "spatialized": false
+    },
+    "boss": {
+        "file": "/assets/sound/boss.mp3",
+        "volume": 0.03,
         "spatialized": false
     }
 }

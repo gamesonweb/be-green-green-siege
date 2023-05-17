@@ -15,6 +15,7 @@ import { Player } from './player/player';
 import TimeControlledProjectileAnimation from './projectile/TimeControlledProjectileAnimation';
 import { SoundPlayer } from './sounds/soundPlayer';
 import { StateManager, StatesEnum } from './states/stateManager';
+import { SoundsBank } from './sounds/soundsBank';
 
 export class Game {
     private _canvas: HTMLCanvasElement;
@@ -50,7 +51,7 @@ export class Game {
         return scene;
     }
 
-    createFreeCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): BABYLON.FreeCamera {
+    createFreeCamera(scene: BABYLON.Scene, canvas: HTMLCanvasElement): BABYLON.FreeCamera {
         const camera = new BABYLON.FreeCamera('PlayerNoVRCamera', BABYLON.Vector3.Zero(), scene);
         // camera.attachControl(cavnas, true);
         camera.inertia = 0;
@@ -62,10 +63,10 @@ export class Game {
     /**
      * Creates the debug camera.
      */
-    createDebugCamera(scene: BABYLON.Scene, cavnas: HTMLCanvasElement): void {
+    createDebugCamera(scene: BABYLON.Scene, canvas: HTMLCanvasElement): void {
         const debugCamera = new BABYLON.FreeCamera('DebugCamera', new BABYLON.Vector3(17, 5, -25), scene);
         debugCamera.setTarget(Game.player.getHeadPosition());
-        debugCamera.attachControl(cavnas, true);
+        debugCamera.attachControl(canvas, true);
         debugCamera.speed = 10;
         debugCamera.inertia = 0;
         debugCamera.angularSensibility = 1000;
@@ -118,6 +119,8 @@ export class Game {
 
         // sounds
         Game.sounds = [];
+        Game.music_green_siege = new SoundPlayer(SoundsBank.MUSIC_GREEN_SIEGE, this._scene);
+        Game.music_green_siege.enableLoop();
 
         // Player
         Game.player = new Player(this._scene);

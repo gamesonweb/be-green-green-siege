@@ -17,5 +17,6 @@ export class SoundsBank {
     public static readonly MUSIC_LEVEL = "music_level";
 
     public static readonly MUSIC_GREEN_SIEGE = "music_green_siege";
+    public static readonly MUSIC_BOSS = "boss";
 
 }

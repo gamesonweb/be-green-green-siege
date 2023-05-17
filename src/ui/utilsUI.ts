@@ -157,9 +157,9 @@ class UtilsUI {
         const rank = await score.getRank(levelNumber);
         let text;
         if (rank === 0) {
-            text = dialog.get("score") + `: ${score.getCurrentScore()}`;
+            text = dialog.get('score') + `: ${score.getCurrentScore()}`;
         } else {
-            text = dialog.get("score") + `: ${score.getCurrentScore()} (` + dialog.get("rank") + `: ${rank})`;
+            text = dialog.get('score') + `: ${score.getCurrentScore()} (` + dialog.get('rank') + `: ${rank})`;
         }
         UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
     }
@@ -195,12 +195,12 @@ class UtilsUI {
             .reverse()
             .forEach((score, index) => {
                 const text = score.score
-                    ? `${displayScores.length - index}. ${score.score} (${new Date(score.timestamp).toLocaleString()})`
+                    ? `${displayScores.length - index}. ${score.score} (${score.timestamp.toLocaleString()})`
                     : `${displayScores.length - index}. ---`;
                 UtilsUI.createTextZone(text, panel, width, height, fontSize, scene);
             });
 
-        UtilsUI.createTextZone(dialog.get("top_score") + ` ${levelNumber}:`, panel, width, height, fontSize, scene);
+        UtilsUI.createTextZone(dialog.get('top_score') + ` ${levelNumber}:`, panel, width, height, fontSize, scene);
     }
 }
 

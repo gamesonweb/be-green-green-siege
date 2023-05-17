@@ -99,10 +99,13 @@ class Score {
 
             // Check if the current score is in the top 100
             if (this.topScores.length < 100 || this.currentScore > this.topScores[99].score) {
+                const currentDate = new Date();
+
                 const newEntry = {
                     score: this.currentScore,
-                    timestamp:
-                        this.formatDateToFrenchStyle(new Date()) + ' ' + this.formatTimeToFrenchStyle(new Date()),
+                    timestamp: `${this.formatDateToFrenchStyle(currentDate)} ${this.formatTimeToFrenchStyle(
+                        currentDate
+                    )}`,
                 };
 
                 // Insert the new score and sort the array

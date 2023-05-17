@@ -39,6 +39,10 @@ export class SoundPlayer {
         }
     }
 
+    public enableLoop() {
+        this._sound.loop = true;
+    }
+
     public play(ignoreIsPlaying: boolean = false): void {
         if (this._sound.isPaused) {
             this._sound.setPlaybackRate(1);

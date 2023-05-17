@@ -119,7 +119,7 @@
                     "min": {
                         "x": -6,
                         "y": 6,
-                        "z": -12
+                        "z": -15
                     },
                     "max": {
                         "x": 64,
@@ -145,7 +145,7 @@
                     "min": {
                         "x": -6,
                         "y": 6,
-                        "z": -12
+                        "z": -15
                     },
                     "max": {
                         "x": 64,
@@ -153,7 +153,7 @@
                         "z": -60
                     },
                     "robotCaracteristics": {
-                        "shotFreq": 20,
+                        "shotFreq": 10,
                         "bulletFreq": 1,
                         "nbBullet": 2,
                         "bulletSpeed": 20,
@@ -175,7 +175,7 @@
                     "min": {
                         "x": -6,
                         "y": 6,
-                        "z": -12
+                        "z": -15
                     },
                     "max": {
                         "x": 64,
@@ -183,7 +183,7 @@
                         "z": -60
                     },
                     "robotCaracteristics": {
-                        "shotFreq": 15,
+                        "shotFreq": 10,
                         "bulletFreq": 1,
                         "nbBullet": 3,
                         "bulletSpeed": 20,
@@ -209,7 +209,7 @@
                         "z": -55
                     },
                     "robotCaracteristics": {
-                        "shotFreq": 15,
+                        "shotFreq": 10,
                         "bulletFreq": 1,
                         "nbBullet": 3,
                         "bulletSpeed": 20,
