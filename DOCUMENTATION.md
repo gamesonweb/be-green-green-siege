@@ -4,7 +4,7 @@
 
 Pour jouer à Green-Siege, vous aurez besoin d'un casque de réalité virtuelle compatible avec Babylon.js, tel que l'Oculus Quest 2. Les contrôles du jeu sont intégrés aux manettes Oculus Touch. Voici un aperçu des commandes :
 
-![Contrôles des manettes Oculus Touch](https://doc.babylonjs.com/img/how_to/xr/xr-quest2-controllers_ids_mapping.jpg)
+![Contrôles des manettes Oculus Touch](./src/assets/controls.png)
 
 - **Tirer** : Appuyez sur le bouton de déclenchement (trigger) situé à l'arrière de votre manette Oculus Touch pour tirer avec votre pistolet laser.
   

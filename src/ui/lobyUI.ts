@@ -68,8 +68,12 @@ export default class LobyUI implements UI {
 
         this.createLevelButton(dialog.get('play'), StatesEnum.MAINMENU, this._topPanel);
 
+        UtilsUI.createTextZone(dialog.get('lobby'), this._topPanel, 4, 1, 45, this._scene);
         // Title
-        UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
+        UtilsUI.createTextZone("Episode IV: Defends the Sacred Tree", this._topPanel, 4, 0.35, 70, this._scene);
+        // UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 100, this._scene);
+        UtilsUI.createImageZone('assets/logo.png', this._topPanel, 4, 1, this._scene);
+        
     }
 
     private createLevelButton(

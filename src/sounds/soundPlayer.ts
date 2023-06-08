@@ -9,7 +9,7 @@ export class SoundPlayer {
 
     private _curentTime: number = 0;
 
-    public constructor(name: string, scene: BABYLON.Scene, mesh?: BABYLON.Mesh) {
+    public constructor(name: string, scene: BABYLON.Scene, mesh?: BABYLON.Mesh, addInList: boolean = true) {
         this._id = name + '_' + Math.random() * 1000000;
         this._sound = new BABYLON.Sound(this._id, data[name].file, scene, null);
         this._sound.spatialSound = data[name].spatialized;
@@ -20,7 +20,13 @@ export class SoundPlayer {
             this._sound.attachToMesh(this._mesh);
         }
         BABYLON.Engine.audioEngine.audioContext?.resume();
-        Game.sounds.push(this);
+        if(addInList) {
+            Game.sounds.push(this);
+        }
+    }
+
+    public attachToInstancedMesh(instancedMesh: BABYLON.InstancedMesh) {
+        this._sound.attachToMesh(instancedMesh);
     }
 
     public setPosition(position: BABYLON.Vector3) {

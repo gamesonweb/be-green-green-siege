@@ -1,4 +1,5 @@
 import timeControl from '../TimeControl';
+import { SoundPlayer } from '../sounds/soundPlayer';
 
 /**
  * This class is used to animate projectiles with time control.
@@ -25,10 +26,12 @@ class TimeControlledProjectileAnimation {
      * Animate the slow time if needed.
      * This method should be called at the end of the animation loop.
      */
-    public animate(): void {
+    public animate(sound: SoundPlayer): void {
         if (this._needSlowTime) {
+            sound.play();
             timeControl.activeSlowDanger(this._slowTimeFactor);
         } else {
+            sound.pause();
             timeControl.disableSlowDanger();
         }
 

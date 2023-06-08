@@ -14,9 +14,9 @@ export default class PlayerUI {
     private _manager: GUI.GUI3DManager;
     private textBox: GUI.TextBlock;
 
-    private static WIDTH = 0.5;
-    private static HEIGHT = 0.2;
-    private static FONT_SIZE = 35;
+    private static WIDTH = 0.35;
+    private static HEIGHT = 0.17;
+    private static FONT_SIZE = 25;
 
     constructor(_scene: BABYLON.Scene) {
         this.scoreString = '🪙 0';
@@ -132,7 +132,7 @@ export default class PlayerUI {
         this.anchorUI.setParent(anchor);
         this.anchorUI.position = anchor.position.clone();
         this.anchorUI.rotation = anchor.rotation.clone();
-        this.anchorUI.rotation.x += 0.3;
+        this.anchorUI.rotation.x += 0.7;
         this.anchorUI.position.y += 0.2;
         this.anchorUI.position.z += -0.1;
     }

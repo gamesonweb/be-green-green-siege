@@ -40,6 +40,8 @@ export class Game {
     public static sounds: SoundPlayer[];
     static MAX_LEVEL: number = 6;
 
+    private _bip_ball: SoundPlayer;
+
     constructor(canvasElement: string) {
         this._canvas = <HTMLCanvasElement>document.getElementById(canvasElement);
         this._engine = new BABYLON.Engine(this._canvas, true);
@@ -138,6 +140,8 @@ export class Game {
 
         this._assetManager.load();
 
+        this._bip_ball = new SoundPlayer(SoundsBank.BIP_BALL, this._scene, undefined, false);
+
         this._scene.executeWhenReady(async () => {
             this.initAnimations(this._scene);
 
@@ -183,7 +187,7 @@ export class Game {
 
             Game.player.animate();
             this._stateManager.getCurrentState().animate(deltaTime * timeControl.getTimeScale());
-            TimeControlledProjectileAnimation.animate();
+            TimeControlledProjectileAnimation.animate(this._bip_ball);
             timeControl.update();
         });
 

@@ -1,4 +1,4 @@
-# ⭐🌍🤖🔫🧑🌳 Green-Siege 🌳🧑🔫🤖🌍⭐
+![Logo de Green Siege](src/assets/logo.png)
 
 Green-Siege est un jeu de tir en réalité virtuelle palpitant, se déroulant dans le cadre sidéral. Votre mission ? Protéger un arbre géant et sacré contre les attaques d'ennemis implacables déterminés à le détruire. Cette création est née de notre participation au concours [Games on Web 2023](https://www.cgi.com/france/fr-fr/event/games-on-web-2023), orchestré par [CGI France](https://www.cgi.com/france/fr-fr/).
 

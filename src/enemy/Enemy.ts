@@ -61,6 +61,7 @@ export class Enemy extends Targetable implements IEnemy {
     private _sound_fuckin: SoundPlayer;
     private _sound_touched: SoundPlayer;
     private _sound_shoot: SoundPlayer;
+    // private _bip_ball: SoundPlayer;
 
     // explosion
     private _explosion: BABYLON.ParticleSystem;
@@ -442,6 +443,7 @@ export class Enemy extends Targetable implements IEnemy {
     public dispose() {
         this._mesh.dispose();
         this._sound_bip_bip.stopAndDispose();
+        // this._bip_ball.stopAndDispose();
         this._smokeParticles.dispose();
         this._laser.dispose();
     }

@@ -12,6 +12,8 @@ import Tutorial3 from './tuto/tuto3';
 import Tutorial4 from './tuto/tuto4';
 import Tutorial5 from './tuto/tuto5';
 import Tutorial6 from './tuto/tuto6';
+import { Credit } from './credit';
+import { Controls } from './controls';
 
 export enum StatesEnum {
     MAINMENU,
@@ -25,6 +27,8 @@ export enum StatesEnum {
     TUTO6,
     NOVR,
     LOBY,
+    CREDIT,
+    CONTROLS
 }
 
 export class StateManager {
@@ -79,6 +83,12 @@ export class StateManager {
                 break;
             case StatesEnum.LOBY:
                 this._currentState = new LobyState(this._scene, this, StatesEnum.LOBY);
+                break;
+            case StatesEnum.CREDIT:
+                this._currentState = new Credit(this._scene, this, StatesEnum.CREDIT);
+                break;
+            case StatesEnum.CONTROLS:
+                this._currentState = new Controls(this._scene, this, StatesEnum.CONTROLS);
                 break;
             default:
                 console.error('State not found');

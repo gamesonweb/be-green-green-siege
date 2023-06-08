@@ -60,7 +60,7 @@ export default class MainGUI implements UI {
         this._topPanel = new GUI.StackPanel3D(true);
         this._topPanel.isVertical = false;
         this._mainPanel.addControl(this._topPanel);
-        this._topPanel.position.y = 0.4;
+        this._topPanel.position.y = 0.9;
 
         // Create left sub panel
         this._leftPanel = new GUI.StackPanel3D(true);
@@ -114,7 +114,8 @@ export default class MainGUI implements UI {
         ////////////////////
 
         // Title
-        UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
+        // UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
+        UtilsUI.createImageZone('assets/logo.png', this._topPanel, 4, 1, this._scene);
 
         // Levels
         this.createLevelButton(dialog.get('level') + ' 3', StatesEnum.LEVEL, this._leftPanel, 3);
@@ -126,6 +127,9 @@ export default class MainGUI implements UI {
         this.createLevelButton(dialog.get('level') + ' 5', StatesEnum.LEVEL, this._middlePanel, 5);
         this.createLevelButton(dialog.get('level') + ' 4', StatesEnum.LEVEL, this._middlePanel, 4);
         this._createEmptySpace(this._middlePanel, 0.3);
+        
+        this.createNavigateButton("Controls", StatesEnum.CONTROLS, this._rightPanel);
+        this.createNavigateButton("Credits", StatesEnum.CREDIT, this._rightPanel);
         this.createLangButton(dialog.get('lang'), this._rightPanel);
 
         // add empty spaces
@@ -133,6 +137,17 @@ export default class MainGUI implements UI {
         this._createEmptySpace(this._middlePanel, 1);
         this._createEmptySpace(this._rightPanel, 1);
         this._createEmptySpace(this._extraRightPanel, 1);
+    }
+
+    private createNavigateButton(
+        text: string,
+        levelenum: StatesEnum,
+        panel: GUI.StackPanel3D,
+        levelNumber: number = undefined
+    ) {
+        return UtilsUI.createActionButton(text, panel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
+            this._stateManager.switchState(levelenum, levelNumber);
+        });
     }
 
     private createLangButton(text: string, panel: GUI.StackPanel3D) {

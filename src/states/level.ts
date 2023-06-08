@@ -48,6 +48,8 @@ export default class Level implements State {
     private _previousLife: number;
     private _previousLifeShield: number;
 
+    private _polution: SoundPlayer;
+
     shieldDeploymentPercentage: number;
     type: StatesEnum;
     levelNumber: number;
@@ -66,6 +68,7 @@ export default class Level implements State {
         this._music_level.setPosition(Game.player.getBodyPosition());
         this._music_level.setAutoplay(true);
         this._music_level.setLoop(true);
+        this._polution = new SoundPlayer(SoundsBank.PLAYER_POLUTION_MAL, this._scene, undefined, false);
     }
 
     canbePaused(): boolean {
@@ -98,6 +101,7 @@ export default class Level implements State {
             this._lose = true;
             Game.debug3D.log = 'LOSE';
             timeControl.pause();
+            this._polution.play();
             this._stateUI.load(StateUIEnum.LOSE, this.levelNumber);
             return;
         }
@@ -128,6 +132,7 @@ export default class Level implements State {
                 score.saveTopScore(this.levelNumber);
                 Game.debug3D.log = 'WIN';
                 timeControl.pause();
+                this._polution.play();
                 this._stateUI.load(StateUIEnum.WIN, this.levelNumber);
                 return;
             }

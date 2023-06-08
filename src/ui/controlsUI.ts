@@ -7,7 +7,7 @@ import dialog from './dialog';
 import UI from './ui';
 import UtilsUI from './utilsUI';
 
-export default class noVRGUI implements UI {
+export default class ControlsUI implements UI {
     private _scene: BABYLON.Scene;
     private _stateManager: StateManager;
     private _camera: BABYLON.Camera;
@@ -66,20 +66,19 @@ export default class noVRGUI implements UI {
         // Create buttons //
         ////////////////////
 
-        this.createLangButton(dialog.get('lang'), this._topPanel);
+        this.createReturnButton(dialog.get('return_menu'), this._topPanel);
 
         // Message
-        UtilsUI.createTextZone(dialog.get('novr'), this._topPanel, 4, 1, 45, this._scene);
+        UtilsUI.createImageZone('assets/controls.png', this._topPanel, 4, 1, this._scene);
 
         // Title
         // UtilsUI.createTextZone('Green Siege', this._topPanel, 4, 0.35, 80, this._scene);
         UtilsUI.createImageZone('assets/logo.png', this._topPanel, 4, 1, this._scene);
     }
 
-    private createLangButton(text: string, panel: GUI.StackPanel3D) {
+    private createReturnButton(text: string, panel: GUI.StackPanel3D) {
         return UtilsUI.createActionButton(text, panel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
-            dialog.changeLang();
-            this._stateManager.switchState(StatesEnum.NOVR);
+            this._stateManager.switchState(StatesEnum.MAINMENU);
         });
     }
 

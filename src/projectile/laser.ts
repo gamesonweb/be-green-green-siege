@@ -4,6 +4,8 @@ import { Game } from '../game';
 import { Targetable } from '../target/targetable';
 import TimeControlledProjectileAnimation from './TimeControlledProjectileAnimation';
 import { Projectile } from './projectile';
+import { SoundPlayer } from '../sounds/soundPlayer';
+import { SoundsBank } from '../sounds/soundsBank';
 
 export class Laser implements Projectile {
     private _scene: BABYLON.Scene;
@@ -15,6 +17,8 @@ export class Laser implements Projectile {
     private _slowTimeDistance: number = 9;
     private _slowTimeFactor: number = 0.1;
     private _sparkParticles: BABYLON.ParticleSystem;
+
+    private _instancedMesh: BABYLON.InstancedMesh;
 
     public constructor(
         scene: BABYLON.Scene,
@@ -105,6 +109,7 @@ export class Laser implements Projectile {
     public fire(origin: BABYLON.Vector3, direction: BABYLON.Vector3): void {
         const laserInstance = this.createLaserInstance(origin, direction);
         laserInstance.isVisible = true;
+        this._instancedMesh = laserInstance;
     }
 
     private createLaserInstance(origin: BABYLON.Vector3, direction: BABYLON.Vector3): BABYLON.InstancedMesh {
@@ -230,6 +235,10 @@ export class Laser implements Projectile {
 
         // Start checking if all instances are disposed
         checkInstancesAndDispose();
+    }
+
+    public getInstancedMesh(): BABYLON.InstancedMesh {
+        return this._instancedMesh;
     }
 
     public dispose() {

@@ -74,7 +74,8 @@ class UtilsUI {
         width: number,
         height: number,
         fontSize: number,
-        scene: BABYLON.Scene
+        scene: BABYLON.Scene,
+        color?: string
     ): GUI.MeshButton3D {
         // Create a plane mesh
         const planeMesh = BABYLON.MeshBuilder.CreatePlane(
@@ -104,7 +105,11 @@ class UtilsUI {
         // Create a text block inside the rectangle
         const textBlock = new GUI.TextBlock();
         textBlock.text = text;
-        textBlock.color = 'white';
+        if(text === "Green Siege") {  
+            textBlock.color = "#7CD511";
+        } else {
+            textBlock.color = 'white';
+        }
         textBlock.fontSize = fontSize;
         textBlock.fontWeight = 'bold';
         textBlock.textWrapping = true; // Enable text wrapping
@@ -136,6 +141,78 @@ class UtilsUI {
 
         return meshButton;
     }
+
+    /**
+     * Create an image zone
+     * @param imagePath the path of the image
+     * @param panel the panel where the image zone will be added
+     * @param width the maximum width of the image zone
+     * @param height the maximum height of the image zone
+     * @param scene the scene
+     * @returns
+     */
+    public static createImageZone(
+        imagePath: string,
+        panel: GUI.StackPanel3D,
+        width: number,
+        height: number,
+        scene: BABYLON.Scene
+    ): GUI.MeshButton3D {
+        // Create a plane mesh
+        const planeMesh = BABYLON.MeshBuilder.CreatePlane(
+            'imageZonePlane',
+            {
+                width: width,
+                height: height,
+                sideOrientation: BABYLON.Mesh.DOUBLESIDE,
+            },
+            scene
+        );
+
+        // Create an advanced dynamic texture for the plane mesh
+        const advancedTexture = GUI.AdvancedDynamicTexture.CreateForMesh(
+            planeMesh,
+            Math.round(width * 512),
+            Math.round(height * 512)
+        );
+
+        // Create a 2D rectangle container for the image
+        const imageZone = new GUI.Rectangle('imageZone');
+        imageZone.thickness = 0; // No border
+        imageZone.background = 'rgba(0, 0, 0, 0.5)';
+        imageZone.cornerRadius = 10;
+        advancedTexture.addControl(imageZone);
+
+        // Create an image inside the rectangle
+        const image = new GUI.Image('image', imagePath);
+        image.stretch = GUI.Image.STRETCH_UNIFORM;
+        imageZone.addControl(image);
+
+        // Create a standard material and set the advanced dynamic texture as its diffuse texture
+        const material = new BABYLON.StandardMaterial('imageZoneMaterial', scene);
+        material.diffuseTexture = advancedTexture;
+        material.opacityTexture = material.diffuseTexture;
+        material.emissiveColor = BABYLON.Color3.White();
+        material.disableLighting = true;
+        planeMesh.material = material;
+
+        // Create a MeshButton3D using the plane mesh
+        const meshButton = new GUI.MeshButton3D(planeMesh);
+        meshButton.scaling.x = width;
+        meshButton.scaling.y = height;
+
+        // Disable scaling effect on pointer enter and exit
+        meshButton.pointerEnterAnimation = () => {};
+        meshButton.pointerOutAnimation = () => {};
+        meshButton.pointerUpAnimation = () => {};
+        meshButton.pointerDownAnimation = () => {};
+
+        // Add the mesh button to the 3D stack panel
+        panel.addControl(meshButton);
+
+        return meshButton;
+    }
+
 
     /**
      * Create a text zone for the current score

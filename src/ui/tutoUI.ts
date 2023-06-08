@@ -69,7 +69,7 @@ export default class TutoUI {
         this._topPanel = new GUI.StackPanel3D(true);
         this._topPanel.isVertical = false;
         this._mainPanel.addControl(this._topPanel);
-        this._topPanel.position.y = 0.4;
+        this._topPanel.position.y = 0.8;
 
         // Create left sub panel
         this._leftPanel = new GUI.StackPanel3D(true);
@@ -131,7 +131,7 @@ export default class TutoUI {
 
         // Tutorial text
         // UtilsUI.createActionButton(tutorialText, this._topPanel, new BABYLON.Vector3(4, 0.4, 1), 24, () => {});
-        UtilsUI.createTextZone(tutorialText, this._topPanel, 4, 0.5, 30, this._scene);
+        UtilsUI.createTextZone(tutorialText, this._topPanel, 4, 1, 40, this._scene);
 
         // Return to menu button
         UtilsUI.createActionButton(dialog.get("return_menu"), this._leftPanel, new BABYLON.Vector3(1, 0.25, 1), 20, () => {
